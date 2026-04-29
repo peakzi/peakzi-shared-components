@@ -76,6 +76,9 @@
       "require": "./dist/*.cjs"
     }
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "files": [
     "dist",
     "assets"
