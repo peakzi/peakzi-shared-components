@@ -1,0 +1,219 @@
+// =============================================================================
+// Peakzi Design System — Foundation Tokens
+// =============================================================================
+// All CSS custom properties (primitives + semantic light-mode defaults).
+// Components MUST only reference semantic tokens (--bg, --fg-1, --border, etc.)
+// Never hard-code a raw hex value in a component file.
+// =============================================================================
+
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  // ---------------------------------------------------------------------------
+  // BRAND PRIMITIVES — navy anchor
+  // ---------------------------------------------------------------------------
+  --peakzi-navy-950: #0c0b2e; // deepest, near-black navy
+  --peakzi-navy-900: #14133f; // icon background
+  --peakzi-navy-800: #1f1e5a; // canonical brand navy (wordmark)
+  --peakzi-navy-700: #2a2972; // raised surface on navy
+  --peakzi-navy-600: #3b3a8e; // borders on navy
+  --peakzi-navy-500: #5a59b5; // mid navy — muted text on dark
+  --peakzi-navy-300: #a6a5d6; // subdued text on dark
+  --peakzi-navy-100: #e6e6f5; // faint navy tint for subtle fills
+
+  // ---------------------------------------------------------------------------
+  // BRAND PRIMITIVES — gradient spectrum (The Peak)
+  // ---------------------------------------------------------------------------
+  --peakzi-pink:        #eb55ff; // gradient start — hot magenta-pink
+  --peakzi-pink-soft:   #f78fff; // lighter tint
+  --peakzi-purple:      #a070f0; // gradient middle — brand purple
+  --peakzi-purple-soft: #c29bf5;
+  --peakzi-blue:        #7080f0; // gradient end
+  --peakzi-blue-deep:   #5a7bff; // saturated blue extension
+  --peakzi-blue-soft:   #9ba8f5;
+
+  // ---------------------------------------------------------------------------
+  // CANONICAL GRADIENTS
+  // ---------------------------------------------------------------------------
+  --gradient-brand:          linear-gradient(135deg, #eb55ff 0%, #a070f0 50%, #7080f0 100%);
+  --gradient-brand-soft:     linear-gradient(135deg, #f78fff 0%, #c29bf5 50%, #9ba8f5 100%);
+  --gradient-brand-vertical: linear-gradient(180deg, #a070f0 0%, #7080f0 100%);
+  --gradient-peak:           linear-gradient(180deg, #eb55ff 0%, #a070f0 55%, #7080f0 100%);
+  --gradient-navy-fade:      linear-gradient(180deg, #1f1e5a 0%, #0c0b2e 100%);
+  --gradient-dawn:           linear-gradient(135deg, #1f1e5a 0%, #a070f0 80%, #eb55ff 100%);
+
+  // ---------------------------------------------------------------------------
+  // NEUTRALS — slightly cool to sit with navy
+  // ---------------------------------------------------------------------------
+  --neutral-0:    #ffffff;
+  --neutral-25:   #fafafc;
+  --neutral-50:   #f5f5f9;
+  --neutral-100:  #ededf3;
+  --neutral-200:  #d9d9e3;
+  --neutral-300:  #bcbccc;
+  --neutral-400:  #9494a8;
+  --neutral-500:  #6e6e84;
+  --neutral-600:  #52526a;
+  --neutral-700:  #393950;
+  --neutral-800:  #23233a;
+  --neutral-900:  #131327;
+  --neutral-1000: #000000;
+
+  // ---------------------------------------------------------------------------
+  // STATUS / FEEDBACK COLORS
+  // ---------------------------------------------------------------------------
+  --success:        #17b26a;
+  --success-soft:   #dcfae8;
+  --success-strong: #0e7e49;
+  --warning:        #f79009;
+  --warning-soft:   #fef0c7;
+  --warning-strong: #b54708;
+  --danger:         #f04438;
+  --danger-soft:    #fee4e2;
+  --danger-strong:  #b42318;
+  --info:           #7080f0; // reuses brand blue
+  --info-soft:      #e6e9fc;
+
+  // ---------------------------------------------------------------------------
+  // SEMANTIC SURFACES & FOREGROUND — LIGHT MODE (default)
+  // ---------------------------------------------------------------------------
+  --bg:              var(--neutral-0);
+  --bg-subtle:       var(--neutral-50);
+  --bg-muted:        var(--neutral-100);
+  --bg-inverse:      var(--peakzi-navy-900);
+
+  --surface-1:       var(--neutral-0);           // cards
+  --surface-2:       var(--neutral-25);          // raised
+  --surface-3:       var(--neutral-50);          // recessed
+  --surface-overlay: rgb(12 11 46 / 0.72);       // modal backdrop
+
+  --fg:              var(--peakzi-navy-800);
+  --fg-1:            var(--peakzi-navy-800);     // primary text
+  --fg-2:            var(--neutral-600);         // secondary
+  --fg-3:            var(--neutral-500);         // tertiary
+  --fg-4:            var(--neutral-400);         // placeholder
+  --fg-inverse:      var(--neutral-0);
+  --fg-accent:       var(--peakzi-purple);
+  --fg-link:         var(--peakzi-blue-deep);
+
+  --border-subtle:   var(--neutral-100);
+  --border:          var(--neutral-200);
+  --border-strong:   var(--neutral-300);
+  --border-focus:    var(--peakzi-purple);
+
+  // ---------------------------------------------------------------------------
+  // TYPOGRAPHY
+  // ---------------------------------------------------------------------------
+  --font-display: 'Urbanist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  // Type scale — modular, 1.25× ratio above 16px base
+  --text-3xs:  10px;
+  --text-2xs:  11px;
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-base: 16px;
+  --text-md:   18px;
+  --text-lg:   20px;
+  --text-xl:   24px;
+  --text-2xl:  30px;
+  --text-3xl:  36px;
+  --text-4xl:  48px;
+  --text-5xl:  64px;
+  --text-6xl:  80px;
+  --text-7xl:  104px;
+
+  // Line heights
+  --leading-tight:   1.1;
+  --leading-snug:    1.25;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.65;
+
+  // Letter spacing
+  --tracking-tightest: -0.04em;
+  --tracking-tighter:  -0.02em;
+  --tracking-tight:    -0.01em;
+  --tracking-normal:   0;
+  --tracking-wide:     0.02em;
+  --tracking-wider:    0.08em;
+  --tracking-widest:   0.16em;
+
+  // Font weights
+  --weight-regular:   400;
+  --weight-medium:    500;
+  --weight-semibold:  600;
+  --weight-bold:      700;
+  --weight-extrabold: 800;
+  --weight-black:     900;
+
+  // ---------------------------------------------------------------------------
+  // SPACING — 4px base grid
+  // ---------------------------------------------------------------------------
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  // ---------------------------------------------------------------------------
+  // BORDER RADIUS
+  // ---------------------------------------------------------------------------
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-2xl:  28px;
+  --radius-3xl:  36px;
+  --radius-full: 9999px;
+
+  // ---------------------------------------------------------------------------
+  // SHADOWS — layered, navy-tinted
+  // ---------------------------------------------------------------------------
+  --shadow-xs:  0 1px 2px 0 rgb(31 30 90 / 0.05);
+  --shadow-sm:  0 1px 3px 0 rgb(31 30 90 / 0.08), 0 1px 2px -1px rgb(31 30 90 / 0.05);
+  --shadow-md:  0 4px 8px -2px rgb(31 30 90 / 0.08), 0 2px 4px -2px rgb(31 30 90 / 0.06);
+  --shadow-lg:  0 12px 24px -6px rgb(31 30 90 / 0.12), 0 4px 8px -4px rgb(31 30 90 / 0.08);
+  --shadow-xl:  0 24px 48px -12px rgb(31 30 90 / 0.18), 0 8px 16px -8px rgb(31 30 90 / 0.10);
+  --shadow-2xl: 0 40px 80px -20px rgb(31 30 90 / 0.24);
+
+  // Brand glow — reserved for accent states
+  --shadow-glow-purple: 0 8px 32px -4px rgb(160 112 240 / 0.45);
+  --shadow-glow-pink:   0 8px 32px -4px rgb(235 85 255 / 0.40);
+  --shadow-glow-brand:  0 12px 40px -8px rgb(160 112 240 / 0.35);
+
+  // Inner shadow for pressed/inset fields
+  --shadow-inset: inset 0 1px 2px 0 rgb(31 30 90 / 0.06);
+
+  // ---------------------------------------------------------------------------
+  // MOTION
+  // ---------------------------------------------------------------------------
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);       // confident exit
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);       // smooth, standard
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);    // slight overshoot
+
+  --duration-instant: 80ms;
+  --duration-fast:    150ms;
+  --duration-base:    220ms;
+  --duration-slow:    380ms;
+  --duration-slower:  560ms;
+
+  // ---------------------------------------------------------------------------
+  // Z-INDEX SCALE
+  // ---------------------------------------------------------------------------
+  --z-base:     1;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-modal:    1000;
+  --z-toast:    1100;
+}

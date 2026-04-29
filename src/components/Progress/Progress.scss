@@ -1,0 +1,153 @@
+// =============================================================================
+// Progress bar
+// =============================================================================
+
+.pz-progress {
+  height: 8px;
+  background: var(--bg-muted);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  width: 100%;
+}
+
+.pz-progress__bar {
+  height: 100%;
+  background: var(--peakzi-navy-800);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+// Variants
+.pz-progress--gradient .pz-progress__bar {
+  background: var(--gradient-brand);
+}
+
+.pz-progress--success .pz-progress__bar {
+  background: var(--success);
+}
+
+.pz-progress--warning .pz-progress__bar {
+  background: var(--warning);
+}
+
+.pz-progress--danger .pz-progress__bar {
+  background: var(--danger);
+}
+
+// Sizes
+.pz-progress--sm {
+  height: 4px;
+}
+
+.pz-progress--lg {
+  height: 12px;
+}
+
+// =============================================================================
+// Ring (circular progress)
+// =============================================================================
+
+.pz-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.pz-ring__svg {
+  transform: rotate(-90deg);
+}
+
+.pz-ring__track {
+  fill: none;
+  stroke: var(--bg-muted);
+}
+
+.pz-ring__indicator {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--duration-slow) var(--ease-out);
+}
+
+.pz-ring__label {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  font-size: 18px;
+  color: var(--fg-1);
+}
+
+// =============================================================================
+// Spinner
+// =============================================================================
+
+.pz-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--peakzi-purple);
+  border-radius: 50%;
+  animation: pz-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+.pz-spinner--sm {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+
+.pz-spinner--lg {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.pz-spinner--gradient {
+  border-color: transparent;
+  background: conic-gradient(from 0deg, transparent, var(--peakzi-pink), var(--peakzi-purple), var(--peakzi-blue));
+  -webkit-mask: radial-gradient(circle, transparent 60%, black 62%);
+  mask: radial-gradient(circle, transparent 60%, black 62%);
+}
+
+@keyframes pz-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =============================================================================
+// Skeleton
+// =============================================================================
+
+.pz-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-muted) 0%,
+    var(--surface-3) 50%,
+    var(--bg-muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: pz-shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+@keyframes pz-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.pz-skeleton--text {
+  height: 0.9em;
+  border-radius: 4px;
+}
+
+.pz-skeleton--circle {
+  border-radius: 50%;
+}

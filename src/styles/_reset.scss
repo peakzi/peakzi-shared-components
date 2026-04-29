@@ -1,0 +1,45 @@
+// =============================================================================
+// Peakzi Design System — Minimal CSS Reset
+// =============================================================================
+// Scoped to .peakzi-base to avoid polluting consumer stylesheets.
+// Apply to the root wrapper of any Peakzi page/app.
+// =============================================================================
+
+.peakzi-base {
+  font-family: var(--font-body);
+  color: var(--fg);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  background-color: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+// Ensure all .pz-* components inherit border-box
+.pz-btn,
+.pz-input,
+.pz-card,
+.pz-field,
+.pz-badge,
+.pz-chip,
+.pz-tabs,
+.pz-navbar,
+.pz-modal,
+.pz-alert,
+.pz-toast,
+.pz-progress,
+.pz-avatar,
+.pz-table,
+.pz-accordion,
+.pz-dropdown,
+.pz-tip,
+.pz-skeleton {
+  box-sizing: border-box;
+}

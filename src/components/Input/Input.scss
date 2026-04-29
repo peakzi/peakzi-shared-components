@@ -1,0 +1,161 @@
+// =============================================================================
+// Field wrapper
+// =============================================================================
+
+.pz-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pz-field__label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-1);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pz-field__label-required {
+  color: var(--danger);
+}
+
+.pz-field__hint {
+  font-size: var(--text-xs);
+  color: var(--fg-3);
+  line-height: 1.4;
+}
+
+.pz-field__error {
+  font-size: var(--text-xs);
+  color: var(--danger-strong);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: var(--weight-medium);
+}
+
+:root[data-theme='dark'] .pz-field__error {
+  color: #ff8b82;
+}
+
+// =============================================================================
+// Base input
+// =============================================================================
+
+.pz-input {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  color: var(--fg-1);
+  outline: none;
+  width: 100%;
+  box-shadow: var(--shadow-inset);
+  transition: all var(--duration-fast) var(--ease-out);
+
+  &::placeholder {
+    color: var(--fg-4);
+  }
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &:focus,
+  &:focus-visible {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgb(160 112 240 / 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--bg-muted);
+  }
+
+  &.is-error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgb(240 68 56 / 0.18);
+  }
+}
+
+// Sizes
+.pz-input--sm {
+  padding: 7px 12px;
+  font-size: var(--text-xs);
+  border-radius: var(--radius-sm);
+}
+
+.pz-input--lg {
+  padding: 13px 16px;
+  font-size: var(--text-base);
+}
+
+// =============================================================================
+// Input group (lead/trail icons)
+// =============================================================================
+
+.pz-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pz-input-group__icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-3);
+  pointer-events: none;
+}
+
+.pz-input-group__icon--lead {
+  left: 12px;
+}
+
+.pz-input-group__icon--trail {
+  right: 12px;
+  pointer-events: auto;
+}
+
+.pz-input-group .pz-input--with-lead {
+  padding-left: 38px;
+}
+
+.pz-input-group .pz-input--with-trail {
+  padding-right: 38px;
+}
+
+// =============================================================================
+// Textarea
+// =============================================================================
+
+.pz-textarea {
+  min-height: 96px;
+  resize: vertical;
+  line-height: var(--leading-normal);
+}
+
+// =============================================================================
+// Select
+// =============================================================================
+
+.pz-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236E6E84' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+:root[data-theme='dark'] .pz-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a0a0b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}

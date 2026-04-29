@@ -1,0 +1,89 @@
+// =============================================================================
+// Checkbox
+// =============================================================================
+
+.pz-checkbox,
+.pz-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--fg-1);
+  user-select: none;
+  line-height: 1.4;
+
+  // visually hide the native input
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+.pz-checkbox__box,
+.pz-radio__box {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.pz-checkbox__box {
+  border-radius: 5px;
+}
+
+.pz-radio__box {
+  border-radius: 50%;
+}
+
+// Hover state
+.pz-checkbox:hover .pz-checkbox__box,
+.pz-radio:hover .pz-radio__box {
+  border-color: var(--peakzi-purple);
+}
+
+// Checked states
+.pz-checkbox input:checked + .pz-checkbox__box {
+  background: var(--peakzi-navy-800);
+  border-color: var(--peakzi-navy-800);
+
+  &::after {
+    content: '';
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+}
+
+.pz-radio input:checked + .pz-radio__box {
+  border-color: var(--peakzi-navy-800);
+  border-width: 5px;
+}
+
+// Focus ring (keyboard only)
+.pz-checkbox input:focus-visible + .pz-checkbox__box,
+.pz-radio input:focus-visible + .pz-radio__box {
+  box-shadow: 0 0 0 3px rgb(160 112 240 / 0.35);
+}
+
+// Disabled state
+.pz-checkbox input:disabled ~ *,
+.pz-radio input:disabled ~ * {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pz-checkbox:has(input:disabled),
+.pz-radio:has(input:disabled) {
+  cursor: not-allowed;
+}

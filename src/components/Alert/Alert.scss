@@ -1,0 +1,74 @@
+// =============================================================================
+// Alert banner
+// =============================================================================
+
+.pz-alert {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+}
+
+.pz-alert__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  margin: 0 0 2px;
+}
+
+.pz-alert__desc {
+  font-size: var(--text-xs);
+  margin: 0;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.pz-alert__icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+}
+
+// Variants
+.pz-alert--info {
+  background: var(--info-soft);
+  color: var(--peakzi-navy-800);
+}
+
+.pz-alert--success {
+  background: var(--success-soft);
+  color: var(--success-strong);
+}
+
+.pz-alert--warning {
+  background: var(--warning-soft);
+  color: var(--warning-strong);
+}
+
+.pz-alert--danger {
+  background: var(--danger-soft);
+  color: var(--danger-strong);
+}
+
+// Dark mode overrides
+:root[data-theme='dark'] .pz-alert--info {
+  background: rgb(160 112 240 / 0.12);
+  color: var(--peakzi-purple);
+}
+
+:root[data-theme='dark'] .pz-alert--success {
+  background: rgb(23 178 106 / 0.14);
+  color: #6be5a6;
+}
+
+:root[data-theme='dark'] .pz-alert--warning {
+  background: rgb(247 144 9 / 0.14);
+  color: #ffc971;
+}
+
+:root[data-theme='dark'] .pz-alert--danger {
+  background: rgb(240 68 56 / 0.14);
+  color: #ff8b82;
+}

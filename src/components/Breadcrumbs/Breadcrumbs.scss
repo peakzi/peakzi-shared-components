@@ -1,0 +1,98 @@
+// =============================================================================
+// Breadcrumbs
+// =============================================================================
+
+.pz-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+  color: var(--fg-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pz-breadcrumbs__item {
+  color: var(--fg-3);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--fg-1);
+  }
+
+  &.is-current {
+    color: var(--fg-1);
+    font-weight: var(--weight-semibold);
+  }
+}
+
+a.pz-breadcrumbs__item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(160 112 240 / 0.35);
+  border-radius: 2px;
+}
+
+.pz-breadcrumbs__sep {
+  color: var(--fg-4);
+  user-select: none;
+}
+
+// =============================================================================
+// Pagination
+// =============================================================================
+
+.pz-pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.pz-pagination__btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--fg-1);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out);
+
+  &:hover:not(:disabled):not(.is-disabled) {
+    background: var(--bg-muted);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(160 112 240 / 0.35);
+  }
+
+  &.is-active {
+    background: var(--peakzi-navy-800);
+    color: white;
+    border-color: var(--peakzi-navy-800);
+  }
+
+  &:disabled,
+  &.is-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.pz-pagination__ellipsis {
+  padding: 0 6px;
+  color: var(--fg-3);
+}

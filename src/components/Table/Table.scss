@@ -1,0 +1,96 @@
+// =============================================================================
+// Table
+// =============================================================================
+
+.pz-table-wrap {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: auto;
+  background: var(--surface-1);
+}
+
+.pz-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+
+  thead {
+    background: var(--surface-3);
+  }
+
+  th {
+    text-align: left;
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--fg-3);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--fg-1);
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: var(--bg-subtle);
+  }
+}
+
+.pz-table--striped {
+  tbody tr:nth-child(even) {
+    background: var(--surface-3);
+  }
+
+  tbody tr:nth-child(even):hover {
+    background: var(--bg-muted);
+  }
+}
+
+// Numeric cell
+.num {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-semibold);
+  text-align: right;
+}
+
+// Sortable column header
+.pz-table__sortable-header {
+  padding: 0;
+
+  > button {
+    width: 100%;
+    display: flex;
+    padding: 12px 16px;
+    text-align: left;
+  }
+}
+
+.pz-table__sortable {
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(160 112 240 / 0.35) inset;
+  }
+}

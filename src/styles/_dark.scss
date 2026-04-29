@@ -1,0 +1,38 @@
+// =============================================================================
+// Peakzi Design System — Dark Mode Token Overrides
+// =============================================================================
+// Swaps ONLY the semantic layer. Brand primitives (navy, pink, purple, blue)
+// are unchanged — they are already dark-mode appropriate.
+// Activated via [data-theme="dark"] on <html> or the .peakzi-dark utility class.
+// =============================================================================
+
+:root[data-theme='dark'],
+.peakzi-dark {
+  // Backgrounds
+  --bg:              var(--peakzi-navy-950);
+  --bg-subtle:       var(--peakzi-navy-900);
+  --bg-muted:        var(--peakzi-navy-800);
+  --bg-inverse:      var(--neutral-0);
+
+  // Surfaces
+  --surface-1:       var(--peakzi-navy-900);
+  --surface-2:       var(--peakzi-navy-800);
+  --surface-3:       var(--peakzi-navy-700);
+  --surface-overlay: rgb(0 0 0 / 0.72);
+
+  // Foreground
+  --fg:              var(--neutral-0);
+  --fg-1:            var(--neutral-0);
+  --fg-2:            var(--peakzi-navy-300);
+  --fg-3:            var(--peakzi-navy-500);
+  --fg-4:            var(--peakzi-navy-600);
+  --fg-inverse:      var(--peakzi-navy-900);
+  --fg-accent:       var(--peakzi-purple-soft);
+  --fg-link:         var(--peakzi-blue-soft);
+
+  // Borders
+  --border-subtle:   var(--peakzi-navy-700);
+  --border:          var(--peakzi-navy-600);
+  --border-strong:   var(--peakzi-navy-500);
+  // --border-focus stays as var(--peakzi-purple) — same in both modes
+}

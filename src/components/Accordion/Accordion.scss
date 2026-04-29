@@ -1,0 +1,77 @@
+// =============================================================================
+// Accordion
+// =============================================================================
+
+.pz-accordion {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-1);
+}
+
+.pz-accordion__item + .pz-accordion__item {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.pz-accordion__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: transparent;
+  border: none;
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--bg-subtle);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(160 112 240 / 0.35) inset;
+  }
+}
+
+.pz-accordion__trigger-text {
+  flex: 1;
+}
+
+.pz-accordion__chevron {
+  transition: transform var(--duration-base) var(--ease-out);
+  color: var(--fg-3);
+  flex-shrink: 0;
+}
+
+.pz-accordion__item.is-open .pz-accordion__chevron {
+  transform: rotate(180deg);
+  color: var(--fg-1);
+}
+
+// CSS-only collapse animation via grid
+.pz-accordion__content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-base) var(--ease-out);
+}
+
+.pz-accordion__item.is-open .pz-accordion__content {
+  grid-template-rows: 1fr;
+}
+
+.pz-accordion__content-inner {
+  overflow: hidden;
+  font-size: var(--text-sm);
+  color: var(--fg-2);
+  line-height: var(--leading-relaxed);
+
+  > div {
+    padding: 0 20px 20px;
+  }
+}

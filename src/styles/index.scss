@@ -1,0 +1,45 @@
+// =============================================================================
+// Peakzi Design System — Main Style Entry Point
+// =============================================================================
+// Consumers import this ONCE at their application root:
+//
+//   import '@peakzi/components/styles'
+//
+// This provides all CSS custom properties, dark mode tokens,
+// typography classes, and component styles.
+// =============================================================================
+
+// 1. Foundation tokens (CSS custom properties — light mode defaults)
+@use 'foundations' as *;
+
+// 2. Dark mode token overrides
+@use 'dark' as *;
+
+// 3. Minimal scoped reset
+@use 'reset' as *;
+
+// 4. Native HTML element base styles (scoped to [data-theme] on <html>)
+@use 'elements' as *;
+
+// 5. Semantic typography classes (.peakzi-h1, .peakzi-gradient-text, etc.)
+@use 'typography' as *;
+
+// 6. Component styles
+@use '../components/Button/Button';
+@use '../components/Input/Input';
+@use '../components/Checkbox/Checkbox';
+@use '../components/Switch/Switch';
+@use '../components/Card/Card';
+@use '../components/Badge/Badge';
+@use '../components/Tabs/Tabs';
+@use '../components/Navbar/Navbar';
+@use '../components/Breadcrumbs/Breadcrumbs';
+@use '../components/Alert/Alert';
+@use '../components/Progress/Progress';
+@use '../components/Modal/Modal';
+@use '../components/Dropdown/Dropdown';
+@use '../components/Tooltip/Tooltip';
+@use '../components/Table/Table';
+@use '../components/Avatar/Avatar';
+@use '../components/Accordion/Accordion';
+@use '../components/PeakziLogo/PeakziLogo';

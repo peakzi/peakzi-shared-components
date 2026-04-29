@@ -1,0 +1,37 @@
+.pz-logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  line-height: 0; // prevent inline spacing beneath img
+
+  &__img {
+    display: block;
+    width: auto;
+    height: 36px; // md default
+    pointer-events: none;
+    user-select: none;
+  }
+
+  // ── Sizes ─────────────────────────────────────────────────────────────────
+  &--xs &__img { height: 20px; }
+  &--sm &__img { height: 28px; }
+  &--md &__img { height: 36px; }
+  &--lg &__img { height: 48px; }
+  &--xl &__img { height: 64px; }
+
+  // ── Link variant ──────────────────────────────────────────────────────────
+  &--link {
+    text-decoration: none;
+    border-radius: 4px;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 3px;
+    }
+  }
+}

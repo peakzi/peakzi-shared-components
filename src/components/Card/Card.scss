@@ -1,0 +1,115 @@
+// =============================================================================
+// Card
+// =============================================================================
+
+.pz-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  transition: all var(--duration-base) var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+// Variants
+.pz-card--hoverable {
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+.pz-card--elevated {
+  box-shadow: var(--shadow-md);
+  border-color: transparent;
+}
+
+.pz-card--inset {
+  background: var(--surface-3);
+}
+
+.pz-card--dark {
+  background: var(--peakzi-navy-900);
+  color: white;
+  border-color: var(--peakzi-navy-700);
+}
+
+.pz-card--gradient {
+  background: var(--gradient-brand);
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow-brand);
+}
+
+// Sub-components
+.pz-card__title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lg);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+  color: inherit;
+}
+
+.pz-card__body {
+  font-size: var(--text-sm);
+  color: var(--fg-2);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.pz-card--dark .pz-card__body,
+.pz-card--gradient .pz-card__body {
+  color: rgb(255 255 255 / 0.85);
+}
+
+// =============================================================================
+// Stat card
+// =============================================================================
+
+.pz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pz-stat__eyebrow {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.pz-stat__value {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1;
+  letter-spacing: var(--tracking-tightest);
+  color: var(--fg-1);
+}
+
+.pz-stat__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.pz-stat__delta--up {
+  color: var(--success-strong);
+}
+
+.pz-stat__delta--down {
+  color: var(--danger-strong);
+}
