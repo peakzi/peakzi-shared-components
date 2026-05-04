@@ -1,0 +1,28 @@
+// =============================================================================
+// StatCard
+// =============================================================================
+// Style relies on .pz-card + .pz-stat (already in the library).
+// This file only adds spacing tweaks for the card-wrapped variant.
+// =============================================================================
+
+.pz-stat-card {
+  // Tighter padding than default Card — KPI grids need density.
+  padding: 16px 20px;
+  gap: 8px;
+
+  // Stat values can be slightly smaller inside the card to avoid clipping.
+  .pz-stat__value {
+    font-size: clamp(24px, 2.6vw, 36px);
+  }
+}
+
+.pz-stat-card__footer {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-subtle);
+  font-size: var(--text-xs);
+  color: var(--fg-3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

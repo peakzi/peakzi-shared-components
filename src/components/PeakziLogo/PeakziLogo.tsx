@@ -78,3 +78,4 @@ export function PeakziLogo({
 
   return <span className={cls}>{img}</span>
 }
+PeakziLogo.displayName = 'PeakziLogo'

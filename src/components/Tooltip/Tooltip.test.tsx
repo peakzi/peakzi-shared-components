@@ -44,4 +44,32 @@ describe('Tooltip', () => {
     )
     expect(container.querySelector('.pz-tip.my-tip')).toBeInTheDocument()
   })
+
+  it('applies pz-tip--top class by default', () => {
+    const { container } = render(
+      <Tooltip content="Tip"><button type="button">x</button></Tooltip>,
+    )
+    expect(container.querySelector('.pz-tip--top')).toBeInTheDocument()
+  })
+
+  it('applies pz-tip--bottom class when position="bottom"', () => {
+    const { container } = render(
+      <Tooltip content="Tip" position="bottom"><button type="button">x</button></Tooltip>,
+    )
+    expect(container.querySelector('.pz-tip--bottom')).toBeInTheDocument()
+  })
+
+  it('applies pz-tip--left class when position="left"', () => {
+    const { container } = render(
+      <Tooltip content="Tip" position="left"><button type="button">x</button></Tooltip>,
+    )
+    expect(container.querySelector('.pz-tip--left')).toBeInTheDocument()
+  })
+
+  it('applies pz-tip--right class when position="right"', () => {
+    const { container } = render(
+      <Tooltip content="Tip" position="right"><button type="button">x</button></Tooltip>,
+    )
+    expect(container.querySelector('.pz-tip--right')).toBeInTheDocument()
+  })
 })

@@ -1,0 +1,37 @@
+// =============================================================================
+// AppFooter
+// =============================================================================
+
+.pz-app-footer {
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+  background: var(--surface-1);
+  border-top: 1px solid var(--border-subtle);
+  font-size: var(--text-xs);
+  color: var(--fg-3);
+}
+
+// Position variants — also set --_align so stacked content follows the same direction
+.pz-app-footer--left   { justify-content: flex-start; --_align: flex-start; }
+.pz-app-footer--center { justify-content: center;     --_align: center; }
+.pz-app-footer--right  { justify-content: flex-end;   --_align: flex-end; }
+
+.pz-app-footer__content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+// Stack version below the copyright text — inherits alignment from the position modifier
+.pz-app-footer__content--stacked {
+  flex-direction: column;
+  align-items: var(--_align, flex-start);
+  gap: 2px;
+}
+
+.pz-app-footer__version {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-4);
+}

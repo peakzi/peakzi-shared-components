@@ -4,6 +4,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   useEffect,
   useRef,
+  useId,
 } from 'react'
 import { X } from 'lucide-react'
 import { createPortal } from 'react-dom'
@@ -22,25 +23,27 @@ export interface ModalProps {
   open: boolean
   onClose: () => void
   title?: string
+  /** Accessible name used when no visible title is rendered. */
+  'aria-label'?: string
   description?: string
   size?: ModalSize
   /** Footer slot — typically action buttons */
   footer?: ReactNode
   children?: ReactNode
-  /** aria-labelledby id */
-  labelId?: string
 }
 
 export function Modal({
   open,
   onClose,
   title,
+  'aria-label': ariaLabel,
   description,
   size,
   footer,
   children,
-  labelId = 'pz-modal-title',
 }: ModalProps) {
+  const generatedId = useId()
+  const labelId = `pz-modal-${generatedId}`
   const dialogRef = useRef<HTMLDivElement>(null)
 
   // Trap focus and handle Escape key
@@ -108,6 +111,7 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? labelId : undefined}
+        aria-label={title ? undefined : (ariaLabel ?? 'Dialog')}
         aria-describedby={description ? `${labelId}-desc` : undefined}
         className={['pz-modal', size && size !== 'md' && `pz-modal--${size}`]
           .filter(Boolean)

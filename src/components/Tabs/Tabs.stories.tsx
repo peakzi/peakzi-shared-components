@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Tabs, TabList, Tab, TabPanel } from './Tabs'
 
 const meta: Meta<typeof Tabs> = {
-  title: 'Navigation/Tabs',
+  title: 'Components/Navigation/Tabs',
   component: Tabs,
   tags: ['autodocs'],
   parameters: {

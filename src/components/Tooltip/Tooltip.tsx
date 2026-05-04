@@ -4,9 +4,13 @@ import { type ReactNode, type HTMLAttributes, useId } from 'react'
 // Tooltip
 // ---------------------------------------------------------------------------
 
+export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right'
+
 export interface TooltipProps extends HTMLAttributes<HTMLSpanElement> {
   /** Tooltip text */
   content: string
+  /** Preferred direction of the tooltip bubble. Defaults to `'top'`. */
+  position?: TooltipPosition
   children: ReactNode
 }
 
@@ -17,12 +21,12 @@ export interface TooltipProps extends HTMLAttributes<HTMLSpanElement> {
  * For interactive children, the tooltip label is exposed via aria-describedby.
  * The tooltip bubble itself is aria-hidden to avoid double-reading.
  */
-export function Tooltip({ content, className, children, ...rest }: TooltipProps) {
+export function Tooltip({ content, position = 'top', className, children, ...rest }: TooltipProps) {
   const id = useId()
 
   return (
     <span
-      className={['pz-tip', className].filter(Boolean).join(' ')}
+      className={['pz-tip', `pz-tip--${position}`, className].filter(Boolean).join(' ')}
       aria-describedby={id}
       {...rest}
     >

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Badge, Chip } from './Badge'
 
 const meta: Meta<typeof Badge> = {
-  title: 'Surfaces/Badge',
+  title: 'Components/Surfaces/Badge',
   component: Badge,
   tags: ['autodocs'],
   parameters: {

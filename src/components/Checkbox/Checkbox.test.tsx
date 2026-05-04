@@ -75,6 +75,28 @@ describe('Checkbox', () => {
     const { container } = render(<Checkbox className="custom">Option</Checkbox>)
     expect(container.querySelector('.pz-checkbox.custom')).toBeInTheDocument()
   })
+
+  it('has no label position modifier by default (right)', () => {
+    const { container } = render(<Checkbox>Option</Checkbox>)
+    const label = container.querySelector('label')
+    expect(label).not.toHaveClass('pz-checkbox--label-right')
+    expect(label).not.toHaveClass('pz-checkbox--label-left')
+  })
+
+  it('applies label-left modifier', () => {
+    const { container } = render(<Checkbox labelPosition="left">Option</Checkbox>)
+    expect(container.querySelector('.pz-checkbox--label-left')).toBeInTheDocument()
+  })
+
+  it('applies label-top modifier', () => {
+    const { container } = render(<Checkbox labelPosition="top">Option</Checkbox>)
+    expect(container.querySelector('.pz-checkbox--label-top')).toBeInTheDocument()
+  })
+
+  it('applies label-bottom modifier', () => {
+    const { container } = render(<Checkbox labelPosition="bottom">Option</Checkbox>)
+    expect(container.querySelector('.pz-checkbox--label-bottom')).toBeInTheDocument()
+  })
 })
 
 // =============================================================================

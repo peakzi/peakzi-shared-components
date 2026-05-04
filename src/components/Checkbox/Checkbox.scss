@@ -87,3 +87,27 @@
 .pz-radio:has(input:disabled) {
   cursor: not-allowed;
 }
+
+// =============================================================================
+// Label position variants
+// =============================================================================
+
+// Left — label before the control
+.pz-checkbox--label-left,
+.pz-radio--label-left {
+  flex-direction: row-reverse;
+}
+
+// Top — label above the control
+.pz-checkbox--label-top,
+.pz-radio--label-top {
+  flex-direction: column-reverse;
+  align-items: flex-start;
+}
+
+// Bottom — label below the control
+.pz-checkbox--label-bottom,
+.pz-radio--label-bottom {
+  flex-direction: column;
+  align-items: flex-start;
+}

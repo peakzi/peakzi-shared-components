@@ -34,6 +34,16 @@ describe('Field', () => {
     expect(screen.getByText('As on invoice')).toBeInTheDocument()
   })
 
+  it('associates hint text with the input via aria-describedby', () => {
+    render(
+      <Field label="Name" hint="As on invoice" id="x">
+        <Input id="x" />
+      </Field>,
+    )
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-describedby', 'x-hint')
+    expect(screen.getByText('As on invoice')).toHaveAttribute('id', 'x-hint')
+  })
+
   it('renders error message with role=alert', () => {
     render(
       <Field label="Email" error="Invalid email" id="x">
@@ -42,6 +52,16 @@ describe('Field', () => {
     )
     const err = screen.getByRole('alert')
     expect(err).toHaveTextContent('Invalid email')
+  })
+
+  it('associates error text with the input via aria-describedby', () => {
+    render(
+      <Field label="Email" error="Invalid email" id="x">
+        <Input id="x" />
+      </Field>,
+    )
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-describedby', 'x-error')
+    expect(screen.getByRole('alert')).toHaveAttribute('id', 'x-error')
   })
 
   it('hides hint when error is shown', () => {
@@ -94,9 +114,9 @@ describe('Input', () => {
     expect(screen.getByRole('textbox')).not.toHaveClass('pz-input--md')
   })
 
-  it('applies is-error class when hasError', () => {
+  it('sets aria-invalid when hasError', () => {
     render(<Input hasError aria-label="test" />)
-    expect(screen.getByRole('textbox')).toHaveClass('is-error')
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('wraps in pz-input-group when leadIcon provided', () => {
@@ -167,9 +187,18 @@ describe('Textarea', () => {
     expect(screen.getByRole('textbox')).toHaveClass('pz-textarea')
   })
 
-  it('applies is-error class when hasError', () => {
+  it('sets aria-invalid when hasError', () => {
     render(<Textarea hasError aria-label="notes" />)
-    expect(screen.getByRole('textbox')).toHaveClass('is-error')
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('uses Field description ids', () => {
+    render(
+      <Field label="Notes" hint="Optional context" id="notes">
+        <Textarea id="notes" />
+      </Field>,
+    )
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-describedby', 'notes-hint')
   })
 
   it('forwards ref to textarea element', () => {
@@ -209,13 +238,24 @@ describe('Select', () => {
     expect(screen.getByRole('combobox')).toHaveClass('pz-select')
   })
 
-  it('applies is-error class when hasError', () => {
+  it('sets aria-invalid when hasError', () => {
     render(
       <Select hasError aria-label="trade">
         <option>HVAC</option>
       </Select>,
     )
-    expect(screen.getByRole('combobox')).toHaveClass('is-error')
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('uses Field description ids', () => {
+    render(
+      <Field label="Trade" error="Choose a trade" id="trade">
+        <Select id="trade">
+          <option>HVAC</option>
+        </Select>
+      </Field>,
+    )
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-describedby', 'trade-error')
   })
 
   it('renders children options', () => {

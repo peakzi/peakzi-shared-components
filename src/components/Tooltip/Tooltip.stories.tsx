@@ -3,7 +3,7 @@ import { Tooltip } from './Tooltip'
 import { Button } from '../Button'
 
 const meta: Meta<typeof Tooltip> = {
-  title: 'Overlays/Tooltip',
+  title: 'Components/Overlays/Tooltip',
   component: Tooltip,
   tags: ['autodocs'],
   parameters: {
@@ -37,6 +37,26 @@ export const Default: Story = {
     <div style={{ padding: 48, display: 'flex', justifyContent: 'center' }}>
       <Tooltip {...args}>
         <Button>Analyse profile</Button>
+      </Tooltip>
+    </div>
+  ),
+}
+
+export const AllPositions: Story = {
+  name: 'All positions',
+  render: () => (
+    <div style={{ padding: 80, display: 'flex', gap: 16, justifyContent: 'center', alignItems: 'center' }}>
+      <Tooltip content="Tooltip on top" position="top">
+        <Button variant="secondary" size="sm">Top</Button>
+      </Tooltip>
+      <Tooltip content="Tooltip on bottom" position="bottom">
+        <Button variant="secondary" size="sm">Bottom</Button>
+      </Tooltip>
+      <Tooltip content="Tooltip on left" position="left">
+        <Button variant="secondary" size="sm">Left</Button>
+      </Tooltip>
+      <Tooltip content="Tooltip on right" position="right">
+        <Button variant="secondary" size="sm">Right</Button>
       </Tooltip>
     </div>
   ),

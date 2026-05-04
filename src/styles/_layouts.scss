@@ -1,0 +1,48 @@
+// =============================================================================
+// App shell layout
+// =============================================================================
+// Used by admin / dashboard surfaces. Gives a 3-row × 2-col grid:
+//
+//   ┌──────────────┬───────────────────────┐
+//   │              │  topbar               │  56px
+//   │  side rail   ├───────────────────────┤
+//   │  (240px)     │  main                 │  1fr
+//   │              ├───────────────────────┤
+//   │              │  footer               │  auto
+//   └──────────────┴───────────────────────┘
+//
+// Markup:
+//   <div class="pz-app">
+//     <aside class="pz-app__rail">  …<SideNav />…  </aside>
+//     <header class="pz-app__topbar">  …<TopBar />…  </header>
+//     <main   class="pz-app__main">    …pages…       </main>
+//     <footer class="pz-app__footer">  …<AppFooter />…</footer>
+//   </div>
+// =============================================================================
+
+.pz-app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 56px 1fr auto;
+  grid-template-areas:
+    'rail topbar'
+    'rail main'
+    'rail footer';
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg-1);
+}
+
+.pz-app__rail   { grid-area: rail;   border-right: 1px solid var(--border-subtle); background: var(--surface-1); }
+.pz-app__topbar { grid-area: topbar; }
+.pz-app__main   { grid-area: main;   min-width: 0; overflow-x: hidden; }
+.pz-app__footer { grid-area: footer; }
+
+.pz-app__main-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 32px 48px;
+}
+
+// Collapsed rail (icon-only) — toggle by adding .pz-app--rail-collapsed
+.pz-app--rail-collapsed { grid-template-columns: 64px 1fr; }

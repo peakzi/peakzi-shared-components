@@ -85,7 +85,7 @@ export interface DropdownTriggerProps extends ButtonHTMLAttributes<HTMLButtonEle
   children?: ReactNode
 }
 
-export function DropdownTrigger({ className, children, ...rest }: DropdownTriggerProps) {
+export function DropdownTrigger({ className, children, onClick, ...rest }: DropdownTriggerProps) {
   const { open, setOpen, triggerId, menuId } = useDropdownContext()
   return (
     <button
@@ -95,8 +95,8 @@ export function DropdownTrigger({ className, children, ...rest }: DropdownTrigge
       aria-expanded={open}
       aria-controls={menuId}
       className={className}
-      onClick={() => setOpen(!open)}
       {...rest}
+      onClick={(e) => { setOpen(!open); onClick?.(e) }}
     >
       {children}
     </button>

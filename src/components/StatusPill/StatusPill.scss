@@ -1,0 +1,12 @@
+// =============================================================================
+// StatusPill
+// =============================================================================
+// Inherits all visuals from .pz-badge — this file only exists for the
+// .pz-status-pill marker class so apps can target StatusPills specifically
+// without affecting plain Badges.
+// =============================================================================
+
+.pz-status-pill {
+  // Slightly tighter type for status enums.
+  letter-spacing: var(--tracking-wide);
+}

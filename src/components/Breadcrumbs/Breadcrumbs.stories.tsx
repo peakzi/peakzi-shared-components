@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Breadcrumbs, Pagination } from './Breadcrumbs'
 
 const meta: Meta<typeof Breadcrumbs> = {
-  title: 'Navigation/Breadcrumbs',
+  title: 'Components/Navigation/Breadcrumbs',
   component: Breadcrumbs,
   tags: ['autodocs'],
   parameters: {

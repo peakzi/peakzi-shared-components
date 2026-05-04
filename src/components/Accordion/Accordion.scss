@@ -3,10 +3,12 @@
 // =============================================================================
 
 .pz-accordion {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  border-radius: var(--radius-xl);
   background: var(--surface-1);
+  overflow: hidden;
 }
 
 .pz-accordion__item + .pz-accordion__item {
@@ -14,64 +16,49 @@
 }
 
 .pz-accordion__trigger {
-  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  padding: 16px 20px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 0;
   background: transparent;
-  border: none;
   color: var(--fg-1);
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   text-align: left;
   cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-out);
+  transition: background var(--duration-base) var(--ease-out);
 
-  &:hover {
-    background: var(--bg-subtle);
-  }
-
+  &:hover { background: var(--surface-2); }
   &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px rgb(160 112 240 / 0.35) inset;
+    outline: 2px solid var(--border-focus);
+    outline-offset: -2px;
   }
 }
 
-.pz-accordion__trigger-text {
-  flex: 1;
+.pz-accordion__trigger-content {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-.pz-accordion__chevron {
-  transition: transform var(--duration-base) var(--ease-out);
-  color: var(--fg-3);
+.pz-accordion__indicator {
   flex-shrink: 0;
+  color: var(--fg-3);
+  transition: transform var(--duration-base) var(--ease-out);
 }
 
-.pz-accordion__item.is-open .pz-accordion__chevron {
+.pz-accordion__item--open .pz-accordion__indicator {
   transform: rotate(180deg);
-  color: var(--fg-1);
 }
 
-// CSS-only collapse animation via grid
 .pz-accordion__content {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--duration-base) var(--ease-out);
-}
-
-.pz-accordion__item.is-open .pz-accordion__content {
-  grid-template-rows: 1fr;
-}
-
-.pz-accordion__content-inner {
-  overflow: hidden;
+  padding: 4px 16px 16px;
   font-size: var(--text-sm);
   color: var(--fg-2);
   line-height: var(--leading-relaxed);
-
-  > div {
-    padding: 0 20px 20px;
-  }
 }
+
+.pz-accordion__content[hidden] { display: none; }

@@ -24,11 +24,16 @@
 // 5. Semantic typography classes (.peakzi-h1, .peakzi-gradient-text, etc.)
 @use 'typography' as *;
 
-// 6. Component styles
+// 6. App-shell layout utilities
+@use 'layouts' as *;
+@use 'topbar' as *;
+
+// 7. Component styles
 @use '../components/Button/Button';
 @use '../components/Input/Input';
 @use '../components/Checkbox/Checkbox';
 @use '../components/Switch/Switch';
+@use '../components/Slider/Slider';
 @use '../components/Card/Card';
 @use '../components/Badge/Badge';
 @use '../components/Tabs/Tabs';
@@ -43,3 +48,16 @@
 @use '../components/Avatar/Avatar';
 @use '../components/Accordion/Accordion';
 @use '../components/PeakziLogo/PeakziLogo';
+
+// 8. New (Phase-2 admin) component styles
+@use '../components/PageHeader/PageHeader';
+@use '../components/SideNav/SideNav';
+@use '../components/AppFooter/AppFooter';
+@use '../components/CopyField/CopyField';
+@use '../components/EditableField/EditableField';
+@use '../components/StatusPill/StatusPill';
+@use '../components/Stepper/Stepper';
+@use '../components/Segmented/Segmented';
+@use '../components/StatCard/StatCard';
+@use '../components/EmptyState/EmptyState';
+@use '../components/DefList/DefList';

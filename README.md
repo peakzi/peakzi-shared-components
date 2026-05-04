@@ -4,7 +4,7 @@ Brand-consistent UI component library for all Peakzi websites. Built with React 
 
 ## What's inside
 
-- **18 components** — Button, Input, Card, Badge, Tabs, Navbar, Modal, Dropdown, Tooltip, Table, Avatar, Accordion, Alert, Progress, Spinner, Skeleton, Checkbox, Radio, Switch, Slider, Breadcrumbs, Pagination, PeakziLogo
+- **30 component groups** — inputs, surfaces, navigation, feedback, overlays, data display, app shell, and brand
 - **Design tokens** — CSS custom properties for colour, typography, spacing, radius, shadow, and motion
 - **Dark mode** — toggle via `data-theme="dark"` on `<html>`, no JavaScript required for the styles
 - **Accessible** — ARIA roles, keyboard navigation, focus rings, and zero a11y violations enforced in CI
@@ -85,12 +85,13 @@ export function Example() {
 
 | Category | Components |
 |---|---|
-| **Inputs** | `Button`, `Input`, `Field`, `Textarea`, `Select`, `Checkbox`, `Radio`, `Switch`, `Slider` |
-| **Surfaces** | `Card`, `CardTitle`, `CardBody`, `Stat`, `Badge`, `Chip` |
-| **Navigation** | `Tabs`, `TabList`, `Tab`, `TabPanel`, `Navbar`, `NavBrand`, `NavLinks`, `NavLink`, `NavActions`, `Breadcrumbs`, `Pagination` |
-| **Feedback** | `Alert`, `Progress`, `Ring`, `Spinner`, `Skeleton` |
+| **Inputs** | `Button`, `Input`, `Field`, `Textarea`, `Select`, `Checkbox`, `Radio`, `Switch`, `Slider`, `Segmented` |
+| **Surfaces** | `Card`, `CardTitle`, `CardBody`, `Stat`, `Badge`, `Chip`, `StatusPill` |
+| **Navigation** | `Tabs`, `TabList`, `Tab`, `TabPanel`, `Navbar`, `NavBrand`, `NavLinks`, `NavLink`, `NavActions`, `Breadcrumbs`, `Pagination`, `Stepper`, `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent` |
+| **Feedback** | `Alert`, `Progress`, `Ring`, `Spinner`, `Skeleton`, `EmptyState` |
 | **Overlays** | `Modal`, `Dropdown`, `DropdownTrigger`, `DropdownMenu`, `DropdownItem`, `Tooltip` |
-| **Data display** | `Table`, `Thead`, `Tbody`, `Tr`, `Th`, `Td`, `Avatar`, `AvatarStack`, `Accordion`, `AccordionItem` |
+| **Data Display** | `Table`, `Thead`, `Tbody`, `Tr`, `Th`, `Td`, `Avatar`, `AvatarStack`, `StatCard`, `CopyField`, `DefList`, `EditableField` |
+| **App Shell** | `AppFooter`, `PageHeader`, `SideNav` |
 | **Brand** | `PeakziLogo` |
 
 All named exports and their TypeScript prop types are available from the root import:
@@ -98,6 +99,13 @@ All named exports and their TypeScript prop types are available from the root im
 ```tsx
 import { Button } from '@peakzi/components'
 import type { ButtonProps, ButtonVariant, ButtonSize } from '@peakzi/components'
+```
+
+Deep imports are also supported for bundle-splitting:
+
+```tsx
+import { Button } from '@peakzi/components/Button'
+import { Modal } from '@peakzi/components/Modal'
 ```
 
 ---
@@ -204,6 +212,9 @@ npm test
 # Watch mode
 npm run test:watch
 
+# Coverage report
+npm run test:coverage
+
 # TypeScript check
 npm run typecheck
 
@@ -216,11 +227,25 @@ npm run build
 
 ### Storybook
 
-Storybook runs at `http://localhost:6006`. It includes:
+Storybook runs at `http://localhost:6006`. The sidebar is organised as:
 
-- **Foundation/Colors** — full brand palette and semantic token reference
-- **Foundation/Typography** — font families, type scale, and all typography classes
-- All 18 component groups with interactive controls, dark/light toggle, and a11y panel
+```
+Foundation
+  Colors       — full brand palette and semantic token reference
+  Typography   — font families, type scale, and all typography classes
+
+Components
+  Inputs       — Button, Input, Checkbox, Switch, Slider, Segmented
+  Surfaces     — Card, Badge, StatusPill
+  Feedback     — Alert, EmptyState, Progress
+  Navigation   — Breadcrumbs, Navbar, Tabs, Stepper, Accordion
+  Overlays     — Dropdown, Modal, Tooltip
+  Data Display — Avatar, Table, StatCard, CopyField, DefList, EditableField
+  App Shell    — AppFooter, PageHeader, SideNav
+  Brand        — PeakziLogo
+```
+
+Each story includes interactive Controls, a dark/light theme toggle, and an a11y panel.
 
 ---
 

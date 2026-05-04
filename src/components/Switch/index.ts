@@ -1,2 +1,2 @@
-export { Switch, Slider } from './Switch'
-export type { SwitchProps, SliderProps } from './Switch'
+export { Switch } from './Switch'
+export type { SwitchProps } from './Switch'

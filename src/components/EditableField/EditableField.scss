@@ -1,0 +1,96 @@
+// =============================================================================
+// EditableField
+// =============================================================================
+
+.pz-editable-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pz-editable-field__label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+// Inline layout — label sits to the left of the value in a horizontal row
+.pz-editable-field--inline {
+  flex-direction: row;
+  align-items: center;
+
+  .pz-editable-field__label {
+    flex-shrink: 0;
+    width: 140px;
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: var(--text-sm);
+    color: var(--fg-2);
+  }
+
+  .pz-editable-field__read-row,
+  .pz-editable-field__edit-row {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.pz-editable-field__read-row,
+.pz-editable-field__edit-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pz-editable-field__value {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--fg-1);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pz-editable-field__placeholder { color: var(--fg-3); font-style: italic; }
+
+.pz-editable-field__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--fg-2);
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out),
+              color var(--duration-base) var(--ease-out);
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) { background: var(--surface-2); color: var(--fg-1); }
+  &:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 1px;
+  }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.pz-editable-field__btn--save {
+  background: var(--success-soft);
+  color: var(--success-strong);
+
+  &:hover:not(:disabled) { background: var(--success-strong); color: white; }
+}
+
+.pz-editable-field__error {
+  font-size: var(--text-xs);
+  color: var(--danger-strong);
+}

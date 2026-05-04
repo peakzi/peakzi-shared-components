@@ -1,0 +1,119 @@
+// =============================================================================
+// Stepper
+// =============================================================================
+
+.pz-stepper {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pz-stepper__item {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  padding: 4px 0 20px 0;
+
+  // connector line
+  &::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 26px;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-subtle);
+  }
+
+  &:last-child::before { display: none; }
+}
+
+.pz-stepper__marker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  color: var(--fg-3);
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+}
+
+.pz-stepper__num { line-height: 1; }
+
+.pz-stepper__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 1px;
+  min-width: 0;
+}
+
+.pz-stepper__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--fg-1);
+}
+
+.pz-stepper__body {
+  font-size: var(--text-sm);
+  color: var(--fg-2);
+  line-height: var(--leading-relaxed);
+}
+
+// Status: idle (default already covered)
+// Status: active
+.pz-stepper__item--active {
+  .pz-stepper__marker {
+    background: var(--surface-1);
+    border-color: var(--peakzi-purple);
+    color: var(--peakzi-purple);
+  }
+  .pz-stepper__title { color: var(--fg-1); }
+}
+
+.pz-stepper__pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--peakzi-purple);
+  animation: pz-stepper-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pz-stepper-pulse {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.4); opacity: 0.5; }
+}
+
+// Status: done
+.pz-stepper__item--done {
+  .pz-stepper__marker {
+    background: var(--success-strong);
+    border-color: var(--success-strong);
+    color: white;
+  }
+  &::before { background: var(--success-strong); opacity: 0.5; }
+  .pz-stepper__title { color: var(--fg-2); }
+}
+
+// Status: error
+.pz-stepper__item--error {
+  .pz-stepper__marker {
+    background: var(--danger-soft);
+    border-color: var(--danger-strong);
+    color: var(--danger-strong);
+  }
+  .pz-stepper__title { color: var(--danger-strong); }
+}
+
+// Idle items appear muted
+.pz-stepper__item--idle .pz-stepper__title { color: var(--fg-3); }

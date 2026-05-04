@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { PeakziLogo } from './PeakziLogo'
 
 const meta: Meta<typeof PeakziLogo> = {
-  title: 'Brand/PeakziLogo',
+  title: 'Components/Brand/PeakziLogo',
   component: PeakziLogo,
   tags: ['autodocs'],
   parameters: {

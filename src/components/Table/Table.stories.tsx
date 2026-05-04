@@ -5,7 +5,7 @@ import type { SortDirection } from './Table'
 import { Badge } from '../Badge'
 
 const meta: Meta<typeof Table> = {
-  title: 'Data/Table',
+  title: 'Components/Data Display/Table',
   component: Table,
   tags: ['autodocs'],
   parameters: {

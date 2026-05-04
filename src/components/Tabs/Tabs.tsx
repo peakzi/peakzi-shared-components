@@ -106,7 +106,7 @@ export interface TabProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode
 }
 
-export function Tab({ tabId, className, children, onKeyDown, ...rest }: TabProps) {
+export function Tab({ tabId, className, children, onKeyDown, onClick, ...rest }: TabProps) {
   const { activeId, setActiveId, baseId } = useTabsContext()
   const isActive = activeId === tabId
 
@@ -157,9 +157,9 @@ export function Tab({ tabId, className, children, onKeyDown, ...rest }: TabProps
       ]
         .filter(Boolean)
         .join(' ')}
-      onClick={() => setActiveId(tabId)}
       onKeyDown={handleKeyDown}
       {...rest}
+      onClick={(e) => { setActiveId(tabId); onClick?.(e) }}
     >
       {children}
     </button>

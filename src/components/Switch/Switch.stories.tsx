@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { Switch, Slider } from './Switch'
+import { Switch } from './Switch'
 
 const meta: Meta<typeof Switch> = {
-  title: 'Inputs/Switch',
+  title: 'Components/Inputs/Switch',
   component: Switch,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component:
-          'Toggle switch using a native checkbox with role="switch", and a range slider with branded thumb.',
+          'Toggle switch using a native checkbox with role="switch".',
       },
     },
   },
@@ -54,48 +54,6 @@ export const SwitchGroup: Story = {
           Auto-publish blog drafts
         </Switch>
         <Switch disabled>Locked by admin</Switch>
-      </div>
-    )
-  },
-}
-
-export const SliderStory: StoryObj<typeof Slider> = {
-  name: 'Slider',
-  render: function SliderStory() {
-    const [value, setValue] = useState(72)
-    return (
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 360,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 8,
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontSize: 13,
-          }}
-        >
-          <span style={{ fontWeight: 600, color: 'var(--fg-1)' }}>Visibility threshold</span>
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              color: 'var(--fg-accent)',
-              fontWeight: 600,
-            }}
-          >
-            {value}
-          </span>
-        </div>
-        <Slider
-          value={value}
-          onChange={(e) => setValue(Number(e.target.value))}
-          aria-label="Visibility threshold"
-        />
       </div>
     )
   },

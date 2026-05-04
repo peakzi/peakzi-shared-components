@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Avatar, AvatarStack } from './Avatar'
 
 const meta: Meta<typeof Avatar> = {
-  title: 'Data/Avatar',
+  title: 'Components/Data Display/Avatar',
   component: Avatar,
   tags: ['autodocs'],
   parameters: {
@@ -17,7 +17,7 @@ const meta: Meta<typeof Avatar> = {
     initials: { control: 'text', description: 'Fallback initials when no image src' },
     alt: { control: 'text', description: 'Accessible label' },
     size: { control: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
-    variant: { control: 'select', options: ['default', 'gradient', 'outline'] },
+    variant: { control: 'select', options: ['default', 'gradient'] },
     status: { control: 'select', options: [undefined, 'online', 'away', 'busy', 'offline'] },
     ring: { control: 'boolean' },
   },

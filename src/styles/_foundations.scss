@@ -101,11 +101,15 @@
   --border-strong:   var(--neutral-300);
   --border-focus:    var(--peakzi-purple);
 
+  --ring-focus:   rgb(160 112 240 / 0.3);   // purple focus shadow
+  --ring-danger:  rgb(240 68 56 / 0.18);    // red danger shadow
+
   // ---------------------------------------------------------------------------
   // TYPOGRAPHY
   // ---------------------------------------------------------------------------
   --font-display: 'Urbanist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans:    var(--font-body);   // alias used by Phase-2 components
   --font-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
 
   // Type scale — modular, 1.25× ratio above 16px base

@@ -4,7 +4,7 @@
   "description": "Peakzi shared component library — brand-consistent UI for all Peakzi websites",
   "main": "./dist/index.cjs",
   "scripts": {
-    "dev": "storybook dev -p 6006",
+    "dev": "npm run storybook",
     "build": "vite build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

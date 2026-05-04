@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './Accordion'
 
 const meta: Meta<typeof Accordion> = {
-  title: 'Data/Accordion',
+  title: 'Components/Navigation/Accordion',
   component: Accordion,
   tags: ['autodocs'],
   parameters: {
@@ -14,10 +14,18 @@ const meta: Meta<typeof Accordion> = {
     },
   },
   argTypes: {
-    multiple: { control: 'boolean', description: 'Allow multiple items open at once' },
+    type: {
+      control: 'select',
+      options: ['single', 'multiple'],
+      description: 'Allow single or multiple items open at once',
+    },
+    collapsible: {
+      control: 'boolean',
+      description: 'Allow closing the open item (single mode only)',
+    },
   },
   args: {
-    multiple: false,
+    type: 'single',
   },
 }
 
@@ -45,14 +53,14 @@ const items = [
   },
 ]
 
-/** Interactive playground — toggle `multiple` via the Controls panel. */
+/** Interactive playground — toggle `type` via the Controls panel. */
 export const Default: Story = {
   render: (args) => (
-    <Accordion {...args} defaultOpen={['ai-citations']} style={{ maxWidth: 560 }}>
+    <Accordion {...args} defaultValue="ai-citations" style={{ maxWidth: 560 }}>
       {items.map((item) => (
-        <AccordionItem key={item.id} itemId={item.id}>
-          <AccordionTrigger itemId={item.id}>{item.title}</AccordionTrigger>
-          <AccordionContent itemId={item.id}>{item.content}</AccordionContent>
+        <AccordionItem key={item.id} id={item.id}>
+          <AccordionTrigger>{item.title}</AccordionTrigger>
+          <AccordionContent>{item.content}</AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>
@@ -62,11 +70,11 @@ export const Default: Story = {
 export const MultipleOpen: Story = {
   name: 'Multiple open',
   render: () => (
-    <Accordion multiple defaultOpen={['ai-citations', 'score']} style={{ maxWidth: 560 }}>
+    <Accordion type="multiple" defaultValue={['ai-citations', 'score']} style={{ maxWidth: 560 }}>
       {items.map((item) => (
-        <AccordionItem key={item.id} itemId={item.id}>
-          <AccordionTrigger itemId={item.id}>{item.title}</AccordionTrigger>
-          <AccordionContent itemId={item.id}>{item.content}</AccordionContent>
+        <AccordionItem key={item.id} id={item.id}>
+          <AccordionTrigger>{item.title}</AccordionTrigger>
+          <AccordionContent>{item.content}</AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>
@@ -78,9 +86,9 @@ export const AllClosed: Story = {
   render: () => (
     <Accordion style={{ maxWidth: 560 }}>
       {items.map((item) => (
-        <AccordionItem key={item.id} itemId={item.id}>
-          <AccordionTrigger itemId={item.id}>{item.title}</AccordionTrigger>
-          <AccordionContent itemId={item.id}>{item.content}</AccordionContent>
+        <AccordionItem key={item.id} id={item.id}>
+          <AccordionTrigger>{item.title}</AccordionTrigger>
+          <AccordionContent>{item.content}</AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>

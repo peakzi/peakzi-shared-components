@@ -4,7 +4,7 @@ import { Modal } from './Modal'
 import { Button } from '../Button'
 
 const meta: Meta<typeof Modal> = {
-  title: 'Overlays/Modal',
+  title: 'Components/Overlays/Modal',
   component: Modal,
   tags: ['autodocs'],
   parameters: {

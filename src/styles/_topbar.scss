@@ -1,0 +1,31 @@
+// =============================================================================
+// App topbar
+// =============================================================================
+// Sticky bar that lives at the top of .pz-app__main. Holds breadcrumbs on the
+// left, action group on the right (env switcher, theme toggle, avatar).
+// =============================================================================
+
+.pz-app__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 24px;
+  height: 56px;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: saturate(1.4) blur(8px);
+}
+
+.pz-app__topbar-start,
+.pz-app__topbar-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pz-app__topbar-end { gap: 12px; }

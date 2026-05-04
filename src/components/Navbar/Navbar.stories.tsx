@@ -3,7 +3,7 @@ import { Navbar, NavBrand, NavLinks, NavLink, NavActions } from './Navbar'
 import { Button } from '../Button'
 
 const meta: Meta<typeof Navbar> = {
-  title: 'Navigation/Navbar',
+  title: 'Components/Navigation/Navbar',
   component: Navbar,
   tags: ['autodocs'],
   parameters: {

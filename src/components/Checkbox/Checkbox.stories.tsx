@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Checkbox, Radio } from './Checkbox'
 
 const meta: Meta<typeof Checkbox> = {
-  title: 'Inputs/Checkbox',
+  title: 'Components/Inputs/Checkbox',
   component: Checkbox,
   tags: ['autodocs'],
   parameters: {
@@ -16,11 +16,17 @@ const meta: Meta<typeof Checkbox> = {
   },
   argTypes: {
     children: { control: 'text', description: 'Checkbox label' },
+    labelPosition: {
+      control: 'select',
+      options: ['left', 'right', 'top', 'bottom'],
+      description: 'Position of the label relative to the control',
+    },
     disabled: { control: 'boolean' },
     defaultChecked: { control: 'boolean' },
   },
   args: {
     children: 'Email me weekly score updates',
+    labelPosition: 'right',
     disabled: false,
     defaultChecked: false,
   },
@@ -30,7 +36,11 @@ export default meta
 type Story = StoryObj<typeof Checkbox>
 
 /** Interactive playground — toggle disabled or defaultChecked via Controls. */
-export const Default: Story = {}
+export const Default: Story = {
+  decorators: [
+    (Story, { args }) => <Story key={String(args.defaultChecked)} />,
+  ],
+}
 
 export const Checked: Story = {
   args: { defaultChecked: true, children: 'Include podcast transcripts' },
@@ -62,6 +72,18 @@ export const CheckboxGroup: Story = {
       </div>
     )
   },
+}
+
+export const LabelPositions: Story = {
+  name: 'Label positions',
+  render: () => (
+    <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+      <Checkbox defaultChecked labelPosition="right">Right (default)</Checkbox>
+      <Checkbox defaultChecked labelPosition="left">Left</Checkbox>
+      <Checkbox defaultChecked labelPosition="top">Top</Checkbox>
+      <Checkbox defaultChecked labelPosition="bottom">Bottom</Checkbox>
+    </div>
+  ),
 }
 
 export const RadioGroup: Story = {

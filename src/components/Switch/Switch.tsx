@@ -30,31 +30,3 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
   },
 )
 Switch.displayName = 'Switch'
-
-// ---------------------------------------------------------------------------
-// Slider
-// ---------------------------------------------------------------------------
-
-export interface SliderProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
-  min?: number
-  max?: number
-  step?: number
-}
-
-export const Slider = forwardRef<HTMLInputElement, SliderProps>(
-  ({ className, min = 0, max = 100, step = 1, ...rest }, ref) => {
-    return (
-      <input
-        ref={ref}
-        type="range"
-        className={['pz-slider', className].filter(Boolean).join(' ')}
-        min={min}
-        max={max}
-        step={step}
-        {...rest}
-      />
-    )
-  },
-)
-Slider.displayName = 'Slider'

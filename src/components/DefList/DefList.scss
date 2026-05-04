@@ -1,0 +1,52 @@
+// =============================================================================
+// DefList
+// =============================================================================
+
+.pz-deflist {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pz-deflist__row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:last-child { border-bottom: 0; }
+}
+
+.pz-deflist__term {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin: 0;
+  align-self: center;
+}
+
+.pz-deflist__value {
+  font-size: var(--text-sm);
+  color: var(--fg-1);
+  margin: 0;
+  min-width: 0;
+  word-break: break-word;
+}
+
+// Density: sm
+.pz-deflist--sm .pz-deflist__row {
+  padding: 6px 0;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+}
+.pz-deflist--sm .pz-deflist__value { font-size: var(--text-xs); }
+
+// Layout: stacked (term above value)
+.pz-deflist--stacked .pz-deflist__row {
+  grid-template-columns: 1fr;
+  gap: 4px;
+}

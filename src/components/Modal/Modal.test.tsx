@@ -105,10 +105,22 @@ describe('Modal', () => {
     expect(screen.getByRole('dialog')).toHaveAttribute('aria-modal', 'true')
   })
 
-  it('sets aria-labelledby to title id', () => {
-    renderModal({ title: 'Labeled Modal', labelId: 'test-label' })
-    expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby', 'test-label')
-    expect(screen.getByText('Labeled Modal').id).toBe('test-label')
+  it('sets aria-labelledby to the title element id', () => {
+    renderModal({ title: 'Labeled Modal' })
+    const dialog = screen.getByRole('dialog')
+    const labelledBy = dialog.getAttribute('aria-labelledby')
+    expect(labelledBy).toBeTruthy()
+    expect(screen.getByText('Labeled Modal').id).toBe(labelledBy)
+  })
+
+  it('uses aria-label when no title is rendered', () => {
+    renderModal({ title: undefined, 'aria-label': 'Account settings' })
+    expect(screen.getByRole('dialog', { name: 'Account settings' })).toBeInTheDocument()
+  })
+
+  it('provides a fallback accessible name when title is omitted', () => {
+    renderModal({ title: undefined })
+    expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeInTheDocument()
   })
 
   it('applies pz-modal class', () => {

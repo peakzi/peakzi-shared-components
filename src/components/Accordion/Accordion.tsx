@@ -1,162 +1,227 @@
 import {
+  useState,
+  useCallback,
+  useMemo,
+  createContext,
+  useContext,
   type ReactNode,
   type HTMLAttributes,
   type ButtonHTMLAttributes,
-  createContext,
-  useContext,
-  useState,
-  useId,
 } from 'react'
 import { ChevronDown } from 'lucide-react'
 
-// ---------------------------------------------------------------------------
-// Context
-// ---------------------------------------------------------------------------
+// =============================================================================
+// Accordion — context
+// =============================================================================
 
-interface AccordionContextValue {
-  openIds: Set<string>
+type AccordionContextValue = {
+  type: 'single' | 'multiple'
+  open: Set<string>
   toggle: (id: string) => void
-  multiple: boolean
+  collapsible: boolean
 }
 
-const AccordionContext = createContext<AccordionContextValue | null>(null)
+const AccordionCtx = createContext<AccordionContextValue | null>(null)
 
-function useAccordionContext() {
-  const ctx = useContext(AccordionContext)
-  if (!ctx) throw new Error('AccordionItem must be used inside <Accordion>')
+function useAccordion() {
+  const ctx = useContext(AccordionCtx)
+  if (!ctx) throw new Error('Accordion sub-components must be inside <Accordion>.')
   return ctx
 }
 
-// ---------------------------------------------------------------------------
-// Accordion root
-// ---------------------------------------------------------------------------
+const ItemCtx = createContext<{ id: string; isOpen: boolean } | null>(null)
+
+function useItem() {
+  const ctx = useContext(ItemCtx)
+  if (!ctx) throw new Error('AccordionTrigger/Content must be inside <AccordionItem>.')
+  return ctx
+}
+
+// =============================================================================
+// Accordion — root
+// =============================================================================
 
 export interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
-  /** Allow multiple items open simultaneously */
-  multiple?: boolean
-  /** IDs of initially open items */
-  defaultOpen?: string[]
+  /** `'single'` only allows one open item; `'multiple'` allows many. Defaults to `'single'`. */
+  type?: 'single' | 'multiple'
+  /** Item id(s) open by default. */
+  defaultValue?: string | string[]
+  /** Controlled open value(s). */
+  value?: string | string[]
+  /** Called when open value changes. */
+  onValueChange?: (value: string[]) => void
+  /** When `type='single'`, allow closing the open item. Defaults to true. */
+  collapsible?: boolean
   children?: ReactNode
 }
 
+/**
+ * **Accordion** — disclosure widget for vertical lists of expandable items.
+ *
+ * @example
+ * <Accordion type="single" defaultValue="acct-1">
+ *   <AccordionItem id="acct-1">
+ *     <AccordionTrigger>Account #1</AccordionTrigger>
+ *     <AccordionContent>…details…</AccordionContent>
+ *   </AccordionItem>
+ * </Accordion>
+ */
 export function Accordion({
-  multiple = false,
-  defaultOpen = [],
-  className,
+  type = 'single',
+  defaultValue,
+  value,
+  onValueChange,
+  collapsible = true,
   children,
+  className,
   ...rest
 }: AccordionProps) {
-  const [openIds, setOpenIds] = useState<Set<string>>(new Set(defaultOpen))
+  const initial = useMemo(() => {
+    const seed = value ?? defaultValue
+    if (seed == null) return new Set<string>()
+    return new Set(Array.isArray(seed) ? seed : [seed])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const toggle = (id: string) => {
-    setOpenIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) {
-        next.delete(id)
+  const [internal, setInternal] = useState<Set<string>>(initial)
+
+  const open = useMemo(() => {
+    if (value == null) return internal
+    return new Set(Array.isArray(value) ? value : [value])
+  }, [value, internal])
+
+  const toggle = useCallback(
+    (id: string) => {
+      const next = new Set(open)
+      const isOpen = next.has(id)
+
+      if (type === 'single') {
+        next.clear()
+        if (!isOpen) next.add(id)
+        else if (!collapsible) next.add(id)
       } else {
-        if (!multiple) next.clear()
-        next.add(id)
+        if (isOpen) next.delete(id)
+        else next.add(id)
       }
-      return next
-    })
-  }
+
+      if (value == null) setInternal(next)
+      onValueChange?.([...next])
+    },
+    [open, type, collapsible, value, onValueChange]
+  )
+
+  const cls = ['pz-accordion', className].filter(Boolean).join(' ')
 
   return (
-    <AccordionContext.Provider value={{ openIds, toggle, multiple }}>
-      <div
-        className={['pz-accordion', className].filter(Boolean).join(' ')}
-        {...rest}
-      >
+    <AccordionCtx.Provider value={{ type, open, toggle, collapsible }}>
+      <div className={cls} {...rest}>
         {children}
       </div>
-    </AccordionContext.Provider>
+    </AccordionCtx.Provider>
   )
 }
 Accordion.displayName = 'Accordion'
 
-// ---------------------------------------------------------------------------
+// =============================================================================
 // AccordionItem
-// ---------------------------------------------------------------------------
+// =============================================================================
 
 export interface AccordionItemProps extends HTMLAttributes<HTMLDivElement> {
-  /** Unique identifier for this item */
-  itemId: string
+  /** Stable id used to track open state. */
+  id: string
   children?: ReactNode
 }
 
-export function AccordionItem({ itemId, className, children, ...rest }: AccordionItemProps) {
-  const { openIds } = useAccordionContext()
-  const isOpen = openIds.has(itemId)
+export function AccordionItem({ id, children, className, ...rest }: AccordionItemProps) {
+  const { open } = useAccordion()
+  const isOpen = open.has(id)
+  const cls = [
+    'pz-accordion__item',
+    isOpen && 'pz-accordion__item--open',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
-    <div
-      className={['pz-accordion__item', isOpen && 'is-open', className]
-        .filter(Boolean)
-        .join(' ')}
-      {...rest}
-    >
-      {children}
-    </div>
+    <ItemCtx.Provider value={{ id, isOpen }}>
+      <div className={cls} {...rest}>
+        {children}
+      </div>
+    </ItemCtx.Provider>
   )
 }
 AccordionItem.displayName = 'AccordionItem'
 
-// ---------------------------------------------------------------------------
+// =============================================================================
 // AccordionTrigger
-// ---------------------------------------------------------------------------
+// =============================================================================
 
-export interface AccordionTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Must match the parent AccordionItem's itemId */
-  itemId: string
+export interface AccordionTriggerProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
+  /** Hide the chevron indicator. */
+  hideIndicator?: boolean
   children?: ReactNode
 }
 
-export function AccordionTrigger({ itemId, className, children, ...rest }: AccordionTriggerProps) {
-  const { openIds, toggle } = useAccordionContext()
-  const isOpen = openIds.has(itemId)
-  const baseId = useId()
-  const triggerId = `${baseId}-trigger`
-  const panelId = `${baseId}-panel`
+export function AccordionTrigger({
+  hideIndicator,
+  children,
+  className,
+  onClick,
+  ...rest
+}: AccordionTriggerProps) {
+  const { toggle } = useAccordion()
+  const { id, isOpen } = useItem()
+  const cls = ['pz-accordion__trigger', className].filter(Boolean).join(' ')
 
   return (
     <button
       type="button"
-      id={triggerId}
+      className={cls}
       aria-expanded={isOpen}
-      aria-controls={panelId}
-      className={['pz-accordion__trigger', className].filter(Boolean).join(' ')}
-      onClick={() => toggle(itemId)}
-      data-panel-id={panelId}
+      aria-controls={`${id}-panel`}
+      id={`${id}-trigger`}
+      onClick={(e) => {
+        toggle(id)
+        onClick?.(e)
+      }}
       {...rest}
     >
-      <span className="pz-accordion__trigger-text">{children}</span>
-      <ChevronDown size={16} className="pz-accordion__chevron" aria-hidden />
+      <span className="pz-accordion__trigger-content">{children}</span>
+      {!hideIndicator && (
+        <ChevronDown
+          size={16}
+          className="pz-accordion__indicator"
+          aria-hidden="true"
+        />
+      )}
     </button>
   )
 }
 AccordionTrigger.displayName = 'AccordionTrigger'
 
-// ---------------------------------------------------------------------------
+// =============================================================================
 // AccordionContent
-// ---------------------------------------------------------------------------
+// =============================================================================
 
 export interface AccordionContentProps extends HTMLAttributes<HTMLDivElement> {
-  /** Optional id hook for consumers mirroring the trigger's itemId */
-  itemId?: string
   children?: ReactNode
 }
 
-export function AccordionContent({ itemId, className, children, ...rest }: AccordionContentProps) {
+export function AccordionContent({ children, className, ...rest }: AccordionContentProps) {
+  const { id, isOpen } = useItem()
+  const cls = ['pz-accordion__content', className].filter(Boolean).join(' ')
+
   return (
     <div
+      id={`${id}-panel`}
       role="region"
-      data-item-id={itemId}
-      className={['pz-accordion__content', className].filter(Boolean).join(' ')}
+      aria-labelledby={`${id}-trigger`}
+      hidden={!isOpen}
+      className={cls}
       {...rest}
     >
-      <div className="pz-accordion__content-inner">
-        <div>{children}</div>
-      </div>
+      {children}
     </div>
   )
 }

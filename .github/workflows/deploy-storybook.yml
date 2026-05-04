@@ -1,0 +1,37 @@
+name: Deploy Storybook
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  deploy-storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v3
+
+      - name: Installing Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.18.0"
+
+      - name: Installing dependencies
+        run: npm install
+
+      - name: Type checking
+        run: npm run typecheck
+
+      - name: Building Storybook
+        run: npm run build-storybook
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to S3 bucket
+        run: aws s3 sync storybook-static/ s3://peakzi-storybook/ --delete

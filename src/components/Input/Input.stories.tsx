@@ -8,7 +8,7 @@ import { Field, Input, Textarea, Select } from './Input'
 // ---------------------------------------------------------------------------
 
 const meta: Meta<typeof Input> = {
-  title: 'Inputs/Input',
+  title: 'Components/Inputs/Input',
   component: Input,
   tags: ['autodocs'],
   parameters: {
@@ -17,6 +17,7 @@ const meta: Meta<typeof Input> = {
         component:
           'Text, textarea, and select controls with consistent borders, focus rings, and error styling. Always pair with a `Field` label for accessibility.',
       },
+      source: { type: 'dynamic' },
     },
   },
   argTypes: {
@@ -25,6 +26,7 @@ const meta: Meta<typeof Input> = {
     disabled: { control: 'boolean' },
     hasError: { control: 'boolean' },
     defaultValue: { control: 'text', description: 'Initial value' },
+    error: { control: 'text', description: 'Error message shown below the field (Field prop)' },
   },
   args: {
     placeholder: 'Enter a value…',
@@ -32,6 +34,7 @@ const meta: Meta<typeof Input> = {
     disabled: false,
     hasError: false,
     defaultValue: 'Ana Ruiz',
+    error: '',
   },
 }
 
@@ -44,11 +47,17 @@ type Story = StoryObj<typeof Input>
 
 /** Interactive playground — change size, disabled, hasError via Controls. */
 export const Default: Story = {
-  render: (args) => (
-    <Field label="Customer name" hint="As it appears on the invoice." id="name">
-      <Input id="name" {...args} />
-    </Field>
-  ),
+  decorators: [
+    (Story, { args }) => <Story key={String(args.defaultValue)} />,
+  ],
+  render: (args) => {
+    const { error, ...inputArgs } = args as typeof args & { error?: string }
+    return (
+      <Field label="Customer name" hint="As it appears on the invoice." id="name" error={error || undefined}>
+        <Input id="name" {...inputArgs} />
+      </Field>
+    )
+  },
 }
 
 export const WithLeadIcon: Story = {
@@ -71,14 +80,16 @@ export const WithError: Story = {
 
 export const PasswordToggle: Story = {
   name: 'Password toggle',
-  render: function PasswordToggleStory() {
+  render: function PasswordToggleStory(args) {
     const [show, setShow] = useState(false)
     return (
       <Field label="Password" id="password">
         <Input
           id="password"
-          type={show ? 'text' : 'password'}
           placeholder="At least 12 characters"
+          {...args}
+          type={show ? 'text' : 'password'}
+          defaultValue={undefined}
           trailIcon={
             <button
               type="button"
