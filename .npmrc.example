@@ -1,0 +1,6 @@
+# Add this to .npmrc in any project that consumes @peakzi/components
+# Replace YOUR_GITHUB_PAT with a token that has read:packages scope
+# In CI, use ${{ secrets.GITHUB_TOKEN }} or a PAT stored as a secret
+
+@peakzi:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
