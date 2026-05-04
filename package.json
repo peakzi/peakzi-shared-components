@@ -76,6 +76,10 @@
       "require": "./dist/*.cjs"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peakzi/peakzi-shared-components.git"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
