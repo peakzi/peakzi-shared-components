@@ -88,6 +88,44 @@
 }
 
 // =============================================================================
+// BadgeAnchor — overlay badge pinned to a corner of its child
+// =============================================================================
+
+.pz-badge-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.pz-badge-anchor__badge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  // White ring separates the badge from the element beneath
+  box-shadow: 0 0 0 2px var(--bg);
+
+  &--dot {
+    min-width: 8px;
+    width: 8px;
+    height: 8px;
+    padding: 0;
+  }
+
+  &--top-right    { top: 0; right: 0;    transform: translate(50%, -50%); }
+  &--top-left     { top: 0; left: 0;     transform: translate(-50%, -50%); }
+  &--bottom-right { bottom: 0; right: 0; transform: translate(50%, 50%); }
+  &--bottom-left  { bottom: 0; left: 0;  transform: translate(-50%, 50%); }
+}
+
+// =============================================================================
 // Chip
 // =============================================================================
 

@@ -9,28 +9,123 @@
   min-height: 0;
 }
 
+// Brand row ----------------------------------------------------------
+
 .pz-sidenav__brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   height: 56px;
-  padding: 0 16px;
+  padding: 0 var(--space-3) 0 var(--space-4);
   border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
 
+.pz-sidenav__brand-content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+// Brand icon: hidden in expanded mode, revealed in collapsed mode
+.pz-sidenav__brand-icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+// Compact icon button in brand row (close) ----------------------------
+
+.pz-sidenav__close-btn {
+  display: none; // visible on mobile only (overridden below)
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--fg-3);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto; // push to right edge of brand row
+  transition: background var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--fg-1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 1px;
+  }
+}
+
+// Collapse button: inline in brand row, right-aligned (desktop only) -
+
+.pz-sidenav__collapse-btn {
+  display: none; // hidden on mobile (revealed at ≥768px)
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-left: auto; // push to right edge of brand row
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--fg-3);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--fg-1);
+    border-color: var(--border);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 1px;
+  }
+}
+
+// Desktop: show collapse btn. Mobile: show close btn instead.
+@media (min-width: 768px) {
+  .pz-sidenav__collapse-btn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 767px) {
+  .pz-sidenav__close-btn {
+    display: inline-flex;
+  }
+}
+
+// Body ---------------------------------------------------------------
+
 .pz-sidenav__body {
   flex: 1 1 auto;
   overflow-y: auto;
-  padding: 16px 8px;
+  padding: var(--space-4) var(--space-2);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-5);
 }
+
+// Footer -------------------------------------------------------------
 
 .pz-sidenav__footer {
   border-top: 1px solid var(--border-subtle);
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   flex-shrink: 0;
 }
 
@@ -39,7 +134,7 @@
 .pz-sidenav__group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .pz-sidenav__group-label {
@@ -48,7 +143,7 @@
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
   color: var(--fg-3);
-  padding: 4px 12px;
+  padding: var(--space-1) var(--space-3);
 }
 
 .pz-sidenav__items {
@@ -65,9 +160,9 @@
 .pz-sidenav__item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 10px; // intentional midpoint between space-2/space-3 for icon-label rhythm
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   border: 0;
   border-radius: var(--radius-md);
   background: transparent;
@@ -95,7 +190,7 @@
 
 .pz-sidenav__item--active,
 .pz-sidenav__item[aria-current='page'] {
-  background: var(--surface-3);
+  background: var(--peakzi-navy-100);
   color: var(--fg-1);
   font-weight: var(--weight-semibold);
 }
@@ -132,8 +227,93 @@
   flex-shrink: 0;
 }
 
-// Collapsed rail support -------------------------------------------
-// When .pz-app--rail-collapsed is set on the shell, hide labels.
+// Brand badge override — wider tracking for ADMIN/BETA labels ---
+
+.pz-sidenav__badge {
+  letter-spacing: var(--tracking-wider);
+}
+
+// Collapsed state (desktop icon-only rail) --------------------------
+
+.pz-sidenav--collapsed {
+  // Hide wordmark + badge, reveal the compact icon
+  .pz-sidenav__brand-content,
+  .pz-sidenav__badge {
+    display: none;
+  }
+
+  .pz-sidenav__brand-icon {
+    display: inline-flex;
+  }
+
+  // Brand row: center the icon; collapse btn is pulled out of flow via position:absolute
+  .pz-sidenav__brand {
+    position: relative;
+    justify-content: center;
+    padding: 0;
+  }
+
+  // Collapse btn: absolute so it doesn't push the centered icon off-axis
+  .pz-sidenav__collapse-btn {
+    position: absolute;
+    right: var(--space-2);
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0;
+  }
+
+  // Center icon in item
+  .pz-sidenav__item {
+    justify-content: center;
+    padding: var(--space-2);
+  }
+
+  .pz-sidenav__item-icon { opacity: 1; }
+
+  // Hide text-only elements
+  .pz-sidenav__group-label,
+  .pz-sidenav__item-label,
+  .pz-sidenav__item-badge {
+    display: none;
+  }
+}
+
+// Mobile overlay (behind drawer, above content) --------------------
+
+.pz-sidenav__overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--surface-overlay);
+  z-index: calc(var(--z-modal) - 1);
+  animation: pz-sidenav-fade-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes pz-sidenav-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// Mobile drawer (< 768px) ------------------------------------------
+
+@media (max-width: 767px) {
+  .pz-sidenav {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 280px;
+    z-index: var(--z-modal);
+    background: var(--surface-1);
+    transform: translateX(-100%);
+    transition: transform var(--duration-base) var(--ease-out),
+                box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  .pz-sidenav--mobile-open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+// Legacy collapsed support via shell class (kept for back-compat) ---
 
 .pz-app--rail-collapsed {
   .pz-sidenav__group-label,

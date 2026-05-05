@@ -46,3 +46,25 @@
 
 // Collapsed rail (icon-only) — toggle by adding .pz-app--rail-collapsed
 .pz-app--rail-collapsed { grid-template-columns: 64px 1fr; }
+
+// Tablet — auto-collapse rail to icon-only width
+@media (max-width: 1023px) and (min-width: 768px) {
+  .pz-app { grid-template-columns: 64px 1fr; }
+}
+
+// Mobile — single column; rail becomes a fixed-position drawer (see SideNav.scss)
+@media (max-width: 767px) {
+  .pz-app {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'topbar'
+      'main'
+      'footer';
+  }
+
+  // display: contents removes the rail wrapper from the grid flow
+  // while keeping the SideNav child in the DOM for the fixed-position drawer
+  .pz-app__rail {
+    display: contents;
+  }
+}

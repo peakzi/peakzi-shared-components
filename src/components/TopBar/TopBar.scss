@@ -1,0 +1,70 @@
+// =============================================================================
+// TopBar — horizontal header for the pz-app__topbar grid area
+// =============================================================================
+
+.pz-topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 56px;
+  padding: 0 var(--space-6);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-1);
+  min-width: 0;
+}
+
+// Hamburger button — visible on mobile only -------------------------
+
+.pz-topbar__menu-btn {
+  display: none; // hidden on desktop (overridden at ≤767px)
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--fg-2);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--fg-1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 1px;
+  }
+}
+
+@media (max-width: 767px) {
+  .pz-topbar {
+    padding: 0 var(--space-4);
+  }
+
+  .pz-topbar__menu-btn {
+    display: inline-flex;
+  }
+}
+
+// Slots ------------------------------------------------------------
+
+.pz-topbar__start {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.pz-topbar__end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  margin-left: auto;
+}

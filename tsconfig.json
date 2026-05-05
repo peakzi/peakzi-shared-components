@@ -19,5 +19,6 @@
     "types": ["node"]
   },
   "include": ["src", ".storybook"],
-  "exclude": ["node_modules", "dist", "**/*.stories.tsx", "**/*.test.tsx"]
+  "exclude": ["node_modules", "dist", "**/*.stories.tsx", "**/*.test.tsx"],
+  "references": [{ "path": "./tsconfig.test.json" }]
 }

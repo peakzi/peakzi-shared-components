@@ -1,2 +1,2 @@
-export { Badge, Chip } from './Badge'
-export type { BadgeProps, BadgeVariant, BadgeSize, ChipProps } from './Badge'
+export { Badge, Chip, BadgeAnchor } from './Badge'
+export type { BadgeProps, BadgeVariant, BadgeSize, ChipProps, BadgeAnchorProps, BadgePosition } from './Badge'

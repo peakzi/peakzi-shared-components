@@ -17,11 +17,13 @@ const withTheme: Decorator = (Story, context) => {
   const theme = (context.globals['theme'] as string | undefined) ?? 'light'
   document.documentElement.setAttribute('data-theme', theme)
 
+  const isFullscreen = context.parameters['layout'] === 'fullscreen'
+
   return (
     <div
       className="peakzi-base"
       style={{
-        padding: '2rem',
+        padding: isFullscreen ? 0 : '2rem',
         minHeight: '100vh',
         background: 'var(--bg)',
         color: 'var(--fg)',

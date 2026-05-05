@@ -1,5 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { useState } from 'react'
+import {
+  Users,
+  Building2,
+  ClipboardList,
+  Settings,
+  Search,
+  FileText,
+  Menu,
+} from 'lucide-react'
 import { SideNav, SideNavGroup, SideNavItem } from './SideNav'
+import { TopBar } from '../TopBar'
+import { PeakziLogo } from '../PeakziLogo'
 
 const meta: Meta<typeof SideNav> = {
   title: 'Components/App Shell/SideNav',
@@ -8,7 +20,9 @@ const meta: Meta<typeof SideNav> = {
   parameters: {
     docs: {
       description: {
-        component: 'Vertical navigation rail for admin app shells. Compose with SideNavGroup and SideNavItem. The `brand` slot is a flex row with `gap: 8px` — just pass children directly, no wrapper needed.',
+        component:
+          'Vertical navigation rail for admin app shells. Compose with SideNavGroup and SideNavItem. ' +
+          'Use `collapsible` for a desktop collapse toggle. Use `mobileOpen` + `onMobileClose` to control the mobile drawer.',
       },
     },
     layout: 'fullscreen',
@@ -42,6 +56,7 @@ export const WithBrand: Story = {
       <SideNav
         brand={<span style={{ fontWeight: 700 }}>peakzi</span>}
         badge="ADMIN"
+        badgeVariant="brand"
       >
         <SideNavGroup label="Customers">
           <SideNavItem href="/accounts" active>Accounts</SideNavItem>
@@ -74,6 +89,40 @@ export const WithBrandNoBadge: Story = {
   ),
 }
 
+export const BadgeVariants: Story = {
+  name: 'Brand badge variants',
+  render: () => (
+    <div style={{ display: 'flex', gap: 16 }}>
+      {(['brand', 'warning', 'danger', 'success', 'info', 'outline'] as const).map((v) => (
+        <div key={v} style={{ width: 200, height: 80, border: '1px solid #e5e7eb' }}>
+          <SideNav
+            brand={<span style={{ fontWeight: 700, fontSize: 14 }}>peakzi</span>}
+            badge={v.toUpperCase()}
+            badgeVariant={v}
+          />
+        </div>
+      ))}
+    </div>
+  ),
+}
+
+export const BadgeSizes: Story = {
+  name: 'Brand badge sizes',
+  render: () => (
+    <div style={{ display: 'flex', gap: 16 }}>
+      {(['sm', 'lg'] as const).map((s) => (
+        <div key={s} style={{ width: 200, height: 80, border: '1px solid #e5e7eb' }}>
+          <SideNav
+            brand={<span style={{ fontWeight: 700, fontSize: 14 }}>peakzi</span>}
+            badge={s.toUpperCase()}
+            badgeSize={s}
+          />
+        </div>
+      ))}
+    </div>
+  ),
+}
+
 export const WithBadges: Story = {
   name: 'With item badges',
   render: () => (
@@ -86,4 +135,240 @@ export const WithBadges: Story = {
       </SideNav>
     </div>
   ),
+}
+
+export const WithIcons: Story = {
+  name: 'With icons',
+  render: () => (
+    <div style={{ width: 240, height: 500, border: '1px solid #e5e7eb' }}>
+      <SideNav
+        brand={<span style={{ fontWeight: 700 }}>peakzi</span>}
+        badge="ADMIN"
+        badgeVariant="brand"
+      >
+        <SideNavGroup label="Customers">
+          <SideNavItem href="/accounts" icon={<Users size={16} />} active>Accounts</SideNavItem>
+          <SideNavItem href="/business" icon={<Building2 size={16} />}>Business</SideNavItem>
+          <SideNavItem href="/content" icon={<FileText size={16} />}>Content Generator</SideNavItem>
+        </SideNavGroup>
+        <SideNavGroup label="Operations">
+          <SideNavItem href="/admin" icon={<ClipboardList size={16} />}>Admin Tasks</SideNavItem>
+          <SideNavItem href="/talent" icon={<Search size={16} />}>Talent Search</SideNavItem>
+          <SideNavItem href="/settings" icon={<Settings size={16} />}>Settings</SideNavItem>
+        </SideNavGroup>
+      </SideNav>
+    </div>
+  ),
+}
+
+export const Collapsible: Story = {
+  name: 'Collapsible (desktop toggle)',
+  render: function CollapsibleStory() {
+    const [collapsed, setCollapsed] = useState(false)
+    return (
+      <div
+        style={{
+          width: collapsed ? 64 : 240,
+          height: 560,
+          border: '1px solid #e5e7eb',
+          transition: 'width 220ms cubic-bezier(0.22, 1, 0.36, 1)',
+          overflow: 'hidden',
+        }}
+      >
+        <SideNav
+          brand={<PeakziLogo variant="color" size="sm" />}
+          brandIcon={<PeakziLogo variant="icon" size="xs" />}
+          badge="ADMIN"
+          badgeVariant="brand"
+          collapsible
+          collapsed={collapsed}
+          onCollapsedChange={setCollapsed}
+        >
+          <SideNavGroup label="Customers">
+            <SideNavItem href="/accounts" icon={<Users size={16} />} active>
+              Accounts
+            </SideNavItem>
+            <SideNavItem href="/business" icon={<Building2 size={16} />}>
+              Business
+            </SideNavItem>
+            <SideNavItem href="/content" icon={<FileText size={16} />}>
+              Content Generator
+            </SideNavItem>
+          </SideNavGroup>
+          <SideNavGroup label="Operations">
+            <SideNavItem href="/admin" icon={<ClipboardList size={16} />}>
+              Admin Tasks
+            </SideNavItem>
+            <SideNavItem href="/talent" icon={<Search size={16} />}>
+              Talent Search
+            </SideNavItem>
+            <SideNavItem href="/settings" icon={<Settings size={16} />}>
+              Settings
+            </SideNavItem>
+          </SideNavGroup>
+        </SideNav>
+      </div>
+    )
+  },
+}
+
+export const MobileDrawer: Story = {
+  name: 'Mobile drawer',
+  parameters: {
+    layout: 'fullscreen',
+    // Force a mobile viewport so the drawer CSS (max-width: 767px) activates
+    viewport: { defaultViewport: 'mobile2' },
+  },
+  render: function MobileDrawerStory() {
+    const [open, setOpen] = useState(false)
+    return (
+      <div style={{ minHeight: 600, background: '#f5f5f9', position: 'relative' }}>
+        {/* Simulated TopBar */}
+        <div
+          style={{
+            height: 56,
+            background: '#fff',
+            borderBottom: '1px solid #e5e7eb',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 16px',
+            gap: 12,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Open navigation"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 36,
+              height: 36,
+              border: 0,
+              borderRadius: 8,
+              background: 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            <Menu size={20} />
+          </button>
+          <span style={{ fontWeight: 600 }}>My App</span>
+        </div>
+
+        {/* Page content */}
+        <div style={{ padding: 24, color: '#52526a', fontSize: 14 }}>
+          Click ☰ to open the nav. The X in the drawer header closes it.
+        </div>
+
+        {/* SideNav as drawer — X close button appears automatically in brand row */}
+        <SideNav
+          brand={<span style={{ fontWeight: 700 }}>peakzi</span>}
+          badge="ADMIN"
+          badgeVariant="brand"
+          mobileOpen={open}
+          onMobileClose={() => setOpen(false)}
+        >
+          <SideNavGroup label="Customers">
+            <SideNavItem href="/accounts" icon={<Users size={16} />} active>
+              Accounts
+            </SideNavItem>
+            <SideNavItem href="/business" icon={<Building2 size={16} />}>
+              Business
+            </SideNavItem>
+          </SideNavGroup>
+          <SideNavGroup label="Operations">
+            <SideNavItem href="/admin" icon={<ClipboardList size={16} />}>
+              Admin Tasks
+            </SideNavItem>
+            <SideNavItem href="/settings" icon={<Settings size={16} />}>
+              Settings
+            </SideNavItem>
+          </SideNavGroup>
+        </SideNav>
+      </div>
+    )
+  },
+}
+
+// =============================================================================
+// Full app shell — wires TopBar + SideNav together in the pz-app grid
+// =============================================================================
+
+export const AppShell: Story = {
+  name: 'App shell (desktop + mobile)',
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story:
+          'Full responsive shell. On desktop (≥768 px) the rail is always visible and the hamburger is hidden. ' +
+          'Switch to a mobile viewport to see the hamburger appear; tapping it slides the SideNav in as an overlay.',
+      },
+    },
+  },
+  render: function AppShellStory() {
+    const [drawerOpen, setDrawerOpen] = useState(false)
+    const [collapsed, setCollapsed] = useState(false)
+
+    return (
+      <div
+        className={['pz-app', collapsed && 'pz-app--rail-collapsed'].filter(Boolean).join(' ')}
+        style={{ minHeight: '100vh' }}
+      >
+        {/* Rail — hidden from grid on mobile, becomes a fixed overlay via SideNav */}
+        <aside className="pz-app__rail">
+          <SideNav
+            brand={<PeakziLogo variant="color" size="sm" />}
+            brandIcon={<PeakziLogo variant="icon" size="xs" />}
+            badge="ADMIN"
+            badgeVariant="brand"
+            collapsible
+            collapsed={collapsed}
+            onCollapsedChange={setCollapsed}
+            mobileOpen={drawerOpen}
+            onMobileClose={() => setDrawerOpen(false)}
+          >
+            <SideNavGroup label="Customers">
+              <SideNavItem href="/accounts" icon={<Users size={16} />} active>
+                Accounts
+              </SideNavItem>
+              <SideNavItem href="/business" icon={<Building2 size={16} />}>
+                Business
+              </SideNavItem>
+              <SideNavItem href="/content" icon={<FileText size={16} />}>
+                Content Generator
+              </SideNavItem>
+            </SideNavGroup>
+            <SideNavGroup label="Operations">
+              <SideNavItem href="/admin" icon={<ClipboardList size={16} />}>
+                Admin Tasks
+              </SideNavItem>
+              <SideNavItem href="/talent" icon={<Search size={16} />}>
+                Talent Search
+              </SideNavItem>
+              <SideNavItem href="/settings" icon={<Settings size={16} />}>
+                Settings
+              </SideNavItem>
+            </SideNavGroup>
+          </SideNav>
+        </aside>
+
+        {/* TopBar — rendered directly into the grid area; hamburger visible on mobile only */}
+        <TopBar
+          className="pz-app__topbar"
+          onMenuClick={() => setDrawerOpen(true)}
+          start={<span style={{ fontWeight: 600, fontSize: 15 }}>Dashboard</span>}
+        />
+
+        {/* Main content */}
+        <main className="pz-app__main">
+          <div className="pz-app__main-inner" style={{ color: 'var(--fg-2)', fontSize: 14 }}>
+            <p>Resize the canvas below 768 px to see the hamburger appear and the rail slide in as a drawer.</p>
+            <p>On desktop, use the › button on the right edge of the rail to collapse to icon-only mode.</p>
+          </div>
+        </main>
+      </div>
+    )
+  },
 }

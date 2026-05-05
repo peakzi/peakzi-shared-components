@@ -1,20 +1,48 @@
-import { type ReactNode, type HTMLAttributes, type MouseEventHandler } from 'react'
-
-// =============================================================================
-// SideNav — root
-// =============================================================================
+import {
+  type ReactNode,
+  type HTMLAttributes,
+  type MouseEventHandler,
+  useState,
+  useEffect,
+} from 'react'
+import { createPortal } from 'react-dom'
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { Badge } from '../Badge'
+import type { BadgeVariant, BadgeSize } from '../Badge'
 
 export interface SideNavProps extends HTMLAttributes<HTMLElement> {
-  /** Logo or brand block at the top of the rail. */
+  /** Logo or brand block at the top of the rail (shown when expanded). */
   brand?: ReactNode
+  /** Compact icon shown instead of `brand` when the rail is collapsed. */
+  brandIcon?: ReactNode
   /** Optional badge text shown after the brand (e.g. "ADMIN", "BETA"). Omit to hide. */
   badge?: string
+  /** Variant for the brand badge. Defaults to 'brand'. */
+  badgeVariant?: BadgeVariant
+  /** Size for the brand badge. Defaults to 'sm'. */
+  badgeSize?: BadgeSize
   /** `<SideNavGroup>` children. */
   children?: ReactNode
   /** Optional bottom-pinned content (e.g. user card, status). */
   footer?: ReactNode
   /** Accessible label for the nav landmark. Defaults to "Primary". */
   'aria-label'?: string
+
+  // Collapse (desktop icon-only mode) --------------------------------
+  /** Show a collapse/expand chevron in the brand header row (desktop only). */
+  collapsible?: boolean
+  /** Controlled collapsed state. Omit to use internal state. */
+  collapsed?: boolean
+  /** Initial collapsed state when uncontrolled. Defaults to false. */
+  defaultCollapsed?: boolean
+  /** Called when the collapsed state changes. */
+  onCollapsedChange?: (collapsed: boolean) => void
+
+  // Mobile drawer ----------------------------------------------------
+  /** Whether the nav is open as a slide-in drawer on mobile (< 768px). */
+  mobileOpen?: boolean
+  /** Called when the mobile overlay or the built-in close button is clicked. */
+  onMobileClose?: () => void
 }
 
 /**
@@ -23,39 +51,115 @@ export interface SideNavProps extends HTMLAttributes<HTMLElement> {
  * Compose with `<SideNavGroup>` and `<SideNavItem>`. Sits inside
  * `.pz-app__rail` (see `_layouts.scss`).
  *
+ * - `collapsible` — adds a chevron in the top-right of the brand row (desktop).
+ * - `mobileOpen` + `onMobileClose` — turns the nav into a slide-in drawer on mobile.
+ *   An X button appears automatically in the brand row on mobile; no extra footer needed.
+ *
  * @example
- * <SideNav brand={<PeakziLogo size="sm" />}>
+ * <SideNav
+ *   brand={<PeakziLogo size="sm" />}
+ *   collapsible
+ *   mobileOpen={drawerOpen}
+ *   onMobileClose={() => setDrawerOpen(false)}
+ * >
  *   <SideNavGroup label="Customers">
  *     <SideNavItem icon={<Users />} active>Accounts</SideNavItem>
- *     <SideNavItem icon={<Building />}>Business</SideNavItem>
- *   </SideNavGroup>
- *   <SideNavGroup label="Operations">
- *     <SideNavItem icon={<ClipboardList />}>Admin tasks</SideNavItem>
  *   </SideNavGroup>
  * </SideNav>
  */
 export function SideNav({
   brand,
+  brandIcon,
   badge,
+  badgeVariant = 'brand',
+  badgeSize = 'sm',
   footer,
   children,
   className,
   'aria-label': ariaLabel = 'Primary',
+  collapsible = false,
+  collapsed: collapsedProp,
+  defaultCollapsed = false,
+  onCollapsedChange,
+  mobileOpen = false,
+  onMobileClose,
   ...rest
 }: SideNavProps) {
-  const cls = ['pz-sidenav', className].filter(Boolean).join(' ')
+  const isControlled = collapsedProp !== undefined
+  const [collapsedState, setCollapsedState] = useState(defaultCollapsed)
+  const collapsed = isControlled ? collapsedProp : collapsedState
+
+  // Portal mount guard — avoids SSR mismatch
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const toggle = () => {
+    const next = !collapsed
+    if (!isControlled) setCollapsedState(next)
+    onCollapsedChange?.(next)
+  }
+
+  const cls = [
+    'pz-sidenav',
+    collapsed && 'pz-sidenav--collapsed',
+    mobileOpen && 'pz-sidenav--mobile-open',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  const hasBrandRow = brand || brandIcon || badge || collapsible || onMobileClose
 
   return (
-    <nav className={cls} aria-label={ariaLabel} {...rest}>
-      {(brand || badge) && (
-        <div className="pz-sidenav__brand">
-          {brand}
-          {badge && <span className="pz-sidenav__badge pz-badge pz-badge--purple pz-badge--sm">{badge}</span>}
-        </div>
-      )}
-      <div className="pz-sidenav__body">{children}</div>
-      {footer && <div className="pz-sidenav__footer">{footer}</div>}
-    </nav>
+    <>
+      {mounted &&
+        mobileOpen &&
+        createPortal(
+          <div className="pz-sidenav__overlay" onClick={onMobileClose} aria-hidden="true" />,
+          document.body,
+        )}
+      <nav className={cls} aria-label={ariaLabel} {...rest}>
+        {hasBrandRow && (
+          <div className="pz-sidenav__brand">
+            {/* Full wordmark — hidden in collapsed mode */}
+            {brand && <span className="pz-sidenav__brand-content">{brand}</span>}
+            {/* Compact icon — shown only in collapsed mode */}
+            {brandIcon && <span className="pz-sidenav__brand-icon">{brandIcon}</span>}
+            {badge && (
+              <Badge variant={badgeVariant} size={badgeSize} className="pz-sidenav__badge">
+                {badge}
+              </Badge>
+            )}
+            {/* Close button — shown on mobile only (CSS), when drawer is used */}
+            {onMobileClose && (
+              <button
+                type="button"
+                className="pz-sidenav__close-btn"
+                onClick={onMobileClose}
+                aria-label="Close navigation"
+              >
+                <X size={16} />
+              </button>
+            )}
+            {/* Collapse chevron — right-aligned in brand row (desktop only via CSS) */}
+            {collapsible && (
+              <button
+                type="button"
+                className="pz-sidenav__collapse-btn"
+                onClick={toggle}
+                aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
+              >
+                {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+              </button>
+            )}
+          </div>
+        )}
+        <div className="pz-sidenav__body">{children}</div>
+        {footer && <div className="pz-sidenav__footer">{footer}</div>}
+      </nav>
+    </>
   )
 }
 SideNav.displayName = 'SideNav'
@@ -111,17 +215,17 @@ export function SideNavItem({
   children,
   className,
 }: SideNavItemProps) {
-  const cls = [
-    'pz-sidenav__item',
-    active && 'pz-sidenav__item--active',
-    className,
-  ]
+  const cls = ['pz-sidenav__item', active && 'pz-sidenav__item--active', className]
     .filter(Boolean)
     .join(' ')
 
   const inner = (
     <>
-      {icon && <span className="pz-sidenav__item-icon" aria-hidden="true">{icon}</span>}
+      {icon && (
+        <span className="pz-sidenav__item-icon" aria-hidden="true">
+          {icon}
+        </span>
+      )}
       <span className="pz-sidenav__item-label">{children}</span>
       {badge != null && <span className="pz-sidenav__item-badge">{badge}</span>}
     </>
@@ -130,12 +234,7 @@ export function SideNavItem({
   return (
     <li>
       {href ? (
-        <a
-          className={cls}
-          href={href}
-          aria-current={active ? 'page' : undefined}
-          onClick={onClick}
-        >
+        <a className={cls} href={href} aria-current={active ? 'page' : undefined} onClick={onClick}>
           {inner}
         </a>
       ) : (

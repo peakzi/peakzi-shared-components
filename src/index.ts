@@ -53,6 +53,9 @@ export type { PageHeaderProps } from './components/PageHeader'
 export { SideNav, SideNavGroup, SideNavItem } from './components/SideNav'
 export type { SideNavProps, SideNavGroupProps, SideNavItemProps } from './components/SideNav'
 
+export { TopBar } from './components/TopBar'
+export type { TopBarProps } from './components/TopBar'
+
 export { AppFooter } from './components/AppFooter'
 export type { AppFooterProps, AppFooterPosition, AppFooterVersionPlacement } from './components/AppFooter'
 

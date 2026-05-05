@@ -1,6 +1,48 @@
 import { type ReactNode, type HTMLAttributes, type MouseEventHandler } from 'react'
 
 // ---------------------------------------------------------------------------
+// BadgeAnchor — positions a badge overlay on any element
+// ---------------------------------------------------------------------------
+
+export type BadgePosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
+
+export interface BadgeAnchorProps {
+  /** The element the badge is anchored to */
+  children: ReactNode
+  /** Badge label (count, "New", etc.). Omit for a plain dot. */
+  content?: ReactNode
+  variant?: BadgeVariant
+  /** Corner to pin the badge to. Defaults to 'top-right'. */
+  position?: BadgePosition
+  className?: string
+}
+
+export function BadgeAnchor({
+  children,
+  content,
+  variant = 'danger',
+  position = 'top-right',
+  className,
+}: BadgeAnchorProps) {
+  const badgeCls = [
+    'pz-badge-anchor__badge',
+    `pz-badge-anchor__badge--${position}`,
+    `pz-badge--${variant}`,
+    !content && 'pz-badge-anchor__badge--dot',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  return (
+    <span className={['pz-badge-anchor', className].filter(Boolean).join(' ')}>
+      {children}
+      <span className={badgeCls}>{content}</span>
+    </span>
+  )
+}
+BadgeAnchor.displayName = 'BadgeAnchor'
+
+// ---------------------------------------------------------------------------
 // Badge
 // ---------------------------------------------------------------------------
 

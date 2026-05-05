@@ -1,8 +1,12 @@
 // =============================================================================
 // App topbar
 // =============================================================================
-// Sticky bar that lives at the top of .pz-app__main. Holds breadcrumbs on the
+// Sticky bar that occupies .pz-app__topbar grid area. Holds breadcrumbs on the
 // left, action group on the right (env switcher, theme toggle, avatar).
+//
+// The <TopBar> component renders as <header class="pz-topbar"> and should be
+// placed directly in the grid with an extra pz-app__topbar class:
+//   <TopBar className="pz-app__topbar" />
 // =============================================================================
 
 .pz-app__topbar {
