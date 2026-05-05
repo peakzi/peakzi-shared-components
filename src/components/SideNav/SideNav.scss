@@ -66,16 +66,41 @@
   }
 }
 
-// Collapse button: inline in brand row, right-aligned (desktop only) -
+@media (max-width: 767px) {
+  .pz-sidenav__close-btn {
+    display: inline-flex;
+  }
+}
+
+// Body ---------------------------------------------------------------
+
+.pz-sidenav__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+// Collapse toggle footer (desktop only, pinned below body) -----------
+
+.pz-sidenav__collapse-footer {
+  display: none; // hidden on mobile (shown at ≥768px below)
+  align-items: center;
+  justify-content: flex-end; // chevron hugs the right in expanded mode
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
 
 .pz-sidenav__collapse-btn {
-  display: none; // hidden on mobile (revealed at ≥768px)
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  margin-left: auto; // push to right edge of brand row
   border: 1px solid var(--border-subtle);
   border-radius: 50%;
   background: transparent;
@@ -97,28 +122,11 @@
   }
 }
 
-// Desktop: show collapse btn. Mobile: show close btn instead.
+// Desktop: show collapse footer
 @media (min-width: 768px) {
-  .pz-sidenav__collapse-btn {
-    display: inline-flex;
+  .pz-sidenav__collapse-footer {
+    display: flex;
   }
-}
-
-@media (max-width: 767px) {
-  .pz-sidenav__close-btn {
-    display: inline-flex;
-  }
-}
-
-// Body ---------------------------------------------------------------
-
-.pz-sidenav__body {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  padding: var(--space-4) var(--space-2);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
 }
 
 // Footer -------------------------------------------------------------
@@ -158,6 +166,7 @@
 // Item --------------------------------------------------------------
 
 .pz-sidenav__item {
+  position: relative; // anchor for collapsed-mode tooltip pseudo-elements
   display: flex;
   align-items: center;
   gap: 10px; // intentional midpoint between space-2/space-3 for icon-label rhythm
@@ -180,6 +189,8 @@
   &:hover {
     background: var(--surface-2);
     color: var(--fg-1);
+
+    .pz-sidenav__item-icon { color: var(--peakzi-navy-800); }
   }
 
   &:focus-visible {
@@ -193,20 +204,19 @@
   background: var(--peakzi-navy-100);
   color: var(--fg-1);
   font-weight: var(--weight-semibold);
+
+  .pz-sidenav__item-icon { color: var(--peakzi-navy-800); }
 }
 
 .pz-sidenav__item-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-  color: currentColor;
-  opacity: 0.85;
+  color: var(--peakzi-navy-500); // unified single color, no opacity hack
 }
-
-.pz-sidenav__item--active .pz-sidenav__item-icon { opacity: 1; }
 
 .pz-sidenav__item-label {
   flex: 1 1 auto;
@@ -236,45 +246,111 @@
 // Collapsed state (desktop icon-only rail) --------------------------
 
 .pz-sidenav--collapsed {
-  // Hide wordmark + badge, reveal the compact icon
+  // Hide wordmark + badge; brand icon stays visible
   .pz-sidenav__brand-content,
   .pz-sidenav__badge {
     display: none;
   }
 
+  // Brand icon: revealed, centered
   .pz-sidenav__brand-icon {
     display: inline-flex;
   }
 
-  // Brand row: center the icon; collapse btn is pulled out of flow via position:absolute
+  // Brand row: center the lone logo icon
   .pz-sidenav__brand {
-    position: relative;
     justify-content: center;
-    padding: 0;
+    padding: 0 var(--space-2);
   }
 
-  // Collapse btn: absolute so it doesn't push the centered icon off-axis
-  .pz-sidenav__collapse-btn {
-    position: absolute;
-    right: var(--space-2);
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: 0;
-  }
-
-  // Center icon in item
-  .pz-sidenav__item {
+  // Collapse footer: center the chevron in the narrow rail
+  .pz-sidenav__collapse-footer {
     justify-content: center;
     padding: var(--space-2);
   }
 
-  .pz-sidenav__item-icon { opacity: 1; }
+  // Allow tooltips to overflow the scroll container
+  .pz-sidenav__body {
+    overflow: visible;
+    padding: var(--space-4) var(--space-1);
+  }
 
-  // Hide text-only elements
-  .pz-sidenav__group-label,
+  // Section group-label → 1px horizontal divider (text hidden, line shown)
+  .pz-sidenav__group-label {
+    font-size: 0; // hide text
+    height: 1px;
+    background: var(--border-subtle);
+    width: 60%;
+    margin: var(--space-2) auto;
+    padding: 0;
+    letter-spacing: 0;
+  }
+
+  // Center icon, square tap target
+  .pz-sidenav__item {
+    justify-content: center;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+  }
+
+  // Hide text label + badge (tooltip from ::after replaces label)
   .pz-sidenav__item-label,
   .pz-sidenav__item-badge {
     display: none;
+  }
+
+  // ---- Collapsed tooltip via CSS attr() --------------------------------
+  // Arrow: points left (←) toward the icon, appears at the rail's right edge
+  .pz-sidenav__item[data-label]::before {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-right-color: var(--peakzi-navy-900); // left-pointing triangle
+    pointer-events: none;
+    opacity: 0;
+    z-index: var(--z-dropdown);
+    transition: opacity var(--duration-fast) var(--ease-out);
+    transition-delay: 0ms; // instant hide
+  }
+
+  // Bubble: text from data-label attribute, slides in from the right
+  .pz-sidenav__item[data-label]::after {
+    content: attr(data-label);
+    position: absolute;
+    left: calc(100% + 10px); // gap = arrow(5px) + 5px breathing room
+    top: 50%;
+    transform: translateY(-50%) translateX(4px);
+    background: var(--peakzi-navy-900);
+    color: #fff;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: var(--shadow-md);
+    z-index: var(--z-dropdown);
+    transition: opacity var(--duration-fast) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out);
+    transition-delay: 0ms; // instant hide
+  }
+
+  // Show on hover / keyboard focus — 250ms delay so fast cursor passes don't flash
+  .pz-sidenav__item[data-label]:hover::before,
+  .pz-sidenav__item[data-label]:focus-visible::before {
+    opacity: 1;
+    transition-delay: 250ms;
+  }
+
+  .pz-sidenav__item[data-label]:hover::after,
+  .pz-sidenav__item[data-label]:focus-visible::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    transition-delay: 250ms;
   }
 }
 
@@ -286,6 +362,10 @@
   background: var(--surface-overlay);
   z-index: calc(var(--z-modal) - 1);
   animation: pz-sidenav-fade-in var(--duration-base) var(--ease-out);
+  // Reset button UA styles — this is a <button> for semantics but renders as a plain backdrop
+  border: 0;
+  padding: 0;
+  cursor: default;
 }
 
 @keyframes pz-sidenav-fade-in {

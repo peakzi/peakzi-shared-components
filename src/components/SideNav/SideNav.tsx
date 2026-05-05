@@ -3,7 +3,7 @@ import {
   type HTMLAttributes,
   type MouseEventHandler,
   useState,
-  useEffect,
+  useSyncExternalStore,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
@@ -89,11 +89,8 @@ export function SideNav({
   const [collapsedState, setCollapsedState] = useState(defaultCollapsed)
   const collapsed = isControlled ? collapsedProp : collapsedState
 
-  // Portal mount guard — avoids SSR mismatch
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  // Portal mount guard — useSyncExternalStore returns false on server, true on client
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false)
 
   const toggle = () => {
     const next = !collapsed
@@ -110,14 +107,14 @@ export function SideNav({
     .filter(Boolean)
     .join(' ')
 
-  const hasBrandRow = brand || brandIcon || badge || collapsible || onMobileClose
+  const hasBrandRow = brand || brandIcon || badge || onMobileClose
 
   return (
     <>
       {mounted &&
         mobileOpen &&
         createPortal(
-          <div className="pz-sidenav__overlay" onClick={onMobileClose} aria-hidden="true" />,
+          <button type="button" className="pz-sidenav__overlay" onClick={onMobileClose} aria-label="Close navigation" />,
           document.body,
         )}
       <nav className={cls} aria-label={ariaLabel} {...rest}>
@@ -143,20 +140,22 @@ export function SideNav({
                 <X size={16} />
               </button>
             )}
-            {/* Collapse chevron — right-aligned in brand row (desktop only via CSS) */}
-            {collapsible && (
-              <button
-                type="button"
-                className="pz-sidenav__collapse-btn"
-                onClick={toggle}
-                aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
-              >
-                {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-              </button>
-            )}
           </div>
         )}
         <div className="pz-sidenav__body">{children}</div>
+        {/* Collapse toggle pinned to the bottom of the rail (desktop only via CSS) */}
+        {collapsible && (
+          <div className="pz-sidenav__collapse-footer">
+            <button
+              type="button"
+              className="pz-sidenav__collapse-btn"
+              onClick={toggle}
+              aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
+            >
+              {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+            </button>
+          </div>
+        )}
         {footer && <div className="pz-sidenav__footer">{footer}</div>}
       </nav>
     </>
@@ -192,7 +191,7 @@ SideNavGroup.displayName = 'SideNavGroup'
 // =============================================================================
 
 export interface SideNavItemProps {
-  /** Icon node (typically a lucide-react icon at 16px). */
+  /** Icon node (typically a lucide-react icon at 20px). */
   icon?: ReactNode
   /** href for navigation — renders as `<a>` (preferred for crawlable nav). */
   href?: string
@@ -202,6 +201,11 @@ export interface SideNavItemProps {
   active?: boolean
   /** Optional badge content (count, "New", etc.). */
   badge?: ReactNode
+  /**
+   * Explicit label for the collapsed-mode tooltip (`data-label`).
+   * Defaults to `children` when children is a plain string.
+   */
+  label?: string
   children?: ReactNode
   className?: string
 }
@@ -212,12 +216,16 @@ export function SideNavItem({
   onClick,
   active = false,
   badge,
+  label,
   children,
   className,
 }: SideNavItemProps) {
   const cls = ['pz-sidenav__item', active && 'pz-sidenav__item--active', className]
     .filter(Boolean)
     .join(' ')
+
+  // data-label powers the CSS-only collapsed tooltip (content: attr(data-label))
+  const tooltipLabel = label ?? (typeof children === 'string' ? children : undefined)
 
   const inner = (
     <>
@@ -234,7 +242,13 @@ export function SideNavItem({
   return (
     <li>
       {href ? (
-        <a className={cls} href={href} aria-current={active ? 'page' : undefined} onClick={onClick}>
+        <a
+          className={cls}
+          href={href}
+          aria-current={active ? 'page' : undefined}
+          onClick={onClick}
+          data-label={tooltipLabel}
+        >
           {inner}
         </a>
       ) : (
@@ -243,6 +257,7 @@ export function SideNavItem({
           className={cls}
           aria-current={active ? 'page' : undefined}
           onClick={onClick}
+          data-label={tooltipLabel}
         >
           {inner}
         </button>

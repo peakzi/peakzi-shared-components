@@ -4,9 +4,11 @@ import {
   Users,
   Building2,
   ClipboardList,
-  Settings,
   Search,
   FileText,
+  Link2,
+  UserCog,
+  Globe,
   Menu,
 } from 'lucide-react'
 import { SideNav, SideNavGroup, SideNavItem } from './SideNav'
@@ -22,7 +24,8 @@ const meta: Meta<typeof SideNav> = {
       description: {
         component:
           'Vertical navigation rail for admin app shells. Compose with SideNavGroup and SideNavItem. ' +
-          'Use `collapsible` for a desktop collapse toggle. Use `mobileOpen` + `onMobileClose` to control the mobile drawer.',
+          'Use `collapsible` for a desktop collapse toggle (pinned to the bottom of the rail). ' +
+          'Use `mobileOpen` + `onMobileClose` to control the mobile drawer.',
       },
     },
     layout: 'fullscreen',
@@ -32,17 +35,54 @@ const meta: Meta<typeof SideNav> = {
 export default meta
 type Story = StoryObj<typeof SideNav>
 
+// Shared full nav used across Collapsible, CollapsedTooltips, and AppShell stories
+function FullNav() {
+  return (
+    <>
+      <SideNavGroup label="Customers">
+        <SideNavItem href="/linked-accounts" icon={<Link2 size={20} strokeWidth={2} />} active>
+          Linked Accounts
+        </SideNavItem>
+        <SideNavItem href="/manage-users" icon={<UserCog size={20} strokeWidth={2} />}>
+          Manage Users
+        </SideNavItem>
+        <SideNavItem href="/ai-website" icon={<Globe size={20} strokeWidth={2} />}>
+          AI Website
+        </SideNavItem>
+        <SideNavItem href="/content-generator" icon={<FileText size={20} strokeWidth={2} />}>
+          Content Generator
+        </SideNavItem>
+      </SideNavGroup>
+      <SideNavGroup label="Operations">
+        <SideNavItem href="/admin-tasks" icon={<ClipboardList size={20} strokeWidth={2} />}>
+          Admin Tasks
+        </SideNavItem>
+        <SideNavItem href="/talent-search" icon={<Search size={20} strokeWidth={2} />}>
+          Talent Search
+        </SideNavItem>
+        <SideNavItem href="/accounts" icon={<Users size={20} strokeWidth={2} />}>
+          Accounts
+        </SideNavItem>
+        <SideNavItem href="/business" icon={<Building2 size={20} strokeWidth={2} />}>
+          Business
+        </SideNavItem>
+      </SideNavGroup>
+    </>
+  )
+}
+
 export const Default: Story = {
   render: () => (
     <div style={{ width: 240, height: 600, border: '1px solid #e5e7eb' }}>
       <SideNav>
         <SideNavGroup label="Customers">
-          <SideNavItem href="/accounts" active>Accounts</SideNavItem>
+          <SideNavItem href="/accounts" active>
+            Accounts
+          </SideNavItem>
           <SideNavItem href="/business">Business</SideNavItem>
         </SideNavGroup>
         <SideNavGroup label="Operations">
-          <SideNavItem href="/admin">Admin tasks</SideNavItem>
-          <SideNavItem href="/settings">Settings</SideNavItem>
+          <SideNavItem href="/admin">Admin Tasks</SideNavItem>
         </SideNavGroup>
       </SideNav>
     </div>
@@ -59,16 +99,18 @@ export const WithBrand: Story = {
         badgeVariant="brand"
       >
         <SideNavGroup label="Customers">
-          <SideNavItem href="/accounts" active>Accounts</SideNavItem>
-          <SideNavItem href="/business">Business</SideNavItem>
-          <SideNavItem href="/linked">Linked Accounts</SideNavItem>
-          <SideNavItem href="/users">Manage Users</SideNavItem>
+          <SideNavItem href="/linked-accounts" active>
+            Linked Accounts
+          </SideNavItem>
+          <SideNavItem href="/manage-users">Manage Users</SideNavItem>
+          <SideNavItem href="/ai-website">AI Website</SideNavItem>
+          <SideNavItem href="/content-generator">Content Generator</SideNavItem>
         </SideNavGroup>
         <SideNavGroup label="Operations">
           <SideNavItem href="/admin-tasks">Admin Tasks</SideNavItem>
           <SideNavItem href="/talent-search">Talent Search</SideNavItem>
-          <SideNavItem href="/ai-website">AI Website</SideNavItem>
-          <SideNavItem href="/content-generator">Content Generator</SideNavItem>
+          <SideNavItem href="/accounts">Accounts</SideNavItem>
+          <SideNavItem href="/business">Business</SideNavItem>
         </SideNavGroup>
       </SideNav>
     </div>
@@ -81,7 +123,9 @@ export const WithBrandNoBadge: Story = {
     <div style={{ width: 240, height: 400, border: '1px solid #e5e7eb' }}>
       <SideNav brand={<span style={{ fontWeight: 700 }}>peakzi</span>}>
         <SideNavGroup label="Customers">
-          <SideNavItem href="/accounts" active>Accounts</SideNavItem>
+          <SideNavItem href="/accounts" active>
+            Accounts
+          </SideNavItem>
           <SideNavItem href="/business">Business</SideNavItem>
         </SideNavGroup>
       </SideNav>
@@ -129,8 +173,12 @@ export const WithBadges: Story = {
     <div style={{ width: 240, height: 400, border: '1px solid #e5e7eb' }}>
       <SideNav>
         <SideNavGroup label="Inbox">
-          <SideNavItem href="/messages" badge={12}>Messages</SideNavItem>
-          <SideNavItem href="/notifications" badge="New">Notifications</SideNavItem>
+          <SideNavItem href="/messages" badge={12}>
+            Messages
+          </SideNavItem>
+          <SideNavItem href="/notifications" badge="New">
+            Notifications
+          </SideNavItem>
         </SideNavGroup>
       </SideNav>
     </div>
@@ -140,21 +188,39 @@ export const WithBadges: Story = {
 export const WithIcons: Story = {
   name: 'With icons',
   render: () => (
-    <div style={{ width: 240, height: 500, border: '1px solid #e5e7eb' }}>
+    <div style={{ width: 240, height: 560, border: '1px solid #e5e7eb' }}>
       <SideNav
         brand={<span style={{ fontWeight: 700 }}>peakzi</span>}
         badge="ADMIN"
         badgeVariant="brand"
       >
         <SideNavGroup label="Customers">
-          <SideNavItem href="/accounts" icon={<Users size={16} />} active>Accounts</SideNavItem>
-          <SideNavItem href="/business" icon={<Building2 size={16} />}>Business</SideNavItem>
-          <SideNavItem href="/content" icon={<FileText size={16} />}>Content Generator</SideNavItem>
+          <SideNavItem href="/linked-accounts" icon={<Link2 size={20} strokeWidth={2} />} active>
+            Linked Accounts
+          </SideNavItem>
+          <SideNavItem href="/manage-users" icon={<UserCog size={20} strokeWidth={2} />}>
+            Manage Users
+          </SideNavItem>
+          <SideNavItem href="/ai-website" icon={<Globe size={20} strokeWidth={2} />}>
+            AI Website
+          </SideNavItem>
+          <SideNavItem href="/content-generator" icon={<FileText size={20} strokeWidth={2} />}>
+            Content Generator
+          </SideNavItem>
         </SideNavGroup>
         <SideNavGroup label="Operations">
-          <SideNavItem href="/admin" icon={<ClipboardList size={16} />}>Admin Tasks</SideNavItem>
-          <SideNavItem href="/talent" icon={<Search size={16} />}>Talent Search</SideNavItem>
-          <SideNavItem href="/settings" icon={<Settings size={16} />}>Settings</SideNavItem>
+          <SideNavItem href="/admin-tasks" icon={<ClipboardList size={20} strokeWidth={2} />}>
+            Admin Tasks
+          </SideNavItem>
+          <SideNavItem href="/talent-search" icon={<Search size={20} strokeWidth={2} />}>
+            Talent Search
+          </SideNavItem>
+          <SideNavItem href="/accounts" icon={<Users size={20} strokeWidth={2} />}>
+            Accounts
+          </SideNavItem>
+          <SideNavItem href="/business" icon={<Building2 size={20} strokeWidth={2} />}>
+            Business
+          </SideNavItem>
         </SideNavGroup>
       </SideNav>
     </div>
@@ -168,45 +234,80 @@ export const Collapsible: Story = {
     return (
       <div
         style={{
-          width: collapsed ? 64 : 240,
-          height: 560,
-          border: '1px solid #e5e7eb',
-          transition: 'width 220ms cubic-bezier(0.22, 1, 0.36, 1)',
-          overflow: 'hidden',
+          display: 'flex',
+          height: 640,
         }}
       >
-        <SideNav
-          brand={<PeakziLogo variant="color" size="sm" />}
-          brandIcon={<PeakziLogo variant="icon" size="xs" />}
-          badge="ADMIN"
-          badgeVariant="brand"
-          collapsible
-          collapsed={collapsed}
-          onCollapsedChange={setCollapsed}
+        <div
+          style={{
+            width: collapsed ? 64 : 240,
+            border: '1px solid #e5e7eb',
+            transition: 'width 220ms cubic-bezier(0.22, 1, 0.36, 1)',
+            flexShrink: 0,
+            // No overflow — tooltips must escape rightward past the rail boundary
+          }}
         >
-          <SideNavGroup label="Customers">
-            <SideNavItem href="/accounts" icon={<Users size={16} />} active>
-              Accounts
-            </SideNavItem>
-            <SideNavItem href="/business" icon={<Building2 size={16} />}>
-              Business
-            </SideNavItem>
-            <SideNavItem href="/content" icon={<FileText size={16} />}>
-              Content Generator
-            </SideNavItem>
-          </SideNavGroup>
-          <SideNavGroup label="Operations">
-            <SideNavItem href="/admin" icon={<ClipboardList size={16} />}>
-              Admin Tasks
-            </SideNavItem>
-            <SideNavItem href="/talent" icon={<Search size={16} />}>
-              Talent Search
-            </SideNavItem>
-            <SideNavItem href="/settings" icon={<Settings size={16} />}>
-              Settings
-            </SideNavItem>
-          </SideNavGroup>
-        </SideNav>
+          <SideNav
+            brand={<PeakziLogo variant="color" size="sm" />}
+            brandIcon={<PeakziLogo variant="icon" size="xs" />}
+            badge="ADMIN"
+            badgeVariant="brand"
+            collapsible
+            collapsed={collapsed}
+            onCollapsedChange={setCollapsed}
+          >
+            <FullNav />
+          </SideNav>
+        </div>
+        <div style={{ flex: 1, padding: 24, color: 'var(--fg-3)', fontSize: 13 }}>
+          {collapsed ? 'Hover the icons to see tooltips →' : 'Use the ‹ button at the bottom to collapse'}
+        </div>
+      </div>
+    )
+  },
+}
+
+export const CollapsedTooltips: Story = {
+  name: 'Collapsed — icon tooltips on hover',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When the rail is collapsed to icon-only mode, hovering any nav item reveals its label as a ' +
+          'right-side tooltip after a 250 ms delay (fast cursor passes do not trigger it). ' +
+          'The tooltip text comes from `data-label`, auto-populated from string children.',
+      },
+    },
+  },
+  render: function CollapsedTooltipsStory() {
+    const [collapsed, setCollapsed] = useState(true)
+    return (
+      <div style={{ display: 'flex', height: 560 }}>
+        <div
+          style={{
+            width: collapsed ? 64 : 240,
+            border: '1px solid #e5e7eb',
+            transition: 'width 220ms cubic-bezier(0.22, 1, 0.36, 1)',
+            flexShrink: 0,
+            // No overflow restriction — tooltips must escape the rail rightward
+          }}
+        >
+          <SideNav
+            brand={<PeakziLogo variant="color" size="sm" />}
+            brandIcon={<PeakziLogo variant="icon" size="xs" />}
+            badge="ADMIN"
+            badgeVariant="brand"
+            collapsible
+            collapsed={collapsed}
+            onCollapsedChange={setCollapsed}
+          >
+            <FullNav />
+          </SideNav>
+        </div>
+        {/* Content area so tooltips have space to appear over it */}
+        <div style={{ flex: 1, padding: 24, color: 'var(--fg-3)', fontSize: 13 }}>
+          Hover the icons to see tooltips (250 ms delay) →
+        </div>
       </div>
     )
   },
@@ -270,19 +371,16 @@ export const MobileDrawer: Story = {
           onMobileClose={() => setOpen(false)}
         >
           <SideNavGroup label="Customers">
-            <SideNavItem href="/accounts" icon={<Users size={16} />} active>
+            <SideNavItem href="/accounts" icon={<Users size={20} strokeWidth={2} />} active>
               Accounts
             </SideNavItem>
-            <SideNavItem href="/business" icon={<Building2 size={16} />}>
+            <SideNavItem href="/business" icon={<Building2 size={20} strokeWidth={2} />}>
               Business
             </SideNavItem>
           </SideNavGroup>
           <SideNavGroup label="Operations">
-            <SideNavItem href="/admin" icon={<ClipboardList size={16} />}>
+            <SideNavItem href="/admin" icon={<ClipboardList size={20} strokeWidth={2} />}>
               Admin Tasks
-            </SideNavItem>
-            <SideNavItem href="/settings" icon={<Settings size={16} />}>
-              Settings
             </SideNavItem>
           </SideNavGroup>
         </SideNav>
@@ -321,7 +419,6 @@ export const AppShell: Story = {
           <SideNav
             brand={<PeakziLogo variant="color" size="sm" />}
             brandIcon={<PeakziLogo variant="icon" size="xs" />}
-            badge="ADMIN"
             badgeVariant="brand"
             collapsible
             collapsed={collapsed}
@@ -329,28 +426,7 @@ export const AppShell: Story = {
             mobileOpen={drawerOpen}
             onMobileClose={() => setDrawerOpen(false)}
           >
-            <SideNavGroup label="Customers">
-              <SideNavItem href="/accounts" icon={<Users size={16} />} active>
-                Accounts
-              </SideNavItem>
-              <SideNavItem href="/business" icon={<Building2 size={16} />}>
-                Business
-              </SideNavItem>
-              <SideNavItem href="/content" icon={<FileText size={16} />}>
-                Content Generator
-              </SideNavItem>
-            </SideNavGroup>
-            <SideNavGroup label="Operations">
-              <SideNavItem href="/admin" icon={<ClipboardList size={16} />}>
-                Admin Tasks
-              </SideNavItem>
-              <SideNavItem href="/talent" icon={<Search size={16} />}>
-                Talent Search
-              </SideNavItem>
-              <SideNavItem href="/settings" icon={<Settings size={16} />}>
-                Settings
-              </SideNavItem>
-            </SideNavGroup>
+            <FullNav />
           </SideNav>
         </aside>
 
@@ -364,8 +440,14 @@ export const AppShell: Story = {
         {/* Main content */}
         <main className="pz-app__main">
           <div className="pz-app__main-inner" style={{ color: 'var(--fg-2)', fontSize: 14 }}>
-            <p>Resize the canvas below 768 px to see the hamburger appear and the rail slide in as a drawer.</p>
-            <p>On desktop, use the › button on the right edge of the rail to collapse to icon-only mode.</p>
+            <p>
+              Resize the canvas below 768 px to see the hamburger appear and the rail slide in as a
+              drawer.
+            </p>
+            <p>
+              On desktop, use the ‹ button at the bottom of the rail to collapse to icon-only mode.
+              Hover icons to see tooltips.
+            </p>
           </div>
         </main>
       </div>
