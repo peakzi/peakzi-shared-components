@@ -3,9 +3,7 @@ import {
   type HTMLAttributes,
   type MouseEventHandler,
   useState,
-  useSyncExternalStore,
 } from 'react'
-import { createPortal } from 'react-dom'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { Badge } from '../Badge'
 import type { BadgeVariant, BadgeSize } from '../Badge'
@@ -89,9 +87,6 @@ export function SideNav({
   const [collapsedState, setCollapsedState] = useState(defaultCollapsed)
   const collapsed = isControlled ? collapsedProp : collapsedState
 
-  // Portal mount guard — useSyncExternalStore returns false on server, true on client
-  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false)
-
   const toggle = () => {
     const next = !collapsed
     if (!isControlled) setCollapsedState(next)
@@ -111,12 +106,9 @@ export function SideNav({
 
   return (
     <>
-      {mounted &&
-        mobileOpen &&
-        createPortal(
-          <button type="button" className="pz-sidenav__overlay" onClick={onMobileClose} aria-label="Close navigation" />,
-          document.body,
-        )}
+      {mobileOpen && (
+        <button type="button" className="pz-sidenav__overlay" onClick={onMobileClose} aria-label="Close navigation" />
+      )}
       <nav className={cls} aria-label={ariaLabel} {...rest}>
         {hasBrandRow && (
           <div className="pz-sidenav__brand">
@@ -143,20 +135,22 @@ export function SideNav({
           </div>
         )}
         <div className="pz-sidenav__body">{children}</div>
-        {/* Collapse toggle pinned to the bottom of the rail (desktop only via CSS) */}
-        {collapsible && (
-          <div className="pz-sidenav__collapse-footer">
-            <button
-              type="button"
-              className="pz-sidenav__collapse-btn"
-              onClick={toggle}
-              aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
-            >
-              {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-            </button>
+        {/* Bottom bar: footer content + collapse toggle share one row */}
+        {(footer || collapsible) && (
+          <div className="pz-sidenav__footer">
+            {footer && <div className="pz-sidenav__footer-content">{footer}</div>}
+            {collapsible && (
+              <button
+                type="button"
+                className="pz-sidenav__collapse-btn"
+                onClick={toggle}
+                aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
+              >
+                {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+              </button>
+            )}
           </div>
         )}
-        {footer && <div className="pz-sidenav__footer">{footer}</div>}
       </nav>
     </>
   )

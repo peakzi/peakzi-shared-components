@@ -71,6 +71,23 @@ function FullNav() {
   )
 }
 
+// Shared footer block — copyright + version tag, used in collapsible stories
+function NavFooter() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 8, minWidth: 0 }}>
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--fg-1)', whiteSpace: 'nowrap' }}>
+          © Peakzi
+        </div>
+        <div style={{ fontSize: 11, color: 'var(--fg-3)', whiteSpace: 'nowrap' }}>Copyright</div>
+      </div>
+      <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--fg-3)', flexShrink: 0 }}>
+        v3.14.0
+      </span>
+    </div>
+  )
+}
+
 export const Default: Story = {
   render: () => (
     <div style={{ width: 240, height: 600, border: '1px solid #e5e7eb' }}>
@@ -248,13 +265,14 @@ export const Collapsible: Story = {
           }}
         >
           <SideNav
-            brand={<PeakziLogo variant="color" size="sm" />}
+            brand={<PeakziLogo variant="auto" size="sm" />}
             brandIcon={<PeakziLogo variant="icon" size="xs" />}
             badge="ADMIN"
             badgeVariant="brand"
             collapsible
             collapsed={collapsed}
             onCollapsedChange={setCollapsed}
+            footer={<NavFooter />}
           >
             <FullNav />
           </SideNav>
@@ -293,13 +311,14 @@ export const CollapsedTooltips: Story = {
           }}
         >
           <SideNav
-            brand={<PeakziLogo variant="color" size="sm" />}
+            brand={<PeakziLogo variant="auto" size="sm" />}
             brandIcon={<PeakziLogo variant="icon" size="xs" />}
             badge="ADMIN"
             badgeVariant="brand"
             collapsible
             collapsed={collapsed}
             onCollapsedChange={setCollapsed}
+            footer={<NavFooter />}
           >
             <FullNav />
           </SideNav>
@@ -417,7 +436,7 @@ export const AppShell: Story = {
         {/* Rail — hidden from grid on mobile, becomes a fixed overlay via SideNav */}
         <aside className="pz-app__rail">
           <SideNav
-            brand={<PeakziLogo variant="color" size="sm" />}
+            brand={<PeakziLogo variant="auto" size="sm" />}
             brandIcon={<PeakziLogo variant="icon" size="xs" />}
             badgeVariant="brand"
             collapsible
@@ -425,6 +444,7 @@ export const AppShell: Story = {
             onCollapsedChange={setCollapsed}
             mobileOpen={drawerOpen}
             onMobileClose={() => setDrawerOpen(false)}
+            footer={<NavFooter />}
           >
             <FullNav />
           </SideNav>

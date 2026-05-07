@@ -16,8 +16,8 @@ const meta: Meta<typeof PeakziLogo> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['color', 'white', 'icon', 'icon-navy'],
-      description: 'Which asset to render',
+      options: ['color', 'white', 'icon', 'icon-navy', 'auto'],
+      description: 'Which asset to render. `auto` swaps color ↔ white based on [data-theme].',
     },
     size: {
       control: 'select',

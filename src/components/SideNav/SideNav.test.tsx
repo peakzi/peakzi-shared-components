@@ -53,6 +53,18 @@ describe('SideNav', () => {
     const { container } = render(<SideNav brand={<span>Logo</span>} />)
     expect(container.querySelector('.pz-sidenav__badge')).not.toBeInTheDocument()
   })
+
+  it('renders the mobile overlay with the nav and closes when clicked', () => {
+    const onMobileClose = vi.fn()
+    const { container } = render(<SideNav mobileOpen onMobileClose={onMobileClose} />)
+    const overlay = container.querySelector('.pz-sidenav__overlay')
+
+    expect(overlay).toBeInstanceOf(HTMLButtonElement)
+    expect(container.querySelector('.pz-sidenav--mobile-open')).toBeInTheDocument()
+
+    fireEvent.click(overlay!)
+    expect(onMobileClose).toHaveBeenCalledTimes(1)
+  })
 })
 
 describe('SideNavGroup', () => {

@@ -47,6 +47,19 @@
 // Collapsed rail (icon-only) — toggle by adding .pz-app--rail-collapsed
 .pz-app--rail-collapsed { grid-template-columns: 64px 1fr; }
 
+// Mobile-only topbar — use when the topbar exists only to host the
+// mobile hamburger. Desktop skips the empty 56px row.
+.pz-app--mobile-topbar {
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    'rail main'
+    'rail footer';
+
+  .pz-app__topbar {
+    display: none;
+  }
+}
+
 // Tablet — auto-collapse rail to icon-only width
 @media (max-width: 1023px) and (min-width: 768px) {
   .pz-app { grid-template-columns: 64px 1fr; }
@@ -56,10 +69,17 @@
 @media (max-width: 767px) {
   .pz-app {
     grid-template-columns: 1fr;
+    grid-template-rows: 56px 1fr auto;
     grid-template-areas:
       'topbar'
       'main'
       'footer';
+  }
+
+  .pz-app--mobile-topbar {
+    .pz-app__topbar {
+      display: flex;
+    }
   }
 
   // display: contents removes the rail wrapper from the grid flow

@@ -5,7 +5,12 @@ import whiteLogoSrc from '../../../assets/peakzi-logo-white.png'
 import iconSrc from '../../../assets/peakzi-icon.png'
 import iconNavySrc from '../../../assets/peakzi-icon-navy-bg.png'
 
-export type LogoVariant = 'color' | 'white' | 'icon' | 'icon-navy'
+/**
+ * `'auto'` — renders both color and white images; CSS swaps them based on
+ * `[data-theme="dark"]` on `<html>`. Use this when the logo sits on a themed
+ * surface (e.g. the SideNav brand row) so it stays readable in both modes.
+ */
+export type LogoVariant = 'color' | 'white' | 'icon' | 'icon-navy' | 'auto'
 export type LogoSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 export interface PeakziLogoProps {
@@ -18,14 +23,14 @@ export interface PeakziLogoProps {
   className?: string
 }
 
-const ASSET_SRCS: Record<LogoVariant, string> = {
+const ASSET_SRCS: Record<Exclude<LogoVariant, 'auto'>, string> = {
   color: colorLogoSrc,
   white: whiteLogoSrc,
   icon: iconSrc,
   'icon-navy': iconNavySrc,
 }
 
-const DEFAULT_ALTS: Record<LogoVariant, string> = {
+const DEFAULT_ALTS: Record<Exclude<LogoVariant, 'auto'>, string> = {
   color: 'Peakzi',
   white: 'Peakzi',
   icon: 'Peakzi icon',
@@ -34,19 +39,36 @@ const DEFAULT_ALTS: Record<LogoVariant, string> = {
 
 export const PeakziLogo = forwardRef<HTMLElement, PeakziLogoProps>(
   ({ variant = 'color', size = 'md', href, target, rel, alt, className }, ref) => {
-    const src = ASSET_SRCS[variant]
-    const cls = ['pz-logo', `pz-logo--${size}`, href && 'pz-logo--link', className]
+    const cls = ['pz-logo', `pz-logo--${size}`, variant === 'auto' && 'pz-logo--auto', href && 'pz-logo--link', className]
       .filter(Boolean)
       .join(' ')
 
-    const img = (
-      <img
-        src={src}
-        alt={alt ?? DEFAULT_ALTS[variant]}
-        className="pz-logo__img"
-        draggable={false}
-      />
-    )
+    // 'auto': render both images; CSS hides/shows based on [data-theme]
+    const img =
+      variant === 'auto' ? (
+        <>
+          <img
+            src={colorLogoSrc}
+            alt={alt ?? 'Peakzi'}
+            className="pz-logo__img pz-logo__img--color"
+            draggable={false}
+          />
+          <img
+            src={whiteLogoSrc}
+            alt=""
+            aria-hidden
+            className="pz-logo__img pz-logo__img--white"
+            draggable={false}
+          />
+        </>
+      ) : (
+        <img
+          src={ASSET_SRCS[variant]}
+          alt={alt ?? DEFAULT_ALTS[variant]}
+          className="pz-logo__img"
+          draggable={false}
+        />
+      )
 
     if (href) {
       return (

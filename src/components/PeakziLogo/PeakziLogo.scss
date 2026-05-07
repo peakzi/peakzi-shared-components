@@ -19,6 +19,12 @@
   &--lg &__img { height: 48px; }
   &--xl &__img { height: 64px; }
 
+  // ── Auto variant: CSS-driven light / dark swap ────────────────────────────
+  // Both images are in the DOM; CSS shows one and hides the other.
+  &--auto &__img--white { display: none; }                       // light: show color
+  [data-theme='dark'] &--auto &__img--color { display: none; }   // dark:  hide color
+  [data-theme='dark'] &--auto &__img--white { display: block; }  // dark:  show white
+
   // ── Link variant ──────────────────────────────────────────────────────────
   &--link {
     text-decoration: none;

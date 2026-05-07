@@ -83,19 +83,26 @@
   gap: var(--space-5);
 }
 
-// Collapse toggle footer (desktop only, pinned below body) -----------
+// Footer + collapse toggle — single bottom bar ----------------------
+// When `collapsible` is true the chevron button lives here alongside
+// any `footer` content the consumer passes in.
 
-.pz-sidenav__collapse-footer {
-  display: none; // hidden on mobile (shown at ≥768px below)
+.pz-sidenav__footer {
+  display: flex;
   align-items: center;
-  justify-content: flex-end; // chevron hugs the right in expanded mode
+  gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border-top: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
 
+.pz-sidenav__footer-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .pz-sidenav__collapse-btn {
-  display: inline-flex;
+  display: none; // hidden on mobile (shown at ≥768px below)
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
@@ -122,19 +129,11 @@
   }
 }
 
-// Desktop: show collapse footer
+// Desktop: show collapse button
 @media (min-width: 768px) {
-  .pz-sidenav__collapse-footer {
-    display: flex;
+  .pz-sidenav__collapse-btn {
+    display: inline-flex;
   }
-}
-
-// Footer -------------------------------------------------------------
-
-.pz-sidenav__footer {
-  border-top: 1px solid var(--border-subtle);
-  padding: var(--space-3) var(--space-4);
-  flex-shrink: 0;
 }
 
 // Group --------------------------------------------------------------
@@ -208,6 +207,18 @@
   .pz-sidenav__item-icon { color: var(--peakzi-navy-800); }
 }
 
+[data-theme='dark'] {
+  .pz-sidenav__item--active,
+  .pz-sidenav__item[aria-current='page'] {
+    background: var(--surface-3); // navy-700 — elevated above surface-1 nav bg
+    .pz-sidenav__item-icon { color: var(--peakzi-navy-300); }
+  }
+
+  .pz-sidenav__item:hover {
+    .pz-sidenav__item-icon { color: var(--peakzi-navy-300); } // navy-800 hover bg would hide the icon otherwise
+  }
+}
+
 .pz-sidenav__item-icon {
   display: inline-flex;
   align-items: center;
@@ -260,19 +271,23 @@
   // Brand row: center the lone logo icon
   .pz-sidenav__brand {
     justify-content: center;
-    padding: 0 var(--space-2);
+    padding: 0;
   }
 
-  // Collapse footer: center the chevron in the narrow rail
-  .pz-sidenav__collapse-footer {
+  // Footer bar: center the lone chevron, hide text content
+  .pz-sidenav__footer {
     justify-content: center;
     padding: var(--space-2);
   }
 
-  // Allow tooltips to overflow the scroll container
+  .pz-sidenav__footer-content {
+    display: none;
+  }
+
+  // Allow tooltips to overflow the scroll container; no horizontal padding — items self-center
   .pz-sidenav__body {
     overflow: visible;
-    padding: var(--space-4) var(--space-1);
+    padding: var(--space-3) 0;
   }
 
   // Section group-label → 1px horizontal divider (text hidden, line shown)
@@ -286,10 +301,10 @@
     letter-spacing: 0;
   }
 
-  // Center icon, square tap target
+  // Center icon, square tap target — no horizontal padding so centering is purely justify-content
   .pz-sidenav__item {
     justify-content: center;
-    padding: var(--space-2);
+    padding: var(--space-2) 0;
     border-radius: var(--radius-md);
   }
 
