@@ -62,7 +62,7 @@
 // =============================================================================
 
 .pz-btn--primary {
-  background: var(--peakzi-navy-800);
+  background: var(--peakzi-purple);
   color: var(--neutral-0);
 }
 
@@ -98,7 +98,8 @@
   &:hover:not(:disabled) {
     filter: none;
     background: var(--bg-muted);
-    border-color: var(--border);
+    border-color: var(--peakzi-purple);
+    color: var(--peakzi-purple);
   }
 }
 
