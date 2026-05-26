@@ -32,8 +32,8 @@ export type { SegmentedProps, SegmentedOption } from './components/Segmented'
 // ---------------------------------------------------------------------------
 // Surfaces
 // ---------------------------------------------------------------------------
-export { Card, CardTitle, CardBody, Stat } from './components/Card'
-export type { CardProps, CardVariant, CardTitleProps, CardBodyProps, StatProps, StatDelta } from './components/Card'
+export { Card, CardTitle, CardBody, CardFooter, Stat } from './components/Card'
+export type { CardProps, CardVariant, CardTitleProps, CardBodyProps, CardFooterProps, StatProps, StatDelta } from './components/Card'
 
 export { StatCard } from './components/StatCard'
 export type { StatCardProps } from './components/StatCard'

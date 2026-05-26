@@ -39,13 +39,21 @@ Card.displayName = 'Card'
 
 export interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  /** Icon node rendered before the title text. Pass a fully-formed JSX element, e.g. <CheckCircle2 size={16} />. */
+  titleIcon?: ReactNode
+  /** Action element (Button or anchor) pinned to the trailing edge. */
+  actionButton?: ReactNode
+  /** Centers all title content. Defaults to leading alignment. */
+  centerAlign?: boolean
   children?: ReactNode
 }
 
-export function CardTitle({ as: Tag = 'h3', className, children, ...rest }: CardTitleProps) {
+export function CardTitle({ as: Tag = 'h3', titleIcon, actionButton, centerAlign = false, className, children, ...rest }: CardTitleProps) {
   return (
-    <Tag className={['pz-card__title', className].filter(Boolean).join(' ')} {...rest}>
-      {children}
+    <Tag className={['pz-card__title', centerAlign && 'pz-card__title--center', className].filter(Boolean).join(' ')} {...rest}>
+      {titleIcon && <span className="pz-card__title-icon" aria-hidden="true">{titleIcon}</span>}
+      <span className="pz-card__title-text">{children}</span>
+      {actionButton && <span className="pz-card__title-action">{actionButton}</span>}
     </Tag>
   )
 }
@@ -63,6 +71,19 @@ export function CardBody({ className, children, ...rest }: CardBodyProps) {
   )
 }
 CardBody.displayName = 'CardBody'
+
+export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {
+  children?: ReactNode
+}
+
+export function CardFooter({ className, children, ...rest }: CardFooterProps) {
+  return (
+    <div className={['pz-card__footer', className].filter(Boolean).join(' ')} {...rest}>
+      {children}
+    </div>
+  )
+}
+CardFooter.displayName = 'CardFooter'
 
 // ---------------------------------------------------------------------------
 // Stat card

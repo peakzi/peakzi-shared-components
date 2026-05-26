@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Card, CardTitle, CardBody, Stat } from './Card'
+import { Card, CardTitle, CardBody, CardFooter, Stat } from './Card'
 
 describe('Card', () => {
   it('renders a div with pz-card class', () => {
@@ -72,12 +72,98 @@ describe('CardTitle', () => {
   })
 })
 
+describe('CardTitle — titleIcon', () => {
+  it('renders the icon when titleIcon is provided', () => {
+    const { container } = render(<CardTitle titleIcon={<svg data-testid="icon" />}>Title</CardTitle>)
+    expect(container.querySelector('.pz-card__title-icon')).toBeInTheDocument()
+  })
+
+  it('renders the icon alongside a multiline title', () => {
+    const { container } = render(
+      <CardTitle titleIcon={<svg data-testid="icon" />}>
+        Licensed experts in your area with a very long title that wraps
+      </CardTitle>,
+    )
+    expect(container.querySelector('.pz-card__title-icon')).toBeInTheDocument()
+    expect(container.querySelector('.pz-card__title-text')).toBeInTheDocument()
+  })
+
+  it('does not render the icon wrapper when titleIcon is omitted', () => {
+    const { container } = render(<CardTitle>Title</CardTitle>)
+    expect(container.querySelector('.pz-card__title-icon')).not.toBeInTheDocument()
+  })
+
+  it('always wraps children in pz-card__title-text', () => {
+    render(<CardTitle>My Title</CardTitle>)
+    expect(screen.getByText('My Title').closest('.pz-card__title-text')).toBeInTheDocument()
+  })
+})
+
+describe('CardTitle — actionButton', () => {
+  it('renders the action when actionButton is provided', () => {
+    render(<CardTitle actionButton={<a href="/all">View all</a>}>Title</CardTitle>)
+    expect(screen.getByRole('link', { name: 'View all' })).toBeInTheDocument()
+  })
+
+  it('wraps the action in pz-card__title-action', () => {
+    const { container } = render(
+      <CardTitle actionButton={<button>Go</button>}>Title</CardTitle>,
+    )
+    expect(container.querySelector('.pz-card__title-action')).toBeInTheDocument()
+  })
+
+  it('does not render the action wrapper when actionButton is omitted', () => {
+    const { container } = render(<CardTitle>Title</CardTitle>)
+    expect(container.querySelector('.pz-card__title-action')).not.toBeInTheDocument()
+  })
+
+  it('applies center modifier when centerAlign is true', () => {
+    const { container } = render(<CardTitle centerAlign>Title</CardTitle>)
+    expect(container.querySelector('.pz-card__title--center')).toBeInTheDocument()
+  })
+
+  it('does not apply center modifier by default', () => {
+    const { container } = render(<CardTitle>Title</CardTitle>)
+    expect(container.querySelector('.pz-card__title--center')).not.toBeInTheDocument()
+  })
+
+  it('renders both icon and action together', () => {
+    const { container } = render(
+      <CardTitle titleIcon={<svg data-testid="icon" />} actionButton={<button>Go</button>}>Title</CardTitle>,
+    )
+    expect(container.querySelector('.pz-card__title-icon')).toBeInTheDocument()
+    expect(container.querySelector('.pz-card__title-action')).toBeInTheDocument()
+  })
+})
+
 describe('CardBody', () => {
   it('renders a paragraph with pz-card__body class', () => {
     const { container } = render(<CardBody>Body text</CardBody>)
     const p = container.querySelector('p.pz-card__body')
     expect(p).toBeInTheDocument()
     expect(p).toHaveTextContent('Body text')
+  })
+})
+
+describe('CardFooter', () => {
+  it('renders a div with pz-card__footer class', () => {
+    const { container } = render(<CardFooter>Footer content</CardFooter>)
+    expect(container.querySelector('div.pz-card__footer')).toBeInTheDocument()
+  })
+
+  it('renders children', () => {
+    render(<CardFooter>Footer content</CardFooter>)
+    expect(screen.getByText('Footer content')).toBeInTheDocument()
+  })
+
+  it('merges custom className', () => {
+    const { container } = render(<CardFooter className="extra">Footer</CardFooter>)
+    expect(container.querySelector('.pz-card__footer.extra')).toBeInTheDocument()
+  })
+
+  it('passes through HTML attributes', () => {
+    const { container } = render(<CardFooter data-testid="my-footer">Footer</CardFooter>)
+    expect(container.querySelector('[data-testid="my-footer"]')).toBeInTheDocument()
   })
 })
 
