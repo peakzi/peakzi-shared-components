@@ -11,6 +11,7 @@ export type ButtonVariant =
   | 'secondary'
   | 'ghost'
   | 'link'
+  | 'text'
   | 'danger'
   | 'success'
   | 'icon'
@@ -25,6 +26,7 @@ export interface ButtonProps {
    * - `secondary`— Outlined, lower-hierarchy action.
    * - `ghost`    — Transparent, for tertiary actions.
    * - `link`     — Looks like a hyperlink. No background or border.
+   * - `text`     — Muted label + icon, no border, no padding. For low-hierarchy controls (footer toggles, inline actions).
    * - `danger`   — Destructive actions (delete, remove).
    * - `success`  — Positive confirmation action.
    * - `icon`     — Square icon-only button. **Requires `aria-label`.**

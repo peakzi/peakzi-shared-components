@@ -1,0 +1,176 @@
+// =============================================================================
+// Banner
+// =============================================================================
+
+.pz-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: 1.5;
+  width: 100%;
+  box-sizing: border-box;
+
+  // ----- Variants -------------------------------------------------------
+
+  &--info {
+    background: var(--info-soft);
+    color: var(--info);
+    border: 1px solid var(--info);
+  }
+
+  &--success {
+    background: var(--success-soft);
+    color: var(--success-strong);
+    border: 1px solid var(--success);
+
+    .pz-banner__icon { color: var(--success); }
+  }
+
+  &--warning {
+    background: var(--warning-soft);
+    color: var(--warning-strong);
+    border: 1px solid var(--warning);
+
+    .pz-banner__icon { color: var(--warning-strong); }
+  }
+
+  &--danger {
+    background: var(--danger-soft);
+    color: var(--danger-strong);
+    border: 1px solid var(--danger);
+
+    .pz-banner__icon { color: var(--danger); }
+  }
+
+  &--brand {
+    background: var(--gradient-brand);
+    color: #fff;
+    border: 0;
+
+    .pz-banner__close {
+      color: rgba(255, 255, 255, 0.75);
+      &:hover { background: rgba(255, 255, 255, 0.15); opacity: 1; }
+    }
+  }
+
+  &--neutral {
+    background: var(--bg-subtle);
+    color: var(--fg-2);
+    border: 1px solid var(--border);
+
+    .pz-banner__icon { color: var(--fg-3); }
+  }
+
+  // ----- Sizes ----------------------------------------------------------
+
+  &--sm {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+    gap: var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  &--lg {
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--text-base);
+    gap: var(--space-4);
+  }
+
+  // ----- Positions ------------------------------------------------------
+
+  &--top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    z-index: var(--z-sticky);
+  }
+
+  &--bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    z-index: var(--z-sticky);
+  }
+}
+
+// ----- Sub-elements -------------------------------------------------------
+
+.pz-banner__icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pz-banner__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+}
+
+.pz-banner__title {
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+.pz-banner__body {
+  font-weight: var(--weight-regular);
+  flex: 1 1 auto;
+}
+
+.pz-banner__action {
+  flex-shrink: 0;
+  margin-left: var(--space-2);
+}
+
+.pz-banner__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: currentColor;
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.07);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 1px;
+    opacity: 1;
+  }
+}
+
+[data-theme='dark'] {
+  .pz-banner__close:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
