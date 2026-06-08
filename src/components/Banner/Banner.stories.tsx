@@ -48,7 +48,6 @@ export const Playground: Story = {
 // ---------------------------------------------------------------------------
 
 export const Variants: Story = {
-  name: 'Variants',
   parameters: {
     docs: {
       description: { story: 'All six tone variants. Neutral has no default icon.' },
@@ -83,7 +82,6 @@ export const Variants: Story = {
 // ---------------------------------------------------------------------------
 
 export const Sizes: Story = {
-  name: 'Sizes',
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
       <Banner variant="brand" size="sm">
@@ -104,7 +102,6 @@ export const Sizes: Story = {
 // ---------------------------------------------------------------------------
 
 export const Dismissible: Story = {
-  name: 'Dismissible',
   parameters: {
     docs: {
       description: {
