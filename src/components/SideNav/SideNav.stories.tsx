@@ -11,7 +11,7 @@ import {
   Globe,
   Menu,
 } from 'lucide-react'
-import { SideNav, SideNavGroup, SideNavItem } from './SideNav'
+import { SideNav, SideNavGroup, SideNavItem, SideNavCollapsible } from './SideNav'
 import { TopBar } from '../TopBar'
 import { PeakziLogo } from '../PeakziLogo'
 
@@ -35,17 +35,20 @@ const meta: Meta<typeof SideNav> = {
 export default meta
 type Story = StoryObj<typeof SideNav>
 
-// Shared full nav used across Collapsible, CollapsedTooltips, and AppShell stories
+// Shared full nav — uses SideNavCollapsible to group sub-items
 function FullNav() {
   return (
     <>
       <SideNavGroup label="Customers">
-        <SideNavItem href="/linked-accounts" icon={<Link2 size={20} strokeWidth={2} />} active>
-          Linked Accounts
-        </SideNavItem>
-        <SideNavItem href="/manage-users" icon={<UserCog size={20} strokeWidth={2} />}>
-          Manage Users
-        </SideNavItem>
+        <SideNavCollapsible icon={<Link2 size={20} strokeWidth={2} />} label="Linked Accounts" active defaultOpen>
+          <SideNavItem href="/linked-accounts" active>All Accounts</SideNavItem>
+          <SideNavItem href="/linked-accounts/pending">Pending</SideNavItem>
+          <SideNavItem href="/linked-accounts/archived">Archived</SideNavItem>
+        </SideNavCollapsible>
+        <SideNavCollapsible icon={<UserCog size={20} strokeWidth={2} />} label="Manage Users">
+          <SideNavItem href="/manage-users">All Users</SideNavItem>
+          <SideNavItem href="/manage-users/roles">Roles & Permissions</SideNavItem>
+        </SideNavCollapsible>
         <SideNavItem href="/ai-website" icon={<Globe size={20} strokeWidth={2} />}>
           AI Website
         </SideNavItem>
@@ -57,9 +60,11 @@ function FullNav() {
         <SideNavItem href="/admin-tasks" icon={<ClipboardList size={20} strokeWidth={2} />}>
           Admin Tasks
         </SideNavItem>
-        <SideNavItem href="/talent-search" icon={<Search size={20} strokeWidth={2} />}>
-          Talent Search
-        </SideNavItem>
+        <SideNavCollapsible icon={<Search size={20} strokeWidth={2} />} label="Talent Search">
+          <SideNavItem href="/talent-search">Search</SideNavItem>
+          <SideNavItem href="/talent-search/saved">Saved Searches</SideNavItem>
+          <SideNavItem href="/talent-search/outreach">Outreach</SideNavItem>
+        </SideNavCollapsible>
         <SideNavItem href="/accounts" icon={<Users size={20} strokeWidth={2} />}>
           Accounts
         </SideNavItem>
@@ -244,6 +249,75 @@ export const WithIcons: Story = {
   ),
 }
 
+export const CollapsibleItems: Story = {
+  name: 'Collapsible sub-items',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Use `<SideNavCollapsible>` instead of `<SideNavItem>` when a nav entry has children. ' +
+          'Pass `defaultOpen` to start expanded, and `active` when any child is the current page. ' +
+          'In icon-only (collapsed rail) mode the chevron and sub-items are hidden automatically.',
+      },
+    },
+  },
+  render: function CollapsibleItemsStory() {
+    return (
+      <div style={{ width: 260, height: 640, border: '1px solid #e5e7eb' }}>
+        <SideNav
+          brand={<PeakziLogo variant="auto" size="sm" />}
+          badge="ADMIN"
+          badgeVariant="brand"
+        >
+          <SideNavGroup label="Customers" accordion>
+            {/* Expanded by default — one child is active */}
+            <SideNavCollapsible
+              icon={<Link2 size={20} strokeWidth={2} />}
+              label="Linked Accounts"
+              active
+              defaultOpen
+            >
+              <SideNavItem href="/linked-accounts" active>All Accounts</SideNavItem>
+              <SideNavItem href="/linked-accounts/pending">Pending</SideNavItem>
+              <SideNavItem href="/linked-accounts/archived">Archived</SideNavItem>
+            </SideNavCollapsible>
+
+            {/* Collapsed by default */}
+            <SideNavCollapsible icon={<UserCog size={20} strokeWidth={2} />} label="Manage Users">
+              <SideNavItem href="/manage-users">All Users</SideNavItem>
+              <SideNavItem href="/manage-users/roles">Roles & Permissions</SideNavItem>
+              <SideNavItem href="/manage-users/invites">Invitations</SideNavItem>
+            </SideNavCollapsible>
+
+            <SideNavItem href="/ai-website" icon={<Globe size={20} strokeWidth={2} />}>
+              AI Website
+            </SideNavItem>
+          </SideNavGroup>
+
+          <SideNavGroup label="Operations" accordion>
+            <SideNavCollapsible
+              icon={<Search size={20} strokeWidth={2} />}
+              label="Talent Search"
+              badge={3}
+            >
+              <SideNavItem href="/talent-search">Search</SideNavItem>
+              <SideNavItem href="/talent-search/saved">Saved Searches</SideNavItem>
+              <SideNavItem href="/talent-search/outreach">Outreach</SideNavItem>
+            </SideNavCollapsible>
+
+            <SideNavItem href="/admin-tasks" icon={<ClipboardList size={20} strokeWidth={2} />}>
+              Admin Tasks
+            </SideNavItem>
+            <SideNavItem href="/accounts" icon={<Users size={20} strokeWidth={2} />}>
+              Accounts
+            </SideNavItem>
+          </SideNavGroup>
+        </SideNav>
+      </div>
+    )
+  },
+}
+
 export const Collapsible: Story = {
   name: 'Collapsible (desktop toggle)',
   render: function CollapsibleStory() {
@@ -330,6 +404,37 @@ export const CollapsedTooltips: Story = {
       </div>
     )
   },
+}
+
+export const ShowTooltip: Story = {
+  name: 'Show tooltip (nav-level)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When `showTooltip` is set on `<SideNav>`, all items show a right-side tooltip on hover ' +
+          'regardless of collapsed state. Useful for narrow-but-expanded rails where labels may be truncated. ' +
+          'Individual items can override with their own `showTooltip` prop.',
+      },
+    },
+  },
+  render: () => (
+    <div style={{ display: 'flex', height: 480 }}>
+      <div style={{ width: 200, border: '1px solid #e5e7eb', flexShrink: 0 }}>
+        <SideNav
+          brand={<PeakziLogo variant="auto" size="sm" />}
+          badge="ADMIN"
+          badgeVariant="brand"
+          showTooltip
+        >
+          <FullNav />
+        </SideNav>
+      </div>
+      <div style={{ flex: 1, padding: 24, color: 'var(--fg-3)', fontSize: 13 }}>
+        Hover any nav item to see its tooltip →
+      </div>
+    </div>
+  ),
 }
 
 export const MobileDrawer: Story = {

@@ -5,7 +5,7 @@
 .pz-app-footer {
   display: flex;
   align-items: center;
-  padding: 10px 24px;
+  padding: 8px 24px;
   background: var(--surface-1);
   border-top: 1px solid var(--border-subtle);
   font-size: var(--text-xs);
@@ -13,9 +13,10 @@
 }
 
 // Position variants — also set --_align so stacked content follows the same direction
-.pz-app-footer--left   { justify-content: flex-start; --_align: flex-start; }
-.pz-app-footer--center { justify-content: center;     --_align: center; }
-.pz-app-footer--right  { justify-content: flex-end;   --_align: flex-end; }
+.pz-app-footer--left   { justify-content: flex-start;    --_align: flex-start; }
+.pz-app-footer--center { justify-content: center;        --_align: center; }
+.pz-app-footer--right  { justify-content: flex-end;      --_align: flex-end; }
+.pz-app-footer--split  { justify-content: space-between; --_align: flex-start; }
 
 .pz-app-footer__content {
   display: inline-flex;

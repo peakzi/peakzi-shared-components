@@ -9,6 +9,7 @@ const componentEntries = [
   'AppFooter',
   'Avatar',
   'Badge',
+  'Banner',
   'Breadcrumbs',
   'Button',
   'Card',

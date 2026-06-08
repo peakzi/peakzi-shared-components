@@ -50,8 +50,8 @@ export type { StatusPillProps, StatusPillStatus } from './components/StatusPill'
 export { PageHeader } from './components/PageHeader'
 export type { PageHeaderProps } from './components/PageHeader'
 
-export { SideNav, SideNavGroup, SideNavItem } from './components/SideNav'
-export type { SideNavProps, SideNavGroupProps, SideNavItemProps } from './components/SideNav'
+export { SideNav, SideNavGroup, SideNavItem, SideNavCollapsible } from './components/SideNav'
+export type { SideNavProps, SideNavGroupProps, SideNavItemProps, SideNavCollapsibleProps } from './components/SideNav'
 
 export { TopBar } from './components/TopBar'
 export type { TopBarProps } from './components/TopBar'
@@ -79,6 +79,9 @@ export type { StepperProps, StepperItemProps, StepperStatus } from './components
 // ---------------------------------------------------------------------------
 export { Alert } from './components/Alert'
 export type { AlertProps, AlertVariant } from './components/Alert'
+
+export { Banner } from './components/Banner'
+export type { BannerProps, BannerVariant, BannerSize, BannerPosition } from './components/Banner'
 
 export { Progress, Ring, Spinner, Skeleton } from './components/Progress'
 export type {

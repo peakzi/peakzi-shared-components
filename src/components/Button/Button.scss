@@ -121,6 +121,23 @@
   }
 }
 
+.pz-btn--text {
+  background: transparent;
+  color: var(--fg-3);
+  border-color: transparent;
+  padding-inline: 0;
+  font-weight: var(--weight-medium);
+
+  &:hover:not(:disabled) {
+    filter: none;
+    color: var(--fg-1);
+  }
+
+  &:active:not(:disabled) {
+    transform: none;
+  }
+}
+
 .pz-btn--danger {
   background: var(--danger);
   color: var(--neutral-0);
