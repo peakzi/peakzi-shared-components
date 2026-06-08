@@ -2,11 +2,33 @@ import {
   type ReactNode,
   type HTMLAttributes,
   type MouseEventHandler,
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
   useState,
 } from 'react'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { createPortal } from 'react-dom'
+import { ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { Badge } from '../Badge'
 import type { BadgeVariant, BadgeSize } from '../Badge'
+
+const SideNavContext = createContext<{ showTooltip: boolean; collapsed: boolean }>({
+  showTooltip: false,
+  collapsed: false,
+})
+
+interface SideNavGroupContextValue {
+  accordion: boolean
+  activeId: string | null
+  setActiveId: (id: string | null) => void
+}
+const SideNavGroupContext = createContext<SideNavGroupContextValue>({
+  accordion: false,
+  activeId: null,
+  setActiveId: () => {},
+})
 
 export interface SideNavProps extends HTMLAttributes<HTMLElement> {
   /** Logo or brand block at the top of the rail (shown when expanded). */
@@ -41,6 +63,8 @@ export interface SideNavProps extends HTMLAttributes<HTMLElement> {
   mobileOpen?: boolean
   /** Called when the mobile overlay or the built-in close button is clicked. */
   onMobileClose?: () => void
+  /** Show a tooltip on all SideNavItems on hover (useful for narrow but not collapsed rails). */
+  showTooltip?: boolean
 }
 
 /**
@@ -81,6 +105,7 @@ export function SideNav({
   onCollapsedChange,
   mobileOpen = false,
   onMobileClose,
+  showTooltip = false,
   ...rest
 }: SideNavProps) {
   const isControlled = collapsedProp !== undefined
@@ -97,6 +122,7 @@ export function SideNav({
     'pz-sidenav',
     collapsed && 'pz-sidenav--collapsed',
     mobileOpen && 'pz-sidenav--mobile-open',
+    showTooltip && 'pz-sidenav--show-tooltip',
     className,
   ]
     .filter(Boolean)
@@ -105,7 +131,7 @@ export function SideNav({
   const hasBrandRow = brand || brandIcon || badge || onMobileClose
 
   return (
-    <>
+    <SideNavContext.Provider value={{ showTooltip, collapsed: collapsed ?? false }}>
       {mobileOpen && (
         <button type="button" className="pz-sidenav__overlay" onClick={onMobileClose} aria-label="Close navigation" />
       )}
@@ -152,7 +178,7 @@ export function SideNav({
           </div>
         )}
       </nav>
-    </>
+    </SideNavContext.Provider>
   )
 }
 SideNav.displayName = 'SideNav'
@@ -165,17 +191,22 @@ export interface SideNavGroupProps extends HTMLAttributes<HTMLDivElement> {
   /** Group heading text (rendered uppercase + spaced). */
   label?: ReactNode
   children?: ReactNode
+  /** Only one SideNavCollapsible can be open at a time within this group. */
+  accordion?: boolean
 }
 
-export function SideNavGroup({ label, children, className, ...rest }: SideNavGroupProps) {
+export function SideNavGroup({ label, children, className, accordion = false, ...rest }: SideNavGroupProps) {
+  const [activeId, setActiveId] = useState<string | null>(null)
   const cls = ['pz-sidenav__group', className].filter(Boolean).join(' ')
   return (
-    <div className={cls} {...rest}>
-      {label && <div className="pz-sidenav__group-label">{label}</div>}
-      <ul className="pz-sidenav__items" role="list">
-        {children}
-      </ul>
-    </div>
+    <SideNavGroupContext.Provider value={{ accordion, activeId, setActiveId }}>
+      <div className={cls} {...rest}>
+        {label && <div className="pz-sidenav__group-label">{label}</div>}
+        <ul className="pz-sidenav__items" role="list">
+          {children}
+        </ul>
+      </div>
+    </SideNavGroupContext.Provider>
   )
 }
 SideNavGroup.displayName = 'SideNavGroup'
@@ -196,10 +227,15 @@ export interface SideNavItemProps {
   /** Optional badge content (count, "New", etc.). */
   badge?: ReactNode
   /**
-   * Explicit label for the collapsed-mode tooltip (`data-label`).
+   * Explicit label for the tooltip (`data-label`).
    * Defaults to `children` when children is a plain string.
    */
   label?: string
+  /**
+   * Show a tooltip with the full label on hover regardless of collapsed state.
+   * Useful when the label text may be truncated due to sidebar width.
+   */
+  showTooltip?: boolean
   children?: ReactNode
   className?: string
 }
@@ -211,10 +247,18 @@ export function SideNavItem({
   active = false,
   badge,
   label,
+  showTooltip,
   children,
   className,
 }: SideNavItemProps) {
-  const cls = ['pz-sidenav__item', active && 'pz-sidenav__item--active', className]
+  const ctx = useContext(SideNavContext)
+  const resolvedShowTooltip = showTooltip ?? ctx.showTooltip
+  const cls = [
+    'pz-sidenav__item',
+    active && 'pz-sidenav__item--active',
+    resolvedShowTooltip && 'pz-sidenav__item--show-tooltip',
+    className,
+  ]
     .filter(Boolean)
     .join(' ')
 
@@ -260,3 +304,173 @@ export function SideNavItem({
   )
 }
 SideNavItem.displayName = 'SideNavItem'
+
+// =============================================================================
+// SideNavCollapsible
+// =============================================================================
+
+export interface SideNavCollapsibleProps {
+  /** Icon node (lucide-react icon at 20px). */
+  icon?: ReactNode
+  /** Trigger label — also used as the collapsed-mode tooltip. */
+  label: string
+  /** Optional badge on the trigger. */
+  badge?: ReactNode
+  /** Highlight the trigger (e.g. when a child is the active page). */
+  active?: boolean
+  /** Open by default when uncontrolled. */
+  defaultOpen?: boolean
+  /** Controlled open state. */
+  open?: boolean
+  /** Called when open state changes. */
+  onOpenChange?: (open: boolean) => void
+  children?: ReactNode
+  className?: string
+}
+
+export function SideNavCollapsible({
+  icon,
+  label,
+  badge,
+  active = false,
+  defaultOpen = false,
+  open: openProp,
+  onOpenChange,
+  children,
+  className,
+}: SideNavCollapsibleProps) {
+  const { showTooltip, collapsed } = useContext(SideNavContext)
+  const { accordion, activeId, setActiveId } = useContext(SideNavGroupContext)
+
+  // Stable ID used as the accordion key for this item
+  const uid = useId()
+  const isFirstRender = useRef(true)
+
+  // In accordion mode: register as active on mount if defaultOpen
+  useEffect(() => {
+    if (accordion && defaultOpen && isFirstRender.current) {
+      setActiveId(uid)
+    }
+    isFirstRender.current = false
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const isControlled = openProp !== undefined
+  const [openState, setOpenState] = useState(defaultOpen)
+
+  // Derive open: accordion overrides uncontrolled/controlled state
+  const open = accordion
+    ? activeId === uid
+    : isControlled
+      ? openProp!
+      : openState
+
+  const toggle = () => {
+    if (collapsed) return
+    if (accordion) {
+      const next = activeId === uid ? null : uid
+      setActiveId(next)
+      onOpenChange?.(next !== null)
+    } else {
+      const next = !open
+      if (!isControlled) setOpenState(next)
+      onOpenChange?.(next)
+    }
+  }
+
+  // ---- Collapsed-mode flyout ----------------------------------------
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [flyoutVisible, setFlyoutVisible] = useState(false)
+  const [flyoutPos, setFlyoutPos] = useState({ top: 0, left: 0 })
+
+  const openFlyout = () => {
+    if (!collapsed || !triggerRef.current) return
+    const rect = triggerRef.current.getBoundingClientRect()
+    setFlyoutPos({ top: rect.top, left: rect.right + 8 })
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+    setFlyoutVisible(true)
+  }
+
+  const scheduleFlyoutClose = () => {
+    closeTimerRef.current = setTimeout(() => setFlyoutVisible(false), 120)
+  }
+
+  const cancelFlyoutClose = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+  }
+
+  // Cleanup timer on unmount
+  useEffect(() => () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+  }, [])
+
+  // -------------------------------------------------------------------
+
+  const triggerCls = [
+    'pz-sidenav__item',
+    'pz-sidenav__collapsible-trigger',
+    active && 'pz-sidenav__item--active',
+    showTooltip && 'pz-sidenav__item--show-tooltip',
+    className,
+  ].filter(Boolean).join(' ')
+
+  return (
+    <li className="pz-sidenav__collapsible">
+      <button
+        ref={triggerRef}
+        type="button"
+        className={triggerCls}
+        onClick={toggle}
+        onMouseEnter={openFlyout}
+        onMouseLeave={scheduleFlyoutClose}
+        aria-expanded={collapsed ? undefined : open}
+        data-label={label}
+      >
+        {icon && (
+          <span className="pz-sidenav__item-icon" aria-hidden="true">{icon}</span>
+        )}
+        <span className="pz-sidenav__item-label">{label}</span>
+        {badge != null && <span className="pz-sidenav__item-badge">{badge}</span>}
+        <span
+          className={[
+            'pz-sidenav__collapsible-chevron',
+            open && 'pz-sidenav__collapsible-chevron--open',
+          ].filter(Boolean).join(' ')}
+          aria-hidden="true"
+        >
+          <ChevronDown size={14} />
+        </span>
+      </button>
+
+      {/* Inline sub-items — hidden in collapsed mode via CSS */}
+      <div
+        className={['pz-sidenav__subitems', open && 'pz-sidenav__subitems--open'].filter(Boolean).join(' ')}
+        aria-hidden={!open}
+      >
+        <ul className="pz-sidenav__subitems-inner" role="list">
+          {children}
+        </ul>
+      </div>
+
+      {/* Flyout — portal-rendered so it escapes overflow constraints */}
+      {collapsed && flyoutVisible && typeof document !== 'undefined' && createPortal(
+        <div
+          className="pz-sidenav__flyout"
+          style={{ top: flyoutPos.top, left: flyoutPos.left }}
+          onMouseEnter={cancelFlyoutClose}
+          onMouseLeave={scheduleFlyoutClose}
+          role="navigation"
+          aria-label={label}
+        >
+          <div className="pz-sidenav__flyout-label">{label}</div>
+          <ul className="pz-sidenav__flyout-items" role="list">
+            {children}
+          </ul>
+        </div>,
+        document.body,
+      )}
+    </li>
+  )
+}
+SideNavCollapsible.displayName = 'SideNavCollapsible'

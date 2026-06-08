@@ -4,7 +4,7 @@ import { type HTMLAttributes } from 'react'
 // AppFooter
 // =============================================================================
 
-export type AppFooterPosition = 'left' | 'center' | 'right'
+export type AppFooterPosition = 'left' | 'center' | 'right' | 'split'
 export type AppFooterVersionPlacement = 'inline' | 'block'
 
 export interface AppFooterProps extends HTMLAttributes<HTMLElement> {
@@ -54,6 +54,15 @@ export function AppFooter({
   ]
     .filter(Boolean)
     .join(' ')
+
+  if (position === 'split') {
+    return (
+      <footer className={cls} {...rest}>
+        {text && <span>{'© '}{text}</span>}
+        {version && <span className="pz-app-footer__version">{version}</span>}
+      </footer>
+    )
+  }
 
   return (
     <footer className={cls} {...rest}>
