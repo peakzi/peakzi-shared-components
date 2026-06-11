@@ -12,6 +12,12 @@
   margin-bottom: 24px;
 }
 
+.pz-page-header--borderless {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding: 0;
+}
+
 .pz-page-header__text {
   display: flex;
   flex-direction: column;

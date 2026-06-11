@@ -16,6 +16,8 @@ export interface PageHeaderProps extends Omit<HTMLAttributes<HTMLElement>, 'titl
   actions?: ReactNode
   /** Heading level for SEO/structure. Defaults to `h1`. */
   as?: 'h1' | 'h2' | 'h3'
+  /** Removes the bottom border, bottom margin, and vertical padding. */
+  borderless?: boolean
 }
 
 /**
@@ -37,10 +39,11 @@ export function PageHeader({
   lede,
   actions,
   as: Tag = 'h1',
+  borderless,
   className,
   ...rest
 }: PageHeaderProps) {
-  const cls = ['pz-page-header', className].filter(Boolean).join(' ')
+  const cls = ['pz-page-header', borderless && 'pz-page-header--borderless', className].filter(Boolean).join(' ')
 
   return (
     <header className={cls} {...rest}>
