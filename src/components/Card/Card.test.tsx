@@ -137,11 +137,11 @@ describe('CardTitle — actionButton', () => {
 })
 
 describe('CardBody', () => {
-  it('renders a paragraph with pz-card__body class', () => {
+  it('renders a div with pz-card__body class', () => {
     const { container } = render(<CardBody>Body text</CardBody>)
-    const p = container.querySelector('p.pz-card__body')
-    expect(p).toBeInTheDocument()
-    expect(p).toHaveTextContent('Body text')
+    const div = container.querySelector('div.pz-card__body')
+    expect(div).toBeInTheDocument()
+    expect(div).toHaveTextContent('Body text')
   })
 })
 

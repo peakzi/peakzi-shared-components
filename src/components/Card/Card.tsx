@@ -59,15 +59,15 @@ export function CardTitle({ as: Tag = 'h3', titleIcon, actionButton, centerAlign
 }
 CardTitle.displayName = 'CardTitle'
 
-export interface CardBodyProps extends HTMLAttributes<HTMLParagraphElement> {
+export interface CardBodyProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode
 }
 
 export function CardBody({ className, children, ...rest }: CardBodyProps) {
   return (
-    <p className={['pz-card__body', className].filter(Boolean).join(' ')} {...rest}>
+    <div className={['pz-card__body', className].filter(Boolean).join(' ')} {...rest}>
       {children}
-    </p>
+    </div>
   )
 }
 CardBody.displayName = 'CardBody'
