@@ -68,3 +68,10 @@
 
   &[data-copied] { color: var(--success-strong); }
 }
+
+@media (max-width: 767px), (pointer: coarse) {
+  .pz-copy-field__btn {
+    min-height: 44px;
+    padding-inline: 12px;
+  }
+}

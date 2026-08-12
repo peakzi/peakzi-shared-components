@@ -162,6 +162,10 @@
     background: var(--bg-muted);
     color: var(--fg-1);
   }
+
+  > svg {
+    flex-shrink: 0;
+  }
 }
 
 // =============================================================================
@@ -189,6 +193,7 @@
   &.pz-btn--icon {
     width: 30px;
     height: 30px;
+    padding: 0;
   }
 }
 
@@ -201,6 +206,7 @@
   &.pz-btn--icon {
     width: 44px;
     height: 44px;
+    padding: 0;
   }
 }
 
@@ -212,6 +218,7 @@
   &.pz-btn--icon {
     width: 52px;
     height: 52px;
+    padding: 0;
   }
 }
 
@@ -227,6 +234,20 @@
 
 .pz-btn--block {
   width: 100%;
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  .pz-btn--xs,
+  .pz-btn--sm {
+    min-height: 44px;
+  }
+
+  .pz-btn--xs.pz-btn--icon,
+  .pz-btn--sm.pz-btn--icon,
+  .pz-btn--icon {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 // =============================================================================

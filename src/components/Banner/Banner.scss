@@ -169,6 +169,14 @@
   }
 }
 
+@media (max-width: 767px), (pointer: coarse) {
+  .pz-banner__close {
+    width: 44px;
+    height: 44px;
+    margin: calc((44px - 22px) / -2) 0;
+  }
+}
+
 [data-theme='dark'] {
   .pz-banner__close:hover {
     background: rgba(255, 255, 255, 0.1);
