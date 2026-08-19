@@ -15,6 +15,7 @@ const componentEntries = [
   'Card',
   'Checkbox',
   'CopyField',
+  'CodeSnippet',
   'DefList',
   'Dropdown',
   'EditableField',

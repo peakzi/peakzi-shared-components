@@ -151,6 +151,9 @@ export type {
 export { CopyField } from './components/CopyField'
 export type { CopyFieldProps } from './components/CopyField'
 
+export { CodeSnippet } from './components/CodeSnippet'
+export type { CodeSnippetProps } from './components/CodeSnippet'
+
 export { EditableField } from './components/EditableField'
 export type { EditableFieldProps } from './components/EditableField'
 

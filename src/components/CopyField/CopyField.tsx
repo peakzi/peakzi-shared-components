@@ -1,5 +1,6 @@
-import { useState, useCallback, type ReactNode } from 'react'
-import { Copy, Check } from 'lucide-react'
+import { type ReactNode } from 'react'
+import { AlertTriangle, Check, Copy } from 'lucide-react'
+import { useClipboard } from '../../hooks/ClipBoard/useClipboard'
 
 // =============================================================================
 // CopyField
@@ -18,6 +19,14 @@ export interface CopyFieldProps {
   copyAriaLabel?: string
   /** Tooltip / button label after a successful copy. Defaults to "Copied". */
   copiedLabel?: string
+  /** Button label after a failed copy. Defaults to "Copy failed". */
+  errorLabel?: string
+  /** Milliseconds before copy feedback resets. Defaults to 1500. */
+  resetDelay?: number
+  /** Called after the value is copied successfully. */
+  onCopySuccess?: (value: string) => void
+  /** Called when clipboard access is unavailable or rejected. */
+  onCopyError?: (error: Error, value: string) => void
   className?: string
 }
 
@@ -36,19 +45,20 @@ export function CopyField({
   mono = true,
   copyAriaLabel,
   copiedLabel = 'Copied',
+  errorLabel = 'Copy failed',
+  resetDelay = 1500,
+  onCopySuccess,
+  onCopyError,
   className,
 }: CopyFieldProps) {
-  const [copied, setCopied] = useState(false)
-
-  const onCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(value)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
-    } catch {
-      // Clipboard API may be unavailable (insecure context) — silently no-op.
-    }
-  }, [value])
+  const { copy, status } = useClipboard({
+    resetDelay,
+    onSuccess: onCopySuccess,
+    onError: onCopyError,
+  })
+  const copied = status === 'success'
+  const copyFailed = status === 'error'
+  const feedbackLabel = copied ? copiedLabel : copyFailed ? errorLabel : 'Copy'
 
   const cls = ['pz-copy-field', className].filter(Boolean).join(' ')
   const valueCls = ['pz-copy-field__value', mono && 'pz-copy-field__value--mono']
@@ -63,13 +73,13 @@ export function CopyField({
         <button
           type="button"
           className="pz-copy-field__btn"
-          onClick={onCopy}
+          onClick={() => void copy(value)}
           aria-label={copyAriaLabel ?? `Copy ${label ?? 'value'}`}
-          data-copied={copied || undefined}
+          data-copy-status={status}
         >
-          {copied ? <Check size={14} /> : <Copy size={14} />}
-          <span className="pz-copy-field__btn-label">
-            {copied ? copiedLabel : 'Copy'}
+          {copied ? <Check size={14} /> : copyFailed ? <AlertTriangle size={14} /> : <Copy size={14} />}
+          <span className="pz-copy-field__btn-label" aria-live="polite">
+            {feedbackLabel}
           </span>
         </button>
       </div>
