@@ -135,7 +135,7 @@
 // class selector. `.pz-banner .pz-banner__title` (0-2-0) outranks it, letting
 // the title inherit the variant color instead of the global reset color.
 .pz-banner .pz-banner__title {
-  color: inherit;
+  color: inherit !important;
 }
 
 .pz-banner__body {
