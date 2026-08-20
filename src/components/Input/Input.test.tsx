@@ -283,4 +283,13 @@ describe('Select', () => {
     )
     expect(selectEl).toBeInstanceOf(HTMLSelectElement)
   })
+
+  it('is disabled when disabled prop set', () => {
+    render(
+      <Select disabled aria-label="trade">
+        <option>HVAC</option>
+      </Select>,
+    )
+    expect(screen.getByRole('combobox')).toBeDisabled()
+  })
 })

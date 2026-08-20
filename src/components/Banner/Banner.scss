@@ -130,6 +130,14 @@
   white-space: nowrap;
 }
 
+// _elements.scss scopes its global `strong, b { color: var(--fg-1) }` reset
+// under `:root[data-theme]` (specificity 0-1-1) so it can still beat a single
+// class selector. `.pz-banner .pz-banner__title` (0-2-0) outranks it, letting
+// the title inherit the variant color instead of the global reset color.
+.pz-banner .pz-banner__title {
+  color: inherit !important;
+}
+
 .pz-banner__body {
   font-weight: var(--weight-regular);
   flex: 1 1 auto;
