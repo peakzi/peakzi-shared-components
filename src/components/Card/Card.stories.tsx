@@ -20,6 +20,11 @@ const meta: Meta<typeof Card> = {
       options: ['default', 'hoverable', 'elevated', 'inset', 'dark', 'gradient'],
       description: 'Visual style of the card',
     },
+    tone: {
+      control: 'select',
+      options: [undefined, 'success', 'warning', 'danger', 'info'],
+      description: 'Soft sentiment-tinted background + matching border. Independent of `variant`.',
+    },
   },
   args: {
     variant: 'default',
@@ -198,6 +203,40 @@ export const FullComposition: Story = {
       </CardTitle>
       <CardBody>Your business appeared in 14 AI-generated answers this week — up 23% from last week.</CardBody>
       <CardFooter>Last updated · 2 hours ago</CardFooter>
+    </Card>
+  ),
+}
+
+export const Tone: Story = {
+  name: 'Tone (sentiment tint)',
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+      <Card tone="danger">
+        <CardTitle>Risk — Price perception is your weakest customer score</CardTitle>
+        <CardBody>Your Value score ranks 14th of 18 similar-size competitors.</CardBody>
+      </Card>
+      <Card tone="success">
+        <CardTitle>What&apos;s working — Most-reviewed operator your size</CardTitle>
+        <CardBody>You carry 24,537 reviews, more than any similar-size competitor.</CardBody>
+      </Card>
+      <Card tone="warning">
+        <CardTitle>Renew an expiring offer</CardTitle>
+        <CardBody>Your maintenance membership deal expires August 31.</CardBody>
+      </Card>
+      <Card tone="info">
+        <CardTitle>Context</CardTitle>
+        <CardBody>The market&apos;s Value score barely moved while yours fell 8.45%.</CardBody>
+      </Card>
+    </div>
+  ),
+}
+
+export const ToneWithVariant: Story = {
+  name: 'Tone + variant combined',
+  render: () => (
+    <Card variant="hoverable" tone="warning" style={{ maxWidth: 360 }}>
+      <CardTitle>Tone is independent of variant</CardTitle>
+      <CardBody>A hoverable card can still carry a sentiment tint.</CardBody>
     </Card>
   ),
 }

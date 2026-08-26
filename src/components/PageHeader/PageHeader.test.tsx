@@ -58,4 +58,34 @@ describe('PageHeader', () => {
     const { container } = render(<PageHeader title="Accounts" className="custom" />)
     expect(container.querySelector('.pz-page-header.custom')).toBeInTheDocument()
   })
+
+  it('does not apply pz-page-header__title--md by default', () => {
+    const { container } = render(<PageHeader title="Accounts" />)
+    expect(container.querySelector('.pz-page-header__title--md')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-page-header__title--md when titleSize="md"', () => {
+    const { container } = render(<PageHeader title="A full sentence used as the title" titleSize="md" />)
+    expect(container.querySelector('.pz-page-header__title--md')).toBeInTheDocument()
+  })
+
+  it('does not apply pz-page-header--stacked-actions by default', () => {
+    const { container } = render(<PageHeader title="Accounts" actions={<button>New</button>} />)
+    expect(container.querySelector('.pz-page-header--stacked-actions')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-page-header--stacked-actions when stackedActions is true', () => {
+    const { container } = render(<PageHeader title="Accounts" actions={<button>New</button>} stackedActions />)
+    expect(container.querySelector('.pz-page-header--stacked-actions')).toBeInTheDocument()
+  })
+
+  it('does not apply pz-page-header--bg-subtle by default', () => {
+    const { container } = render(<PageHeader title="Accounts" />)
+    expect(container.querySelector('.pz-page-header--bg-subtle')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-page-header--bg-subtle when background="subtle"', () => {
+    const { container } = render(<PageHeader title="Accounts" background="subtle" />)
+    expect(container.querySelector('.pz-page-header--bg-subtle')).toBeInTheDocument()
+  })
 })

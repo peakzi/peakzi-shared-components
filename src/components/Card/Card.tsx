@@ -5,6 +5,7 @@ import { type ReactNode, type HTMLAttributes } from 'react'
 // ---------------------------------------------------------------------------
 
 export type CardVariant = 'default' | 'hoverable' | 'elevated' | 'inset' | 'dark' | 'gradient'
+export type CardTone = 'success' | 'warning' | 'danger' | 'info'
 
 // ---------------------------------------------------------------------------
 // Card
@@ -12,14 +13,17 @@ export type CardVariant = 'default' | 'hoverable' | 'elevated' | 'inset' | 'dark
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: CardVariant
+  /** Soft sentiment-tinted background + matching border. Independent of `variant`. */
+  tone?: CardTone
   /** <Card.Title> shorthand — also accepts arbitrary children */
   children?: ReactNode
 }
 
-export function Card({ variant = 'default', className, children, ...rest }: CardProps) {
+export function Card({ variant = 'default', tone, className, children, ...rest }: CardProps) {
   const cls = [
     'pz-card',
     variant !== 'default' && `pz-card--${variant}`,
+    tone && `pz-card--tone-${tone}`,
     className,
   ]
     .filter(Boolean)
