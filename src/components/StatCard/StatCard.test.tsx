@@ -37,4 +37,14 @@ describe('StatCard', () => {
     const { container } = render(<StatCard value="100" className="custom" />)
     expect(container.querySelector('.pz-stat-card.custom')).toBeInTheDocument()
   })
+
+  it('does not apply a tone class by default', () => {
+    const { container } = render(<StatCard value="100" />)
+    expect(container.querySelector('[class*="pz-stat-card--tone-"]')).not.toBeInTheDocument()
+  })
+
+  it('applies tone class when tone is set', () => {
+    const { container } = render(<StatCard value="100" tone="danger" />)
+    expect(container.querySelector('.pz-stat-card--tone-danger')).toBeInTheDocument()
+  })
 })

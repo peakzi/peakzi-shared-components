@@ -33,10 +33,10 @@ export const Default: Story = {
 }
 
 export const HeadingLevel: Story = {
-  name: 'h3 heading',
+  name: 'h2 heading',
   render: () => (
     <Section>
-      <SectionHeader title="Do this week" as="h3" />
+      <SectionHeader title="Do this week" as="h2" />
       <Grid columns={2}>
         <StatCard eyebrow="Job demand" value="Sharply up" />
         <StatCard eyebrow="New 1-star reviews" value="2" />

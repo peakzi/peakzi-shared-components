@@ -7,11 +7,29 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  // Inline layout is boxed and sized to its content rather than stretching full-width, so a
+  // short comparison table doesn't leave a visible gap. Reset below for stacked/quote (prose).
+  width: fit-content;
+  max-width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-4);
+}
+
+.pz-deflist--stacked,
+.pz-deflist--quote {
+  width: auto;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
 }
 
 .pz-deflist__row {
   display: grid;
-  grid-template-columns: 180px 1fr;
+  // max-content (not 1fr) keeps the value hugging the term instead of stretching full-width.
+  grid-template-columns: 180px max-content;
   gap: 16px;
   padding: 10px 0;
   border-bottom: 1px solid var(--border-subtle);
@@ -24,7 +42,7 @@
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--fg-3);
+  color: var(--fg-2);
   margin: 0;
   align-self: center;
 }
@@ -35,18 +53,71 @@
   margin: 0;
   min-width: 0;
   word-break: break-word;
+  line-height: var(--leading-relaxed);
 }
 
 // Density: sm
 .pz-deflist--sm .pz-deflist__row {
   padding: 6px 0;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 140px max-content;
   gap: 12px;
 }
 .pz-deflist--sm .pz-deflist__value { font-size: var(--text-xs); }
 
-// Layout: stacked (term above value)
+// Layout: stacked (term above value). Left rail gives structure without boxing it like
+// --quote does — --quote resets this below since its own tinted box already separates it.
 .pz-deflist--stacked .pz-deflist__row {
   grid-template-columns: 1fr;
-  gap: 4px;
+  gap: 6px;
+  padding: 2px 0 2px var(--space-3);
+  border-bottom: none;
+  border-left: 2px solid var(--border);
+}
+.pz-deflist--stacked .pz-deflist__row + .pz-deflist__row {
+  margin-top: var(--space-3);
+}
+.pz-deflist--stacked .pz-deflist__value {
+  text-align: left;
+}
+
+// Grouped rows: marker drawn via ::before rather than list-style, since consuming apps
+// commonly reset list-style to none.
+.pz-deflist__bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.pz-deflist__bullet {
+  margin: 0;
+  padding-left: var(--space-4);
+  position: relative;
+
+  &::before {
+    content: '\2022';
+    position: absolute;
+    left: 2px;
+    color: var(--fg-3);
+  }
+}
+
+// Emphasis: quote — boxes the whole list, for a verbatim customer quote (Evidence),
+// distinct from a plain divided list of analysis text (Reasons)
+.pz-deflist--quote {
+  padding: var(--space-4);
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+}
+.pz-deflist--quote .pz-deflist__row {
+  padding: 0;
+  border-bottom: none;
+  border-left: none;
+}
+.pz-deflist--quote .pz-deflist__row + .pz-deflist__row {
+  margin-top: var(--space-3);
+}
+.pz-deflist--quote .pz-deflist__value {
+  font-style: italic;
 }

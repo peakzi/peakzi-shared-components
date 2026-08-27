@@ -31,20 +31,20 @@ export function Section({ className, children, ...rest }: SectionProps) {
 Section.displayName = 'Section'
 
 export interface SectionHeaderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
-  /** The section's label, e.g. "Standing" or "Slower reads that still matter". Rendered as an uppercase eyebrow. */
+  /** The section's label, e.g. "Standing" or "Slower reads that still matter". Rendered as a small label. */
   title: ReactNode
   /** Optional one-line description under the title, e.g. "Read 10 Aug, next 7 Sep." */
   lead?: ReactNode
-  /** Heading level for the title. Defaults to `h2`. */
+  /** Heading level for the title. Defaults to `h3` — one level below the page's own heading (`PageHeader`, typically `h1`/`h2`). */
   as?: 'h2' | 'h3' | 'h4'
 }
 
 /**
- * **SectionHeader** — the small uppercase label + optional lead line that
+ * **SectionHeader** — the small label + optional lead line that
  * introduces a `Section`. Not a page title (`PageHeader` owns that) — this is
  * one step down, for a region within the page.
  */
-export function SectionHeader({ title, lead, as: Tag = 'h2', className, ...rest }: SectionHeaderProps) {
+export function SectionHeader({ title, lead, as: Tag = 'h3', className, ...rest }: SectionHeaderProps) {
   const cls = ['pz-section-header', className].filter(Boolean).join(' ')
   return (
     <div className={cls} {...rest}>

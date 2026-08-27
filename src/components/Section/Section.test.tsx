@@ -35,14 +35,14 @@ describe('SectionHeader', () => {
     expect(container.querySelector('.pz-section-header')).toBeInTheDocument()
   })
 
-  it('renders title as h2 by default', () => {
+  it('renders title as h3 by default', () => {
     const { container } = render(<SectionHeader title="Standing" />)
-    expect(container.querySelector('h2.pz-section-header__title')).toBeInTheDocument()
+    expect(container.querySelector('h3.pz-section-header__title')).toBeInTheDocument()
   })
 
-  it('renders title as h3 when as="h3"', () => {
-    const { container } = render(<SectionHeader title="Standing" as="h3" />)
-    expect(container.querySelector('h3.pz-section-header__title')).toBeInTheDocument()
+  it('renders title as h2 when as="h2"', () => {
+    const { container } = render(<SectionHeader title="Standing" as="h2" />)
+    expect(container.querySelector('h2.pz-section-header__title')).toBeInTheDocument()
   })
 
   it('renders lead when provided', () => {

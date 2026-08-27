@@ -36,6 +36,12 @@ export interface PageHeaderProps extends Omit<HTMLAttributes<HTMLElement>, 'titl
    * border on its own, no need to also pass `borderless`.
    */
   background?: 'none' | 'subtle'
+  /**
+   * Shorthand for `titleSize="md"` + `stackedActions` + `background="subtle"` together.
+   * Off by default. Any of those three, if also passed explicitly, overrides this for
+   * that one value. Does not set `as`.
+   */
+  masthead?: boolean
   /** Removes the bottom border, bottom margin, and vertical padding. */
   borderless?: boolean
 }
@@ -59,21 +65,26 @@ export function PageHeader({
   lede,
   actions,
   as: Tag = 'h1',
-  titleSize = 'lg',
+  titleSize,
   stackedActions,
-  background = 'none',
+  background,
+  masthead = false,
   borderless,
   className,
   ...rest
 }: PageHeaderProps) {
+  const effectiveTitleSize = titleSize ?? (masthead ? 'md' : 'lg')
+  const effectiveStackedActions = stackedActions ?? masthead
+  const effectiveBackground = background ?? (masthead ? 'subtle' : 'none')
+
   const cls = [
     'pz-page-header',
     borderless && 'pz-page-header--borderless',
-    stackedActions && 'pz-page-header--stacked-actions',
-    background === 'subtle' && 'pz-page-header--bg-subtle',
+    effectiveStackedActions && 'pz-page-header--stacked-actions',
+    effectiveBackground === 'subtle' && 'pz-page-header--bg-subtle',
     className,
   ].filter(Boolean).join(' ')
-  const titleCls = ['pz-page-header__title', titleSize === 'md' && 'pz-page-header__title--md'].filter(Boolean).join(' ')
+  const titleCls = ['pz-page-header__title', effectiveTitleSize === 'md' && 'pz-page-header__title--md'].filter(Boolean).join(' ')
 
   return (
     <header className={cls} {...rest}>
