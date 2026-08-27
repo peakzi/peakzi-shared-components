@@ -18,6 +18,20 @@
   padding: 0;
 }
 
+.pz-page-header--stacked-actions {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+// Comes after --borderless in source order so its own padding/border-bottom win if both are combined
+.pz-page-header--bg-subtle {
+  background: var(--bg-subtle);
+  border-bottom: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
 .pz-page-header__text {
   display: flex;
   flex-direction: column;
@@ -40,6 +54,13 @@
   margin: 0;
   color: var(--fg-1);
   text-wrap: balance;
+}
+
+// text-wrap: pretty overrides the base rule's `balance`, which deliberately narrows the box to
+// even out line lengths — wrong for a full sentence, since it stops the text reaching full width
+.pz-page-header__title--md {
+  font-size: var(--text-xl);
+  text-wrap: pretty;
 }
 
 .pz-page-header__lede {

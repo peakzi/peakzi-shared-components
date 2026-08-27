@@ -47,6 +47,12 @@
   box-shadow: var(--shadow-glow-brand);
 }
 
+// Fades to the card surface rather than a flat fill, so the tint reads as an accent at the leading edge
+.pz-card--tone-success { background: linear-gradient(150deg, var(--success-soft), var(--surface-1) 65%); border-color: var(--success); }
+.pz-card--tone-warning { background: linear-gradient(150deg, var(--warning-soft), var(--surface-1) 65%); border-color: var(--warning); }
+.pz-card--tone-danger  { background: linear-gradient(150deg, var(--danger-soft),  var(--surface-1) 65%); border-color: var(--danger); }
+.pz-card--tone-info    { background: linear-gradient(150deg, var(--info-soft),    var(--surface-1) 65%); border-color: var(--info); }
+
 // Sub-components
 .pz-card__title {
   font-family: var(--font-display);

@@ -53,6 +53,39 @@ describe('Card', () => {
     const { container } = render(<Card data-testid="my-card">content</Card>)
     expect(container.querySelector('[data-testid="my-card"]')).toBeInTheDocument()
   })
+
+  it('does not apply a tone class by default', () => {
+    const { container } = render(<Card>content</Card>)
+    const card = container.querySelector('.pz-card')
+    expect(card?.className).toBe('pz-card')
+  })
+
+  it('applies success tone class', () => {
+    const { container } = render(<Card tone="success">content</Card>)
+    expect(container.querySelector('.pz-card--tone-success')).toBeInTheDocument()
+  })
+
+  it('applies warning tone class', () => {
+    const { container } = render(<Card tone="warning">content</Card>)
+    expect(container.querySelector('.pz-card--tone-warning')).toBeInTheDocument()
+  })
+
+  it('applies danger tone class', () => {
+    const { container } = render(<Card tone="danger">content</Card>)
+    expect(container.querySelector('.pz-card--tone-danger')).toBeInTheDocument()
+  })
+
+  it('applies info tone class', () => {
+    const { container } = render(<Card tone="info">content</Card>)
+    expect(container.querySelector('.pz-card--tone-info')).toBeInTheDocument()
+  })
+
+  it('combines variant and tone classes independently', () => {
+    const { container } = render(<Card variant="hoverable" tone="danger">content</Card>)
+    const card = container.querySelector('.pz-card')
+    expect(card).toHaveClass('pz-card--hoverable')
+    expect(card).toHaveClass('pz-card--tone-danger')
+  })
 })
 
 describe('CardTitle', () => {

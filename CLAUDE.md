@@ -8,7 +8,7 @@
 ## What This Repo Is
 
 Package name: `@peakzi/components`
-30 component groups covering every common UI pattern across all Peakzi apps.
+33 component groups covering every common UI pattern across all Peakzi apps.
 
 **Consuming app setup (already done in existing apps — do not repeat):**
 ```tsx
@@ -55,6 +55,13 @@ Package name: `@peakzi/components`
 | `SideNav`, `SideNavGroup`, `SideNavItem` | Sidebar navigation |
 | `TopBar` | Top application bar |
 | `AppFooter` | Page footer |
+
+### Layout
+| Component | Key Props |
+|-----------|-----------|
+| `Section`, `SectionHeader` | A labeled region within a page: heading (`title`, `lead`, `as`) + content. Use for "Standing", "Do this week", etc. Not a page title — `PageHeader` owns that. |
+| `Grid` | N items in columns. `columns`: number (equal) \| `"auto"` (auto-fit, use with `minColWidth`) \| number array (weighted, e.g. `[1.4, 1]` for an unequal split). `gap`: sm \| md \| lg |
+| `Stack` | One flex row/column of a fixed handful of different things (title rows, label/value pairs, button groups). `direction`, `gap`, `align`, `justify`, `wrap`. For repeating same-shaped items use `Grid` instead. |
 
 ### Navigation
 | Component | Key Props |

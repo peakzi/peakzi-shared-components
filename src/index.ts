@@ -33,7 +33,7 @@ export type { SegmentedProps, SegmentedOption } from './components/Segmented'
 // Surfaces
 // ---------------------------------------------------------------------------
 export { Card, CardTitle, CardBody, CardFooter, Stat } from './components/Card'
-export type { CardProps, CardVariant, CardTitleProps, CardBodyProps, CardFooterProps, StatProps, StatDelta } from './components/Card'
+export type { CardProps, CardVariant, CardTone, CardTitleProps, CardBodyProps, CardFooterProps, StatProps, StatDelta } from './components/Card'
 
 export { StatCard } from './components/StatCard'
 export type { StatCardProps } from './components/StatCard'
@@ -159,6 +159,18 @@ export type { EditableFieldProps } from './components/EditableField'
 
 export { DefList, DefRow } from './components/DefList'
 export type { DefListProps, DefRowProps } from './components/DefList'
+
+// ---------------------------------------------------------------------------
+// Layout
+// ---------------------------------------------------------------------------
+export { Section, SectionHeader } from './components/Section'
+export type { SectionProps, SectionHeaderProps } from './components/Section'
+
+export { Grid } from './components/Grid'
+export type { GridProps, GridGap } from './components/Grid'
+
+export { Stack } from './components/Stack'
+export type { StackProps, StackGap } from './components/Stack'
 
 // ---------------------------------------------------------------------------
 // Brand

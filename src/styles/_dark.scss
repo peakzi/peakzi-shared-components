@@ -35,4 +35,12 @@
   --border:          var(--peakzi-navy-600);
   --border-strong:   var(--peakzi-navy-500);
   // --border-focus stays as var(--peakzi-purple) — same in both modes
+
+  // Dark, desaturated tints instead of the light-mode pastels — without this, Card's tone
+  // gradient stays bright at its corner while --fg-1/--fg-2 go light-for-dark-mode, and the
+  // light-on-light corner becomes unreadable.
+  --success-soft: color-mix(in srgb, var(--success) 18%, var(--peakzi-navy-900));
+  --warning-soft: color-mix(in srgb, var(--warning) 18%, var(--peakzi-navy-900));
+  --danger-soft:  color-mix(in srgb, var(--danger) 18%, var(--peakzi-navy-900));
+  --info-soft:    color-mix(in srgb, var(--info) 18%, var(--peakzi-navy-900));
 }

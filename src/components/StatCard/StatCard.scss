@@ -9,10 +9,18 @@
   // Tighter padding than default Card — KPI grids need density.
   padding: 16px 20px;
   gap: 8px;
+  // Card's default border (--border-subtle) is near-invisible at this smaller size.
+  border-color: var(--border);
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
 
-  // Stat values can be slightly smaller inside the card to avoid clipping.
+  &:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+
+  // Capped below the masthead verdict's size (24px) — a KPI tile shouldn't outscale it.
   .pz-stat__value {
-    font-size: clamp(24px, 2.6vw, 36px);
+    font-size: clamp(20px, 2vw, 22px);
   }
 }
 
@@ -26,3 +34,24 @@
   align-items: center;
   gap: 6px;
 }
+
+// Sentiment text color only — background/border stay flat, deliberately (never colored,
+// so a tile doesn't compete visually with a full finding Card).
+.pz-stat-card--tone-success,
+.pz-stat-card--tone-warning,
+.pz-stat-card--tone-danger,
+.pz-stat-card--tone-info {
+  border-color: var(--border);
+}
+
+.pz-stat-card--tone-success .pz-stat__value,
+.pz-stat-card--tone-success .pz-stat-card__footer { color: var(--success-strong); }
+
+.pz-stat-card--tone-warning .pz-stat__value,
+.pz-stat-card--tone-warning .pz-stat-card__footer { color: var(--warning-strong); }
+
+.pz-stat-card--tone-danger .pz-stat__value,
+.pz-stat-card--tone-danger .pz-stat-card__footer { color: var(--danger-strong); }
+
+.pz-stat-card--tone-info .pz-stat__value,
+.pz-stat-card--tone-info .pz-stat-card__footer { color: var(--info); }
