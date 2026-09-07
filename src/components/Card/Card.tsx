@@ -13,7 +13,7 @@ export type CardTone = 'success' | 'warning' | 'danger' | 'info'
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: CardVariant
-/** Sentiment-colored border (no background wash). Independent of `variant`. */
+  /** Sentiment-colored border (no background wash). Independent of `variant`. */
   tone?: CardTone
   /**
    * Defaults to `'md'` (24px padding). Use `'sm'` (16px) for a denser, dashboard-style

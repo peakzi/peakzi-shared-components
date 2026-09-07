@@ -121,12 +121,7 @@ export interface DefRowProps {
   /** Use either `value` (string/node shorthand) or `children`. */
   value?: ReactNode
   children?: ReactNode
-  /**
-   * Link to the row's source (e.g. the original review). Rendered as a small external-link
-   * icon after the value. Restricted to `http:`/`https:` — anything else (a malformed string,
-   * a `javascript:` URI) is silently dropped rather than rendered as an unsafe href, since this
-   * ultimately comes from upstream data, not something hand-authored and trusted by default.
-   */
+  /** Link to the row's source, e.g. a review. Renders a small icon; non-http(s) values are dropped. */
   href?: string
   className?: string
 }

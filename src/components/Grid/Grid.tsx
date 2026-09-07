@@ -51,14 +51,8 @@ export function Grid({ columns, minColWidth = '220px', gap = 'md', stackOnMobile
     stackOnMobile && 'pz-grid--stack-mobile',
     className,
   ].filter(Boolean).join(' ')
-  // auto-fit grows items to fill the row (right for 2+ items sharing it evenly) but also
-  // stretches a LONE item to the row's full width, which looks wrong for e.g. a single
-  // "slower reads" card. A single explicit track capped at a natural reading width avoids
-  // both bad extremes: it doesn't stretch full-width, and — unlike repeat(auto-fill, ...),
-  // which creates several same-width phantom empty tracks and pins the one real item to
-  // its bare minColWidth share of just the first one — it isn't clamped to the bare minimum
-  // either. Switch automatically based on how many children are actually here right now,
-  // since that count varies week to week and isn't something the caller can know in advance.
+  // A lone item gets a capped natural width instead of stretching full-width (auto-fit) or
+  // clamping to the bare minColWidth (auto-fill); checked at render since count varies.
   const singleItem = columns === 'auto' && Children.count(children) <= 1
   const gridTemplateColumns =
     columns === 'auto' ? (singleItem ? `minmax(${minColWidth}, 420px)` : `repeat(auto-fit, minmax(${minColWidth}, 1fr))`)

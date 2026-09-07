@@ -54,9 +54,7 @@
   box-shadow: var(--shadow-glow-brand);
 }
 
-// No background wash at all — border + role Badge carry the sentiment signal on their own,
-// leaving the card surface plain so body text and evidence/reason panels read with full
-// contrast and nothing competes with them for attention.
+// No background wash — border + role Badge alone carry the sentiment signal.
 .pz-card--tone-success { border-color: var(--success); }
 .pz-card--tone-warning { border-color: var(--warning); }
 .pz-card--tone-danger  { border-color: var(--danger); }
@@ -120,13 +118,8 @@
   color: var(--fg-3);
 }
 
-// Pins the footer to the card's own bottom edge when the CARD ITSELF is taller than its
-// content (e.g. stretched to match a taller sibling in an equal-height Grid row), so footers
-// line up across a row instead of each one floating right after wherever its own body text
-// ends. Scoped to a footer that's a *direct* child of Card: one nested inside a Stack (e.g.
-// a Risk card's two-column reason/evidence composition) sits in its own flex container that
-// gets stretched to match an unrelated sibling column, not the card's own content — pinning
-// it there opens a large gap instead of hugging anything meaningful.
+// Pins the footer to the bottom of an equal-height row; scoped to a *direct* child of Card
+// so a footer nested in a Stack (e.g. Risk's two-column layout) isn't affected.
 .pz-card > .pz-card__footer:last-child {
   margin-top: auto;
 }

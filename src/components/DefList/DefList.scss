@@ -106,8 +106,7 @@
   }
 }
 
-// Source link — a small external-link affordance appended after a row's value (e.g. a
-// review's original URL), not the whole value turned into one big underlined click target.
+// Appended after a row's value, not the whole value turned into a click target.
 .pz-deflist__link {
   display: inline-flex;
   vertical-align: middle;
