@@ -1,6 +1,6 @@
 {
   "name": "@peakzi/components",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Peakzi shared component library — brand-consistent UI for all Peakzi websites",
   "main": "./dist/index.cjs",
   "scripts": {
