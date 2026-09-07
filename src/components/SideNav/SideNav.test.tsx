@@ -118,4 +118,40 @@ describe('SideNavItem', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Foo' }))
     expect(onClick).toHaveBeenCalledTimes(1)
   })
+
+  it('uses host navigation for an ordinary anchor click', () => {
+    const onNavigate = vi.fn()
+    render(
+      <SideNav>
+        <SideNavGroup>
+          <SideNavItem href="/spa-route" active onNavigate={onNavigate}>
+            SPA route
+          </SideNavItem>
+        </SideNavGroup>
+      </SideNav>
+    )
+
+    const link = screen.getByRole('link', { name: 'SPA route' })
+    fireEvent.click(link)
+
+    expect(link).toHaveAttribute('href', '/spa-route')
+    expect(link).toHaveAttribute('aria-current', 'page')
+    expect(link).toHaveClass('pz-sidenav__item--active')
+    expect(onNavigate).toHaveBeenCalledWith('/spa-route')
+  })
+
+  it('keeps modified anchor clicks as native navigation', () => {
+    const onNavigate = vi.fn()
+    render(
+      <SideNav>
+        <SideNavGroup>
+          <SideNavItem href="/spa-route" onNavigate={onNavigate}>SPA route</SideNavItem>
+        </SideNavGroup>
+      </SideNav>
+    )
+
+    fireEvent.click(screen.getByRole('link', { name: 'SPA route' }), { ctrlKey: true })
+
+    expect(onNavigate).not.toHaveBeenCalled()
+  })
 })

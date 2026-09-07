@@ -220,6 +220,11 @@ export interface SideNavItemProps {
   icon?: ReactNode
   /** href for navigation — renders as `<a>` (preferred for crawlable nav). */
   href?: string
+  /**
+   * Handles an ordinary primary-button click through the host application's
+   * router. Modified clicks keep the anchor's native new-tab/window behavior.
+   */
+  onNavigate?: (href: string) => void
   /** Click handler — renders as `<button>` if no href. */
   onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>
   /** Marks the item as the current page. Sets `aria-current="page"`. */
@@ -243,6 +248,7 @@ export interface SideNavItemProps {
 export function SideNavItem({
   icon,
   href,
+  onNavigate,
   onClick,
   active = false,
   badge,
@@ -277,6 +283,24 @@ export function SideNavItem({
     </>
   )
 
+  const handleAnchorClick: MouseEventHandler<HTMLAnchorElement> = event => {
+    const anchorClick = onClick as MouseEventHandler<HTMLAnchorElement> | undefined
+    anchorClick?.(event)
+
+    if (
+      !onNavigate
+      || event.defaultPrevented
+      || event.button !== 0
+      || event.metaKey
+      || event.ctrlKey
+      || event.shiftKey
+      || event.altKey
+    ) return
+
+    event.preventDefault()
+    onNavigate(href!)
+  }
+
   return (
     <li>
       {href ? (
@@ -284,7 +308,7 @@ export function SideNavItem({
           className={cls}
           href={href}
           aria-current={active ? 'page' : undefined}
-          onClick={onClick}
+          onClick={handleAnchorClick}
           data-label={tooltipLabel}
         >
           {inner}
