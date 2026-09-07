@@ -2,6 +2,8 @@
 // PageHeader
 // =============================================================================
 
+@use '../../styles/breakpoints' as *;
+
 .pz-page-header {
   display: flex;
   align-items: flex-start;
@@ -10,12 +12,6 @@
   padding: 24px 0 20px;
   border-bottom: 1px solid var(--border-subtle);
   margin-bottom: 24px;
-}
-
-.pz-page-header--borderless {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding: 0;
 }
 
 .pz-page-header--stacked-actions {
@@ -92,6 +88,14 @@
   }
 }
 
+// Declared after the background rules so it wins on equal specificity regardless of
+// which background is also applied — borderless removes border/margin/padding outright.
+.pz-page-header--borderless {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding: 0;
+}
+
 .pz-page-header__text {
   display: flex;
   flex-direction: column;
@@ -137,7 +141,7 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: $breakpoint-mobile) {
   .pz-page-header {
     flex-direction: column;
     align-items: stretch;

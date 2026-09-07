@@ -1,0 +1,9 @@
+// =============================================================================
+// Shared Sass breakpoints
+// =============================================================================
+// CSS custom properties can't be used inside @media conditions, so these are
+// plain Sass variables, resolved at build time. @use this file wherever a
+// component needs the same breakpoint another component already uses.
+// =============================================================================
+
+$breakpoint-mobile: 640px;

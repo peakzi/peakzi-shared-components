@@ -60,6 +60,13 @@
 .pz-card--tone-danger  { border-color: var(--danger); }
 .pz-card--tone-info    { border-color: var(--info); }
 
+// :hover on --hoverable outranks a single tone class on specificity alone; these compound
+// selectors outrank hover in turn, so tone stays visible on a hovered, toned card.
+.pz-card--hoverable.pz-card--tone-success:hover { border-color: var(--success); }
+.pz-card--hoverable.pz-card--tone-warning:hover { border-color: var(--warning); }
+.pz-card--hoverable.pz-card--tone-danger:hover  { border-color: var(--danger); }
+.pz-card--hoverable.pz-card--tone-info:hover    { border-color: var(--info); }
+
 // Sub-components
 .pz-card__title {
   font-family: var(--font-display);

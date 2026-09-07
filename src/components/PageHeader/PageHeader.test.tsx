@@ -99,6 +99,13 @@ describe('PageHeader', () => {
     expect(container.querySelector('.pz-page-header--bg-dark')).toBeInTheDocument()
   })
 
+  it('combines borderless and background classes independently', () => {
+    const { container } = render(<PageHeader title="Accounts" borderless background="dark" />)
+    const header = container.querySelector('.pz-page-header')
+    expect(header).toHaveClass('pz-page-header--borderless')
+    expect(header).toHaveClass('pz-page-header--bg-dark')
+  })
+
   it('does not apply the masthead recipe by default', () => {
     const { container } = render(<PageHeader title="Accounts" actions={<button>New</button>} />)
     expect(container.querySelector('.pz-page-header__title--md')).not.toBeInTheDocument()

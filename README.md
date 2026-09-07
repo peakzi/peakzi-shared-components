@@ -86,7 +86,8 @@ export function Example() {
 | Category | Components |
 |---|---|
 | **Inputs** | `Button`, `Input`, `Field`, `Textarea`, `Select`, `Checkbox`, `Radio`, `Switch`, `Slider`, `Segmented` |
-| **Surfaces** | `Card`, `CardTitle`, `CardBody`, `Stat`, `Badge`, `Chip`, `StatusPill` |
+| **Surfaces** | `Card`, `CardTitle`, `CardBody`, `CardFooter`, `Stat`, `Badge`, `Chip`, `StatusPill` |
+| **Layout** | `Grid`, `Stack`, `Section`, `SectionHeader` |
 | **Navigation** | `Tabs`, `TabList`, `Tab`, `TabPanel`, `Navbar`, `NavBrand`, `NavLinks`, `NavLink`, `NavActions`, `Breadcrumbs`, `Pagination`, `Stepper`, `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent` |
 | **Feedback** | `Alert`, `Progress`, `Ring`, `Spinner`, `Skeleton`, `EmptyState` |
 | **Overlays** | `Modal`, `Dropdown`, `DropdownTrigger`, `DropdownMenu`, `DropdownItem`, `Tooltip` |
@@ -237,6 +238,7 @@ Foundation
 Components
   Inputs       — Button, Input, Checkbox, Switch, Slider, Segmented
   Surfaces     — Card, Badge, StatusPill
+  Layout       — Grid, Stack, Section
   Feedback     — Alert, EmptyState, Progress
   Navigation   — Breadcrumbs, Navbar, Tabs, Stepper, Accordion
   Overlays     — Dropdown, Modal, Tooltip

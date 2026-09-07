@@ -20,7 +20,7 @@
 
   // Capped below the masthead verdict's size (24px) — a KPI tile shouldn't outscale it.
   .pz-stat__value {
-    font-size: clamp(20px, 2vw, 22px);
+    font-size: clamp(var(--text-lg), 2vw, 22px);
   }
 }
 

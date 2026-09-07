@@ -42,9 +42,9 @@ export const AutoFit: Story = {
 }
 
 export const WeightedColumns: Story = {
-  name: 'Weighted split',
+  name: 'Weighted split (stacks on mobile)',
   render: () => (
-    <Grid columns={[1.4, 1]} gap="lg">
+    <Grid columns={[1.4, 1]} gap="lg" stackOnMobile>
       <Card>
         <CardTitle>Risk — Price perception is your weakest customer score</CardTitle>
         <CardBody>Your Value score ranks 14th of 18 similar-size DFW competitors.</CardBody>
@@ -52,6 +52,18 @@ export const WeightedColumns: Story = {
       <Card variant="inset">
         <CardTitle>Why this ranks first</CardTitle>
         <CardBody>Value is the weakest of six customer scores, and the drop is business-specific.</CardBody>
+      </Card>
+    </Grid>
+  ),
+}
+
+export const SingleItem: Story = {
+  name: 'Single item (capped, not stretched)',
+  render: () => (
+    <Grid columns="auto" minColWidth="220px" gap="sm">
+      <Card variant="inset">
+        <CardTitle>AI visibility trails the market</CardTitle>
+        <CardBody>A lone item gets a capped natural width instead of stretching full-width or clamping to minColWidth.</CardBody>
       </Card>
     </Grid>
   ),

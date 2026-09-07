@@ -51,3 +51,24 @@ export const WithFooter: Story = {
     </div>
   ),
 }
+
+export const Tone: Story = {
+  name: 'Tone (sentiment text color)',
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+      <StatCard eyebrow="New reviews" value="0 negative" footer="Nothing new to react to this week." tone="success" />
+      <StatCard eyebrow="Offer deadline" value="Expires 2 Sept" footer="Renew or replace it soon." tone="warning" />
+      <StatCard eyebrow="Job demand" value="Down 3% this week" footer="In line with the market." tone="info" />
+    </div>
+  ),
+}
+
+export const StandingSize: Story = {
+  name: 'Standing strip (size="sm")',
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 16 }}>
+      <StatCard eyebrow="Review rating" value="4.9 stars" footer="Among the highest tracked" size="sm" />
+      <StatCard eyebrow="Market share" value="11.6%" footer="Nearly double the cohort average" size="sm" />
+    </div>
+  ),
+}

@@ -1,3 +1,5 @@
+@use '../../styles/breakpoints' as *;
+
 .pz-grid {
   display: grid;
   gap: var(--space-4);
@@ -8,7 +10,7 @@
 .pz-grid--gap-lg { gap: var(--space-6); }
 
 // !important needed here — Grid sets its column template via an inline style, which a plain class rule can't override
-@media (max-width: 640px) {
+@media (max-width: $breakpoint-mobile) {
   .pz-grid--stack-mobile {
     grid-template-columns: 1fr !important;
   }
