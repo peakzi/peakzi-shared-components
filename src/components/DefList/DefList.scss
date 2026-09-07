@@ -33,7 +33,7 @@
   // container for a long unbroken value (a bare max-content track never shrinks below its
   // content's natural width, no matter how narrow the container is).
   grid-template-columns: 180px minmax(0, max-content);
-  gap: 16px;
+  gap: var(--space-4);
   padding: 10px 0;
   border-bottom: 1px solid var(--border-subtle);
 
