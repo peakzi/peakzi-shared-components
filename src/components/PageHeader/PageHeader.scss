@@ -24,12 +24,88 @@
   justify-content: flex-start;
 }
 
-// Comes after --borderless in source order so its own padding/border-bottom win if both are combined
+// Comes after --borderless in source order so its own padding/border-bottom win if both are combined.
+// A light brand-purple wash rather than plain --bg-subtle (neutral-50 is barely a shade off
+// white — too close to both the page and a plain Card to read as its own band). Scoped to
+// this one class only, not the shared --bg-subtle token (Banner/Button/Table also use it and
+// shouldn't change).
 .pz-page-header--bg-subtle {
-  background: var(--bg-subtle);
+  background: color-mix(in srgb, var(--peakzi-purple) 10%, var(--bg-subtle));
   border-bottom: none;
   border-radius: var(--radius-lg);
   padding: var(--space-6);
+}
+
+// --bg-subtle and --surface-1 (a plain Card's own background) resolve to the same dark navy
+// step in dark mode, on top of which the light-mode purple mix barely registers against navy —
+// bumped stronger, off --surface-2 (already one step lighter than a plain card), for the same
+// visible separation dark mode's lower contrast otherwise washes out.
+:root[data-theme='dark'] .pz-page-header--bg-subtle,
+.peakzi-dark .pz-page-header--bg-subtle {
+  background: color-mix(in srgb, var(--peakzi-purple) 12%, var(--surface-2));
+}
+
+// A fixed brand-navy panel with a gradient left accent, same look regardless of page theme —
+// same convention as Card's own `dark`/`gradient` variants (they use the raw navy primitive,
+// not a semantic token, precisely so they don't shift with data-theme). Text/sub-component
+// colors below are hardcoded to white for the same reason: this panel doesn't flip.
+// Padding/margin tightened one step below --bg-subtle's (--space-5/--space-4 vs --space-6/24px)
+// as part of a page-wide density pass — scoped to this class only, the base .pz-page-header
+// (used in 24+ other pages) keeps its own padding/margin untouched.
+.pz-page-header--bg-dark {
+  position: relative;
+  overflow: hidden;
+  // Dark where the accent bar and text sit (left) for max contrast on the white text where
+  // reading starts; the lighter glow shows up only in the mostly-empty right/bottom corner.
+  background: linear-gradient(135deg, var(--peakzi-navy-900) 40%, var(--peakzi-navy-600));
+  border-bottom: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-5) var(--space-5) calc(var(--space-5) + 6px);
+  margin-bottom: var(--space-4);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--gradient-peak);
+  }
+}
+
+.pz-page-header--bg-dark .pz-page-header__title {
+  color: white;
+}
+
+.pz-page-header--bg-dark .pz-page-header__lede {
+  color: rgb(255 255 255 / 0.75);
+}
+
+// The score StatCard and rank/date Badges sitting in `actions` are styled for a light page
+// background by default — without this they'd render dark-on-dark. A translucent white tile
+// reads as "on top of" the dark panel rather than borrowing a fixed navy step that could tie
+// unintentionally to some other dark-mode surface.
+.pz-page-header--bg-dark .pz-page-header__actions {
+  .pz-stat-card {
+    background: rgb(255 255 255 / 0.06);
+    border-color: rgb(255 255 255 / 0.15);
+
+    &:hover {
+      border-color: rgb(255 255 255 / 0.3);
+    }
+  }
+
+  .pz-stat__eyebrow {
+    color: rgb(255 255 255 / 0.6);
+  }
+
+  .pz-stat__value {
+    color: white;
+  }
+
+  .pz-badge {
+    background: rgb(255 255 255 / 0.12);
+    color: white;
+  }
 }
 
 .pz-page-header__text {

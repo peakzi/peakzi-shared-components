@@ -28,8 +28,11 @@
 
 .pz-deflist__row {
   display: grid;
-  // max-content (not 1fr) keeps the value hugging the term instead of stretching full-width.
-  grid-template-columns: 180px max-content;
+  // minmax(0, max-content) (not 1fr) keeps the value hugging the term instead of stretching
+  // full-width, while the 0 floor still lets it shrink/wrap instead of overflowing a narrow
+  // container for a long unbroken value (a bare max-content track never shrinks below its
+  // content's natural width, no matter how narrow the container is).
+  grid-template-columns: 180px minmax(0, max-content);
   gap: 16px;
   padding: 10px 0;
   border-bottom: 1px solid var(--border-subtle);
@@ -59,7 +62,7 @@
 // Density: sm
 .pz-deflist--sm .pz-deflist__row {
   padding: 6px 0;
-  grid-template-columns: 140px max-content;
+  grid-template-columns: 140px minmax(0, max-content);
   gap: 12px;
 }
 .pz-deflist--sm .pz-deflist__value { font-size: var(--text-xs); }
@@ -100,6 +103,21 @@
     position: absolute;
     left: 2px;
     color: var(--fg-3);
+  }
+}
+
+// Source link — a small external-link affordance appended after a row's value (e.g. a
+// review's original URL), not the whole value turned into one big underlined click target.
+.pz-deflist__link {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: var(--space-2);
+  color: var(--fg-3);
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--fg-link);
   }
 }
 

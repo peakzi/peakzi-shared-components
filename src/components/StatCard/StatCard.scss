@@ -33,6 +33,33 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
+}
+
+// A Badge's own white-space: nowrap is right for its usual short-label use, but a StatCard's
+// footer sits in a narrow tile — a long Badge (against the library's own convention, but
+// still reachable) would overflow past the card's edge instead of wrapping like plain footer
+// text does. Let it wrap here specifically, rather than clip the card boundary.
+.pz-stat-card__footer .pz-badge {
+  white-space: normal;
+  min-width: 0;
+}
+
+// Density: sm — a reference tile that doesn't need the same visual weight as an actionable
+// one. The footprint of a StatCard is set mostly by its Grid column width, not its own
+// padding — pair this with a narrower minColWidth on the Grid, or the box barely shrinks.
+.pz-stat-card--sm {
+  padding: 10px 14px;
+  gap: 2px;
+
+  .pz-stat__value {
+    font-size: var(--text-base);
+  }
+}
+
+.pz-stat-card--sm .pz-stat-card__footer {
+  margin-top: 2px;
+  padding-top: 6px;
 }
 
 // Sentiment text color only — background/border stay flat, deliberately (never colored,

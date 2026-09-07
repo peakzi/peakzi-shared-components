@@ -31,13 +31,16 @@ export interface PageHeaderProps extends Omit<HTMLAttributes<HTMLElement>, 'titl
   /**
    * Background treatment. Defaults to `none` (transparent, today's behavior — the
    * header just sits on the page background). `subtle` wraps it in a tinted,
-   * rounded panel (`--bg-subtle`) so a masthead reads as its own distinct band
-   * instead of blending into the page. Self-contained — removes the bottom
-   * border on its own, no need to also pass `borderless`.
+   * rounded panel so a masthead reads as its own distinct band instead of blending
+   * into the page. `dark` is a fixed navy panel with white text and a brand-gradient
+   * left accent, independent of the page theme (same fixed-look convention as
+   * `Card`'s own `dark`/`gradient` variants) — reserved for a masthead, at most once
+   * per document, same as those. All non-`none` values are self-contained — they
+   * remove the bottom border on their own, no need to also pass `borderless`.
    */
-  background?: 'none' | 'subtle'
+  background?: 'none' | 'subtle' | 'dark'
   /**
-   * Shorthand for `titleSize="md"` + `stackedActions` + `background="subtle"` together.
+   * Shorthand for `titleSize="md"` + `stackedActions` + `background="dark"` together.
    * Off by default. Any of those three, if also passed explicitly, overrides this for
    * that one value. Does not set `as`.
    */
@@ -75,13 +78,14 @@ export function PageHeader({
 }: PageHeaderProps) {
   const effectiveTitleSize = titleSize ?? (masthead ? 'md' : 'lg')
   const effectiveStackedActions = stackedActions ?? masthead
-  const effectiveBackground = background ?? (masthead ? 'subtle' : 'none')
+  const effectiveBackground = background ?? (masthead ? 'dark' : 'none')
 
   const cls = [
     'pz-page-header',
     borderless && 'pz-page-header--borderless',
     effectiveStackedActions && 'pz-page-header--stacked-actions',
     effectiveBackground === 'subtle' && 'pz-page-header--bg-subtle',
+    effectiveBackground === 'dark' && 'pz-page-header--bg-dark',
     className,
   ].filter(Boolean).join(' ')
   const titleCls = ['pz-page-header__title', effectiveTitleSize === 'md' && 'pz-page-header__title--md'].filter(Boolean).join(' ')

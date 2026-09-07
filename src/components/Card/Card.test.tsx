@@ -86,6 +86,16 @@ describe('Card', () => {
     expect(card).toHaveClass('pz-card--hoverable')
     expect(card).toHaveClass('pz-card--tone-danger')
   })
+
+  it('does not apply a size class for md (default)', () => {
+    const { container } = render(<Card>content</Card>)
+    expect(container.querySelector('.pz-card--sm')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-card--sm when size="sm"', () => {
+    const { container } = render(<Card size="sm">content</Card>)
+    expect(container.querySelector('.pz-card--sm')).toBeInTheDocument()
+  })
 })
 
 describe('CardTitle', () => {

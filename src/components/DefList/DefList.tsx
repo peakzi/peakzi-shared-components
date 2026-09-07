@@ -1,4 +1,5 @@
 import { Children, isValidElement, type ReactElement, type ReactNode, type HTMLAttributes } from 'react'
+import { ExternalLink } from 'lucide-react'
 
 // =============================================================================
 // DefList — semantic <dl> key/value list
@@ -86,14 +87,16 @@ function groupConsecutiveByTerm(children: ReactNode): ReactNode {
     }
 
     if (group.length > 1) {
+      const groupClassName = group.map((row) => row.props.className).filter(Boolean).join(' ')
       output.push(
-        <div className="pz-deflist__row" key={`group-${i}`}>
+        <div className={['pz-deflist__row', groupClassName].filter(Boolean).join(' ')} key={`group-${i}`}>
           <dt className="pz-deflist__term">{term}</dt>
           <dd className="pz-deflist__value">
             <ul className="pz-deflist__bullets">
               {group.map((row, idx) => (
                 <li className="pz-deflist__bullet" key={idx}>
                   {row.props.children ?? row.props.value}
+                  <SourceLink href={row.props.href} />
                 </li>
               ))}
             </ul>
@@ -118,15 +121,45 @@ export interface DefRowProps {
   /** Use either `value` (string/node shorthand) or `children`. */
   value?: ReactNode
   children?: ReactNode
+  /**
+   * Link to the row's source (e.g. the original review). Rendered as a small external-link
+   * icon after the value. Restricted to `http:`/`https:` — anything else (a malformed string,
+   * a `javascript:` URI) is silently dropped rather than rendered as an unsafe href, since this
+   * ultimately comes from upstream data, not something hand-authored and trusted by default.
+   */
+  href?: string
   className?: string
 }
 
-export function DefRow({ term, value, children, className }: DefRowProps) {
+// http(s)-only guard — see the `href` doc above for why this isn't rendered unchecked.
+function isSafeHref(href?: string): href is string {
+  if (!href) return false
+  try {
+    const { protocol } = new URL(href)
+    return protocol === 'http:' || protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
+function SourceLink({ href }: { href: string | undefined }) {
+  if (!isSafeHref(href)) return null
+  return (
+    <a className="pz-deflist__link" href={href} target="_blank" rel="noopener noreferrer" aria-label="View source">
+      <ExternalLink size={12} aria-hidden />
+    </a>
+  )
+}
+
+export function DefRow({ term, value, children, href, className }: DefRowProps) {
   const cls = ['pz-deflist__row', className].filter(Boolean).join(' ')
   return (
     <div className={cls}>
       <dt className="pz-deflist__term">{term}</dt>
-      <dd className="pz-deflist__value">{children ?? value}</dd>
+      <dd className="pz-deflist__value">
+        {children ?? value}
+        <SourceLink href={href} />
+      </dd>
     </div>
   )
 }

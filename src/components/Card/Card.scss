@@ -34,6 +34,13 @@
   background: var(--surface-3);
 }
 
+// Density: sm — for a page with many cards where the default 24px padding adds up to a lot
+// of scroll; spacing only, text sizes stay the same so nothing else about the card changes.
+.pz-card--sm {
+  padding: var(--space-4);
+  gap: var(--space-2);
+}
+
 .pz-card--dark {
   background: var(--peakzi-navy-900);
   color: white;
@@ -47,11 +54,13 @@
   box-shadow: var(--shadow-glow-brand);
 }
 
-// Fades to the card surface rather than a flat fill, so the tint reads as an accent at the leading edge
-.pz-card--tone-success { background: linear-gradient(150deg, var(--success-soft), var(--surface-1) 65%); border-color: var(--success); }
-.pz-card--tone-warning { background: linear-gradient(150deg, var(--warning-soft), var(--surface-1) 65%); border-color: var(--warning); }
-.pz-card--tone-danger  { background: linear-gradient(150deg, var(--danger-soft),  var(--surface-1) 65%); border-color: var(--danger); }
-.pz-card--tone-info    { background: linear-gradient(150deg, var(--info-soft),    var(--surface-1) 65%); border-color: var(--info); }
+// No background wash at all — border + role Badge carry the sentiment signal on their own,
+// leaving the card surface plain so body text and evidence/reason panels read with full
+// contrast and nothing competes with them for attention.
+.pz-card--tone-success { border-color: var(--success); }
+.pz-card--tone-warning { border-color: var(--warning); }
+.pz-card--tone-danger  { border-color: var(--danger); }
+.pz-card--tone-info    { border-color: var(--info); }
 
 // Sub-components
 .pz-card__title {
@@ -111,6 +120,21 @@
   color: var(--fg-3);
 }
 
+// Pins the footer to the card's own bottom edge when the CARD ITSELF is taller than its
+// content (e.g. stretched to match a taller sibling in an equal-height Grid row), so footers
+// line up across a row instead of each one floating right after wherever its own body text
+// ends. Scoped to a footer that's a *direct* child of Card: one nested inside a Stack (e.g.
+// a Risk card's two-column reason/evidence composition) sits in its own flex container that
+// gets stretched to match an unrelated sibling column, not the card's own content — pinning
+// it there opens a large gap instead of hugging anything meaningful.
+.pz-card > .pz-card__footer:last-child {
+  margin-top: auto;
+}
+
+.pz-card--sm .pz-card__footer {
+  padding-top: var(--space-2);
+}
+
 .pz-card--dark .pz-card__body,
 .pz-card--gradient .pz-card__body {
   color: rgb(255 255 255 / 0.85);
@@ -121,6 +145,7 @@
   border-color: rgb(255 255 255 / 0.15);
   color: rgb(255 255 255 / 0.75);
 }
+
 
 // =============================================================================
 // Stat card

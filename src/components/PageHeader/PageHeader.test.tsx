@@ -89,20 +89,30 @@ describe('PageHeader', () => {
     expect(container.querySelector('.pz-page-header--bg-subtle')).toBeInTheDocument()
   })
 
+  it('does not apply pz-page-header--bg-dark by default', () => {
+    const { container } = render(<PageHeader title="Accounts" />)
+    expect(container.querySelector('.pz-page-header--bg-dark')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-page-header--bg-dark when background="dark"', () => {
+    const { container } = render(<PageHeader title="Accounts" background="dark" />)
+    expect(container.querySelector('.pz-page-header--bg-dark')).toBeInTheDocument()
+  })
+
   it('does not apply the masthead recipe by default', () => {
     const { container } = render(<PageHeader title="Accounts" actions={<button>New</button>} />)
     expect(container.querySelector('.pz-page-header__title--md')).not.toBeInTheDocument()
     expect(container.querySelector('.pz-page-header--stacked-actions')).not.toBeInTheDocument()
-    expect(container.querySelector('.pz-page-header--bg-subtle')).not.toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--bg-dark')).not.toBeInTheDocument()
   })
 
-  it('applies titleSize=md, stackedActions, and background=subtle together when masthead is true', () => {
+  it('applies titleSize=md, stackedActions, and background=dark together when masthead is true', () => {
     const { container } = render(
       <PageHeader title="A full sentence used as the title" actions={<button>New</button>} masthead />
     )
     expect(container.querySelector('.pz-page-header__title--md')).toBeInTheDocument()
     expect(container.querySelector('.pz-page-header--stacked-actions')).toBeInTheDocument()
-    expect(container.querySelector('.pz-page-header--bg-subtle')).toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--bg-dark')).toBeInTheDocument()
   })
 
   it('lets an explicit prop override the masthead shorthand for that one value', () => {
@@ -111,6 +121,6 @@ describe('PageHeader', () => {
     )
     expect(container.querySelector('.pz-page-header__title--md')).toBeInTheDocument()
     expect(container.querySelector('.pz-page-header--stacked-actions')).toBeInTheDocument()
-    expect(container.querySelector('.pz-page-header--bg-subtle')).not.toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--bg-dark')).not.toBeInTheDocument()
   })
 })

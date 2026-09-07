@@ -43,4 +43,11 @@
   --warning-soft: color-mix(in srgb, var(--warning) 18%, var(--peakzi-navy-900));
   --danger-soft:  color-mix(in srgb, var(--danger) 18%, var(--peakzi-navy-900));
   --info-soft:    color-mix(in srgb, var(--info) 18%, var(--peakzi-navy-900));
+
+  // -strong tokens (StatCard.tone text, Stat delta) were darkened for text on a *light*
+  // surface — against a dark navy card that leaves ~3.2:1 contrast, below the 4.5:1 minimum.
+  // The base brand color reads clearly on dark navy instead (~7.5:1).
+  --success-strong: var(--success);
+  --warning-strong: var(--warning);
+  --danger-strong:  var(--danger);
 }

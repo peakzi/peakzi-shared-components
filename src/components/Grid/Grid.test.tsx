@@ -25,10 +25,31 @@ describe('Grid', () => {
     expect(el.style.gridTemplateColumns).toBe('repeat(3, minmax(0, 1fr))')
   })
 
-  it('sets auto-fit gridTemplateColumns for columns="auto"', () => {
-    const { container } = render(<Grid columns="auto" minColWidth="200px" />)
+  it('sets auto-fit gridTemplateColumns for columns="auto" with 2+ children', () => {
+    const { container } = render(
+      <Grid columns="auto" minColWidth="200px">
+        <span>First</span>
+        <span>Second</span>
+      </Grid>
+    )
     const el = container.querySelector('.pz-grid') as HTMLElement
     expect(el.style.gridTemplateColumns).toBe('repeat(auto-fit, minmax(200px, 1fr))')
+  })
+
+  it('sets a single capped-width gridTemplateColumns for columns="auto" with exactly one child, so it neither stretches full-width nor clamps to the bare minColWidth', () => {
+    const { container } = render(
+      <Grid columns="auto" minColWidth="200px">
+        <span>Only</span>
+      </Grid>
+    )
+    const el = container.querySelector('.pz-grid') as HTMLElement
+    expect(el.style.gridTemplateColumns).toBe('minmax(200px, 420px)')
+  })
+
+  it('sets a single capped-width gridTemplateColumns for columns="auto" with no children', () => {
+    const { container } = render(<Grid columns="auto" minColWidth="200px" />)
+    const el = container.querySelector('.pz-grid') as HTMLElement
+    expect(el.style.gridTemplateColumns).toBe('minmax(200px, 420px)')
   })
 
   it('sets weighted gridTemplateColumns for an array columns prop', () => {
