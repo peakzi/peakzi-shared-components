@@ -210,7 +210,7 @@ export const FullComposition: Story = {
 export const Tone: Story = {
   name: 'Tone (sentiment tint)',
   render: () => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 'var(--space-4)' }}>
       <Card tone="danger">
         <CardTitle>Risk — Price perception is your weakest customer score</CardTitle>
         <CardBody>Your Value score ranks 14th of 18 similar-size competitors.</CardBody>
