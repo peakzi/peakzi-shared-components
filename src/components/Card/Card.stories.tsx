@@ -23,7 +23,7 @@ const meta: Meta<typeof Card> = {
     tone: {
       control: 'select',
       options: [undefined, 'success', 'warning', 'danger', 'info'],
-      description: 'Soft sentiment-tinted background + matching border. Independent of `variant`.',
+      description: 'Sentiment-colored border (no background wash). Independent of `variant`.',
     },
   },
   args: {
