@@ -7,8 +7,8 @@
 
 .pz-stat-card {
   // Tighter padding than default Card — KPI grids need density.
-  padding: 16px 20px;
-  gap: 8px;
+  padding: var(--space-4) var(--space-5);
+  gap: var(--space-2);
   // Card's default border (--border-subtle) is near-invisible at this smaller size.
   border-color: var(--border);
   transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
