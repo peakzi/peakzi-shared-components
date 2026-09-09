@@ -5,6 +5,7 @@ import { type ReactNode, type HTMLAttributes } from 'react'
 // ---------------------------------------------------------------------------
 
 export type CardVariant = 'default' | 'hoverable' | 'elevated' | 'inset' | 'dark' | 'gradient'
+export type CardTone = 'success' | 'warning' | 'danger' | 'info'
 
 // ---------------------------------------------------------------------------
 // Card
@@ -12,14 +13,23 @@ export type CardVariant = 'default' | 'hoverable' | 'elevated' | 'inset' | 'dark
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: CardVariant
+  /** Sentiment-colored border (no background wash). Independent of `variant`. */
+  tone?: CardTone
+  /**
+   * Defaults to `'md'` (24px padding). Use `'sm'` (16px) for a denser, dashboard-style
+   * layout with many cards on one page — spacing only, text sizes are unaffected.
+   */
+  size?: 'sm' | 'md'
   /** <Card.Title> shorthand — also accepts arbitrary children */
   children?: ReactNode
 }
 
-export function Card({ variant = 'default', className, children, ...rest }: CardProps) {
+export function Card({ variant = 'default', tone, size = 'md', className, children, ...rest }: CardProps) {
   const cls = [
     'pz-card',
     variant !== 'default' && `pz-card--${variant}`,
+    tone && `pz-card--tone-${tone}`,
+    size !== 'md' && `pz-card--${size}`,
     className,
   ]
     .filter(Boolean)
@@ -50,7 +60,10 @@ export interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {
 
 export function CardTitle({ as: Tag = 'h3', titleIcon, actionButton, centerAlign = false, className, children, ...rest }: CardTitleProps) {
   return (
-    <Tag className={['pz-card__title', centerAlign && 'pz-card__title--center', className].filter(Boolean).join(' ')} {...rest}>
+    <Tag
+      className={['pz-card__title', centerAlign && 'pz-card__title--center', className].filter(Boolean).join(' ')}
+      {...rest}
+    >
       {titleIcon && <span className="pz-card__title-icon" aria-hidden="true">{titleIcon}</span>}
       <span className="pz-card__title-text">{children}</span>
       {actionButton && <span className="pz-card__title-action">{actionButton}</span>}

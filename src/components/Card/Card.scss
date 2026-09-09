@@ -34,6 +34,13 @@
   background: var(--surface-3);
 }
 
+// Density: sm — for a page with many cards where the default 24px padding adds up to a lot
+// of scroll; spacing only, text sizes stay the same so nothing else about the card changes.
+.pz-card--sm {
+  padding: var(--space-4);
+  gap: var(--space-2);
+}
+
 .pz-card--dark {
   background: var(--peakzi-navy-900);
   color: white;
@@ -46,6 +53,19 @@
   border-color: transparent;
   box-shadow: var(--shadow-glow-brand);
 }
+
+// No background wash — border + role Badge alone carry the sentiment signal.
+.pz-card--tone-success { border-color: var(--success); }
+.pz-card--tone-warning { border-color: var(--warning); }
+.pz-card--tone-danger  { border-color: var(--danger); }
+.pz-card--tone-info    { border-color: var(--info); }
+
+// :hover on --hoverable outranks a single tone class on specificity alone; these compound
+// selectors outrank hover in turn, so tone stays visible on a hovered, toned card.
+.pz-card--hoverable.pz-card--tone-success:hover { border-color: var(--success); }
+.pz-card--hoverable.pz-card--tone-warning:hover { border-color: var(--warning); }
+.pz-card--hoverable.pz-card--tone-danger:hover  { border-color: var(--danger); }
+.pz-card--hoverable.pz-card--tone-info:hover    { border-color: var(--info); }
 
 // Sub-components
 .pz-card__title {
@@ -105,6 +125,16 @@
   color: var(--fg-3);
 }
 
+// Pins the footer to the bottom of an equal-height row; scoped to a *direct* child of Card
+// so a footer nested in a Stack (e.g. Risk's two-column layout) isn't affected.
+.pz-card > .pz-card__footer:last-child {
+  margin-top: auto;
+}
+
+.pz-card--sm .pz-card__footer {
+  padding-top: var(--space-2);
+}
+
 .pz-card--dark .pz-card__body,
 .pz-card--gradient .pz-card__body {
   color: rgb(255 255 255 / 0.85);
@@ -115,6 +145,7 @@
   border-color: rgb(255 255 255 / 0.15);
   color: rgb(255 255 255 / 0.75);
 }
+
 
 // =============================================================================
 // Stat card

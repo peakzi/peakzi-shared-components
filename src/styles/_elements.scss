@@ -7,16 +7,16 @@
 // Scope: :root[data-theme] — activated the moment data-theme is set,
 // which is a required step in every consuming repo.
 //
-// Specificity: [data-theme] element = 0-1-1.
-// This is intentionally lower than MUI/Emotion class selectors (0-2-0+),
-// so MUI components keep their own styles. Plain HTML elements get ours.
+// Specificity: 0-0-1 (bare element selector). Keep the :where() — without it,
+// ":root[data-theme]" counts as two class-equivalents, which outranks a normal single-class
+// component selector (e.g. .pz-card__title) and silently wins instead of losing to it.
 //
 // Margins follow the "flow" model:
 // - margin-top: 0 (never collapses unexpectedly at top of a container)
 // - margin-bottom: spacing token (controls vertical rhythm)
 // =============================================================================
 
-:root[data-theme] {
+:where(:root[data-theme]) {
   // ---------------------------------------------------------------------------
   // Base body
   // ---------------------------------------------------------------------------

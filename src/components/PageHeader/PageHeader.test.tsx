@@ -58,4 +58,76 @@ describe('PageHeader', () => {
     const { container } = render(<PageHeader title="Accounts" className="custom" />)
     expect(container.querySelector('.pz-page-header.custom')).toBeInTheDocument()
   })
+
+  it('does not apply pz-page-header__title--md by default', () => {
+    const { container } = render(<PageHeader title="Accounts" />)
+    expect(container.querySelector('.pz-page-header__title--md')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-page-header__title--md when titleSize="md"', () => {
+    const { container } = render(<PageHeader title="A full sentence used as the title" titleSize="md" />)
+    expect(container.querySelector('.pz-page-header__title--md')).toBeInTheDocument()
+  })
+
+  it('does not apply pz-page-header--stacked-actions by default', () => {
+    const { container } = render(<PageHeader title="Accounts" actions={<button>New</button>} />)
+    expect(container.querySelector('.pz-page-header--stacked-actions')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-page-header--stacked-actions when stackedActions is true', () => {
+    const { container } = render(<PageHeader title="Accounts" actions={<button>New</button>} stackedActions />)
+    expect(container.querySelector('.pz-page-header--stacked-actions')).toBeInTheDocument()
+  })
+
+  it('does not apply pz-page-header--bg-subtle by default', () => {
+    const { container } = render(<PageHeader title="Accounts" />)
+    expect(container.querySelector('.pz-page-header--bg-subtle')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-page-header--bg-subtle when background="subtle"', () => {
+    const { container } = render(<PageHeader title="Accounts" background="subtle" />)
+    expect(container.querySelector('.pz-page-header--bg-subtle')).toBeInTheDocument()
+  })
+
+  it('does not apply pz-page-header--bg-dark by default', () => {
+    const { container } = render(<PageHeader title="Accounts" />)
+    expect(container.querySelector('.pz-page-header--bg-dark')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-page-header--bg-dark when background="dark"', () => {
+    const { container } = render(<PageHeader title="Accounts" background="dark" />)
+    expect(container.querySelector('.pz-page-header--bg-dark')).toBeInTheDocument()
+  })
+
+  it('combines borderless and background classes independently', () => {
+    const { container } = render(<PageHeader title="Accounts" borderless background="dark" />)
+    const header = container.querySelector('.pz-page-header')
+    expect(header).toHaveClass('pz-page-header--borderless')
+    expect(header).toHaveClass('pz-page-header--bg-dark')
+  })
+
+  it('does not apply the masthead recipe by default', () => {
+    const { container } = render(<PageHeader title="Accounts" actions={<button>New</button>} />)
+    expect(container.querySelector('.pz-page-header__title--md')).not.toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--stacked-actions')).not.toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--bg-dark')).not.toBeInTheDocument()
+  })
+
+  it('applies titleSize=md, stackedActions, and background=dark together when masthead is true', () => {
+    const { container } = render(
+      <PageHeader title="A full sentence used as the title" actions={<button>New</button>} masthead />
+    )
+    expect(container.querySelector('.pz-page-header__title--md')).toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--stacked-actions')).toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--bg-dark')).toBeInTheDocument()
+  })
+
+  it('lets an explicit prop override the masthead shorthand for that one value', () => {
+    const { container } = render(
+      <PageHeader title="A full sentence used as the title" actions={<button>New</button>} masthead background="none" />
+    )
+    expect(container.querySelector('.pz-page-header__title--md')).toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--stacked-actions')).toBeInTheDocument()
+    expect(container.querySelector('.pz-page-header--bg-dark')).not.toBeInTheDocument()
+  })
 })

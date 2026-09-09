@@ -37,4 +37,24 @@ describe('StatCard', () => {
     const { container } = render(<StatCard value="100" className="custom" />)
     expect(container.querySelector('.pz-stat-card.custom')).toBeInTheDocument()
   })
+
+  it('does not apply a tone class by default', () => {
+    const { container } = render(<StatCard value="100" />)
+    expect(container.querySelector('[class*="pz-stat-card--tone-"]')).not.toBeInTheDocument()
+  })
+
+  it('applies tone class when tone is set', () => {
+    const { container } = render(<StatCard value="100" tone="danger" />)
+    expect(container.querySelector('.pz-stat-card--tone-danger')).toBeInTheDocument()
+  })
+
+  it('does not apply a size class for md (default)', () => {
+    const { container } = render(<StatCard value="100" />)
+    expect(container.querySelector('.pz-stat-card--sm')).not.toBeInTheDocument()
+  })
+
+  it('applies pz-stat-card--sm when size="sm"', () => {
+    const { container } = render(<StatCard value="100" size="sm" />)
+    expect(container.querySelector('.pz-stat-card--sm')).toBeInTheDocument()
+  })
 })

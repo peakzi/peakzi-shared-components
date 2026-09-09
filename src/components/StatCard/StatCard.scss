@@ -7,12 +7,20 @@
 
 .pz-stat-card {
   // Tighter padding than default Card — KPI grids need density.
-  padding: 16px 20px;
-  gap: 8px;
+  padding: var(--space-4) var(--space-5);
+  gap: var(--space-2);
+  // Card's default border (--border-subtle) is near-invisible at this smaller size.
+  border-color: var(--border);
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
 
-  // Stat values can be slightly smaller inside the card to avoid clipping.
+  &:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+
+  // Capped below the masthead verdict's size (24px) — a KPI tile shouldn't outscale it.
   .pz-stat__value {
-    font-size: clamp(24px, 2.6vw, 36px);
+    font-size: clamp(var(--text-lg), 2vw, 22px);
   }
 }
 
@@ -25,4 +33,52 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
 }
+
+// A Badge's own white-space: nowrap is right for its usual short-label use, but a StatCard's
+// footer sits in a narrow tile — a long Badge (against the library's own convention, but
+// still reachable) would overflow past the card's edge instead of wrapping like plain footer
+// text does. Let it wrap here specifically, rather than clip the card boundary.
+.pz-stat-card__footer .pz-badge {
+  white-space: normal;
+  min-width: 0;
+}
+
+// Density: sm — a reference tile that doesn't need the same visual weight as an actionable
+// one. The footprint of a StatCard is set mostly by its Grid column width, not its own
+// padding — pair this with a narrower minColWidth on the Grid, or the box barely shrinks.
+.pz-stat-card--sm {
+  padding: 10px 14px;
+  gap: 2px;
+
+  .pz-stat__value {
+    font-size: var(--text-base);
+  }
+}
+
+.pz-stat-card--sm .pz-stat-card__footer {
+  margin-top: 2px;
+  padding-top: 6px;
+}
+
+// Sentiment text color only — background/border stay flat, deliberately (never colored,
+// so a tile doesn't compete visually with a full finding Card).
+.pz-stat-card--tone-success,
+.pz-stat-card--tone-warning,
+.pz-stat-card--tone-danger,
+.pz-stat-card--tone-info {
+  border-color: var(--border);
+}
+
+.pz-stat-card--tone-success .pz-stat__value,
+.pz-stat-card--tone-success .pz-stat-card__footer { color: var(--success-strong); }
+
+.pz-stat-card--tone-warning .pz-stat__value,
+.pz-stat-card--tone-warning .pz-stat-card__footer { color: var(--warning-strong); }
+
+.pz-stat-card--tone-danger .pz-stat__value,
+.pz-stat-card--tone-danger .pz-stat-card__footer { color: var(--danger-strong); }
+
+.pz-stat-card--tone-info .pz-stat__value,
+.pz-stat-card--tone-info .pz-stat-card__footer { color: var(--info); }

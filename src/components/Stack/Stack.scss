@@ -1,0 +1,10 @@
+.pz-stack {
+  display: flex;
+}
+.pz-stack--row { flex-direction: row; }
+.pz-stack--column { flex-direction: column; }
+
+.pz-stack--gap-xs { gap: var(--space-2); }
+.pz-stack--gap-sm { gap: var(--space-3); }
+.pz-stack--gap-md { gap: var(--space-4); }
+.pz-stack--gap-lg { gap: var(--space-6); }

@@ -2,6 +2,8 @@
 // PageHeader
 // =============================================================================
 
+@use '../../styles/breakpoints' as *;
+
 .pz-page-header {
   display: flex;
   align-items: flex-start;
@@ -12,6 +14,82 @@
   margin-bottom: 24px;
 }
 
+.pz-page-header--stacked-actions {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+// A purple wash (plain --bg-subtle reads too close to white); scoped here, not the shared token.
+.pz-page-header--bg-subtle {
+  background: color-mix(in srgb, var(--peakzi-purple) 10%, var(--bg-subtle));
+  border-bottom: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+// Dark mode: bumped stronger and off --surface-2, since --bg-subtle/--surface-1 collapse to the same navy step there.
+:root[data-theme='dark'] .pz-page-header--bg-subtle,
+.peakzi-dark .pz-page-header--bg-subtle {
+  background: color-mix(in srgb, var(--peakzi-purple) 12%, var(--surface-2));
+}
+
+// Fixed navy panel, theme-independent — same convention as Card's dark/gradient variants.
+// Padding tightened one step below --bg-subtle's, scoped to this class only.
+.pz-page-header--bg-dark {
+  position: relative;
+  overflow: hidden;
+  // Dark toward the text/accent bar (left) for contrast; the glow sits in the empty corner.
+  background: linear-gradient(135deg, var(--peakzi-navy-900) 40%, var(--peakzi-navy-600));
+  border-bottom: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-5) var(--space-5) calc(var(--space-5) + 6px);
+  margin-bottom: var(--space-4);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--gradient-peak);
+  }
+}
+
+.pz-page-header--bg-dark .pz-page-header__title {
+  color: white;
+}
+
+.pz-page-header--bg-dark .pz-page-header__lede {
+  color: color-mix(in srgb, var(--neutral-0) 75%, transparent);
+}
+
+// Translucent white so tiles read as sitting on the dark panel, not dark-on-dark by default.
+.pz-page-header--bg-dark .pz-page-header__actions {
+  .pz-stat-card {
+    background: rgb(255 255 255 / 0.06);
+    border-color: rgb(255 255 255 / 0.15);
+
+    &:hover {
+      border-color: rgb(255 255 255 / 0.3);
+    }
+  }
+
+  .pz-stat__eyebrow {
+    color: rgb(255 255 255 / 0.6);
+  }
+
+  .pz-stat__value {
+    color: white;
+  }
+
+  .pz-badge {
+    background: rgb(255 255 255 / 0.12);
+    color: white;
+  }
+}
+
+// Declared after the background rules so it wins on equal specificity regardless of
+// which background is also applied — borderless removes border/margin/padding outright.
 .pz-page-header--borderless {
   border-bottom: none;
   margin-bottom: 0;
@@ -42,6 +120,12 @@
   text-wrap: balance;
 }
 
+// Overrides the base rule's `balance` (narrows the box to even out lines) — wrong for a full-sentence verdict.
+.pz-page-header__title--md {
+  font-size: var(--text-xl);
+  text-wrap: pretty;
+}
+
 .pz-page-header__lede {
   font-size: var(--text-sm);
   color: var(--fg-2);
@@ -57,7 +141,7 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: $breakpoint-mobile) {
   .pz-page-header {
     flex-direction: column;
     align-items: stretch;

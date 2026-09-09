@@ -1,5 +1,5 @@
 import { type ReactNode, type HTMLAttributes } from 'react'
-import { Card } from '../Card'
+import { Card, type CardTone } from '../Card'
 import { Stat, type StatDelta } from '../Card'
 
 // =============================================================================
@@ -13,6 +13,17 @@ export interface StatCardProps extends HTMLAttributes<HTMLDivElement> {
   deltaType?: StatDelta
   /** Optional supporting content under the stat (sparkline, footnote, etc.). */
   footer?: ReactNode
+  /**
+   * Colors `value` and `footer` text by sentiment. Unset by default (plain, today's
+   * behavior) — the card's background stays untinted either way, only the text reads
+   * the sentiment. Independent of `Card`'s own `tone` (background wash).
+   */
+  tone?: CardTone
+  /**
+   * Density. Defaults to `'md'`. Use `'sm'` for a reference tile that doesn't need the same
+   * visual weight as an actionable one (tighter padding, smaller value).
+   */
+  size?: 'sm' | 'md'
 }
 
 /**
@@ -33,10 +44,17 @@ export function StatCard({
   delta,
   deltaType,
   footer,
+  tone,
+  size = 'md',
   className,
   ...rest
 }: StatCardProps) {
-  const cls = ['pz-stat-card', className].filter(Boolean).join(' ')
+  const cls = [
+    'pz-stat-card',
+    tone && `pz-stat-card--tone-${tone}`,
+    size !== 'md' && `pz-stat-card--${size}`,
+    className,
+  ].filter(Boolean).join(' ')
   return (
     <Card className={cls} {...rest}>
       <Stat

@@ -48,3 +48,13 @@ export const Small: Story = {
     </DefList>
   ),
 }
+
+export const EvidenceQuote: Story = {
+  name: 'Evidence quote (with source link)',
+  render: () => (
+    <DefList layout="stacked" emphasis="quote" style={{ maxWidth: 480 }}>
+      <DefRow term="Evidence" value="The rates are crazy. Save yourselves some time by calling another company. (1-star review)" href="https://www.google.com/maps" />
+      <DefRow term="Evidence" value="4:00pm being considered after hours so you can charge an additional $200+ is crazy work." />
+    </DefList>
+  ),
+}

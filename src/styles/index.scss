@@ -64,3 +64,8 @@
 @use '../components/StatCard/StatCard';
 @use '../components/EmptyState/EmptyState';
 @use '../components/DefList/DefList';
+
+// 9. Layout primitives
+@use '../components/Section/Section';
+@use '../components/Grid/Grid';
+@use '../components/Stack/Stack';
