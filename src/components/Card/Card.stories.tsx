@@ -17,7 +17,7 @@ const meta: Meta<typeof Card> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'hoverable', 'elevated', 'inset', 'dark', 'gradient'],
+      options: ['default', 'hoverable', 'elevated', 'inset', 'subtle', 'dark', 'gradient'],
       description: 'Visual style of the card',
     },
     tone: {
@@ -73,6 +73,19 @@ export const Inset: Story = {
   ),
 }
 
+export const Subtle: Story = {
+  render: () => (
+    <Card variant="subtle" style={{ maxWidth: 360 }}>
+      <CardTitle>Subtle card</CardTitle>
+      <CardBody>
+        A neutral tinted panel for content set apart within another card (e.g. a second
+        finding in a `CardFooter`) — sentiment-neutral, so it never competes with a colored
+        `Badge` or `Alert` placed on top of it, unlike `tone`.
+      </CardBody>
+    </Card>
+  ),
+}
+
 export const Dark: Story = {
   render: () => (
     <Card variant="dark" style={{ maxWidth: 360 }}>
@@ -95,7 +108,7 @@ export const AllVariants: Story = {
   name: 'All variants',
   render: () => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
-      {(['default', 'hoverable', 'elevated', 'inset', 'dark', 'gradient'] as const).map(
+      {(['default', 'hoverable', 'elevated', 'inset', 'subtle', 'dark', 'gradient'] as const).map(
         (variant) => (
           <Card key={variant} variant={variant}>
             <CardTitle>{variant}</CardTitle>

@@ -39,7 +39,7 @@ Package name: `@peakzi/components`
 ### Surfaces
 | Component | Key Props |
 |-----------|-----------|
-| `Card` | `variant`: default \| hoverable \| elevated \| inset \| dark \| gradient |
+| `Card` | `variant`: default \| hoverable \| elevated \| inset \| subtle \| dark \| gradient |
 | `CardTitle` | `as` prop for semantic heading tag |
 | `CardBody` | `<p>` wrapper |
 | `Stat` | `eyebrow`, `value`, `delta`, `deltaType`: positive \| negative \| neutral |
