@@ -4,7 +4,7 @@ import { type ReactNode, type HTMLAttributes } from 'react'
 // Card variants
 // ---------------------------------------------------------------------------
 
-export type CardVariant = 'default' | 'hoverable' | 'elevated' | 'inset' | 'dark' | 'gradient'
+export type CardVariant = 'default' | 'hoverable' | 'elevated' | 'inset' | 'subtle' | 'dark' | 'gradient'
 export type CardTone = 'success' | 'warning' | 'danger' | 'info'
 
 // ---------------------------------------------------------------------------

@@ -34,6 +34,11 @@ describe('Card', () => {
     expect(container.querySelector('.pz-card--inset')).toBeInTheDocument()
   })
 
+  it('applies subtle variant class', () => {
+    const { container } = render(<Card variant="subtle">content</Card>)
+    expect(container.querySelector('.pz-card--subtle')).toBeInTheDocument()
+  })
+
   it('applies dark variant class', () => {
     const { container } = render(<Card variant="dark">content</Card>)
     expect(container.querySelector('.pz-card--dark')).toBeInTheDocument()
