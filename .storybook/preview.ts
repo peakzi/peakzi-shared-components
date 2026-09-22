@@ -1,4 +1,5 @@
 import type { Preview, Decorator } from '@storybook/react'
+import { createElement } from 'react'
 import '../src/styles/index.scss'
 
 /**
@@ -19,18 +20,18 @@ const withTheme: Decorator = (Story, context) => {
 
   const isFullscreen = context.parameters['layout'] === 'fullscreen'
 
-  return (
-    <div
-      className="peakzi-base"
-      style={{
+  return createElement(
+    'div',
+    {
+      className: 'peakzi-base',
+      style: {
         padding: isFullscreen ? 0 : '2rem',
         minHeight: '100vh',
         background: 'var(--bg)',
         color: 'var(--fg)',
-      }}
-    >
-      <Story />
-    </div>
+      },
+    },
+    createElement(Story),
   )
 }
 
@@ -77,10 +78,12 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-    // Show source code panel open by default in canvas and docs views
+    // Keep source available without mounting every syntax highlighter at once.
+    // Opening all source blocks causes Storybook Docs to emit repeated React
+    // "Expected static flag was missing" runtime errors.
     docs: {
       canvas: {
-        sourceState: 'shown',
+        sourceState: 'hidden',
       },
       source: {
         // 'dynamic' generates <Component prop="value" /> JSX from current args.

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
-import { SideNav, SideNavGroup, SideNavItem } from './SideNav'
+import { render, screen, fireEvent, within } from '@testing-library/react'
+import { SideNav, SideNavCollapsible, SideNavGroup, SideNavItem } from './SideNav'
 
 function BasicNav() {
   return (
@@ -64,6 +64,24 @@ describe('SideNav', () => {
 
     fireEvent.click(overlay!)
     expect(onMobileClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('toggles the desktop collapsed rail without changing vertical navigation content', () => {
+    const onCollapsedChange = vi.fn()
+    const { container } = render(
+      <SideNav collapsible onCollapsedChange={onCollapsedChange}>
+        <SideNavGroup>
+          <SideNavItem href="/accounts">Accounts</SideNavItem>
+        </SideNavGroup>
+      </SideNav>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Collapse navigation' }))
+
+    expect(container.querySelector('.pz-sidenav')).toHaveClass('pz-sidenav--collapsed')
+    expect(screen.getByRole('link', { name: 'Accounts' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Expand navigation' })).toBeInTheDocument()
+    expect(onCollapsedChange).toHaveBeenCalledWith(true)
   })
 })
 
@@ -153,5 +171,103 @@ describe('SideNavItem', () => {
     fireEvent.click(screen.getByRole('link', { name: 'SPA route' }), { ctrlKey: true })
 
     expect(onNavigate).not.toHaveBeenCalled()
+  })
+})
+
+describe('SideNavCollapsible', () => {
+  it('expands and collapses inline sub-items', () => {
+    const { container } = render(
+      <SideNav>
+        <SideNavGroup>
+          <SideNavCollapsible label="Growth Insights">
+            <SideNavItem href="/weekly">Weekly Takeaway</SideNavItem>
+            <SideNavItem href="/reports">Operator Reports</SideNavItem>
+          </SideNavCollapsible>
+        </SideNavGroup>
+      </SideNav>,
+    )
+
+    const trigger = screen.getByRole('button', { name: 'Growth Insights' })
+    const subitems = container.querySelector('.pz-sidenav__subitems')
+
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    expect(subitems).toHaveAttribute('aria-hidden', 'true')
+
+    fireEvent.click(trigger)
+    expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    expect(subitems).toHaveClass('pz-sidenav__subitems--open')
+    expect(subitems).toHaveAttribute('aria-hidden', 'false')
+
+    fireEvent.click(trigger)
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    expect(subitems).not.toHaveClass('pz-sidenav__subitems--open')
+  })
+
+  it('keeps only one collapsible section open in an accordion group', () => {
+    render(
+      <SideNav>
+        <SideNavGroup accordion>
+          <SideNavCollapsible label="Growth Insights">
+            <SideNavItem href="/weekly">Weekly Takeaway</SideNavItem>
+          </SideNavCollapsible>
+          <SideNavCollapsible label="Cohort">
+            <SideNavItem href="/business">Business</SideNavItem>
+          </SideNavCollapsible>
+        </SideNavGroup>
+      </SideNav>,
+    )
+
+    const growth = screen.getByRole('button', { name: 'Growth Insights' })
+    const cohort = screen.getByRole('button', { name: 'Cohort' })
+
+    fireEvent.click(growth)
+    expect(growth).toHaveAttribute('aria-expanded', 'true')
+
+    fireEvent.click(cohort)
+    expect(growth).toHaveAttribute('aria-expanded', 'false')
+    expect(cohort).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('uses a flyout instead of inline sub-items in the collapsed rail', () => {
+    const { container } = render(
+      <SideNav collapsed>
+        <SideNavGroup>
+          <SideNavCollapsible label="Growth Insights" defaultOpen>
+            <SideNavItem href="/weekly">Weekly Takeaway</SideNavItem>
+          </SideNavCollapsible>
+        </SideNavGroup>
+      </SideNav>,
+    )
+
+    const trigger = screen.getByRole('button', { name: 'Growth Insights' })
+    expect(trigger).not.toHaveAttribute('aria-expanded')
+    expect(container.querySelector('.pz-sidenav__subitems')).toBeInTheDocument()
+
+    fireEvent.click(trigger)
+    expect(trigger).not.toHaveAttribute('aria-expanded')
+
+    fireEvent.mouseEnter(trigger)
+    const flyout = screen.getByRole('navigation', { name: 'Growth Insights' })
+    expect(flyout).toBeInTheDocument()
+    expect(within(flyout).getByRole('link', { name: 'Weekly Takeaway' })).toBeInTheDocument()
+  })
+
+  it('keeps submenu indentation isolated from top-level and flyout lists', () => {
+    const { container } = render(
+      <SideNav>
+        <SideNavGroup>
+          <SideNavItem href="/top-level">Top level</SideNavItem>
+          <SideNavCollapsible label="Growth Insights" defaultOpen>
+            <SideNavItem href="/weekly">Weekly Takeaway</SideNavItem>
+          </SideNavCollapsible>
+        </SideNavGroup>
+      </SideNav>,
+    )
+
+    expect(container.querySelector('.pz-sidenav__items > li > .pz-sidenav__item')).toHaveTextContent('Top level')
+    expect(container.querySelector('.pz-sidenav__subitems-inner')).toContainElement(
+      screen.getByRole('link', { name: 'Weekly Takeaway' }),
+    )
+    expect(container.querySelector('.pz-sidenav__flyout-items')).not.toBeInTheDocument()
   })
 })

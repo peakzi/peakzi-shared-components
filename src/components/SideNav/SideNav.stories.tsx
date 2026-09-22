@@ -165,6 +165,7 @@ export const BadgeVariants: Story = {
             brand={<span style={{ fontWeight: 700, fontSize: 14 }}>peakzi</span>}
             badge={v.toUpperCase()}
             badgeVariant={v}
+            aria-label={`${v} badge navigation`}
           />
         </div>
       ))}
@@ -182,6 +183,7 @@ export const BadgeSizes: Story = {
             brand={<span style={{ fontWeight: 700, fontSize: 14 }}>peakzi</span>}
             badge={s.toUpperCase()}
             badgeSize={s}
+            aria-label={`${s} badge navigation`}
           />
         </div>
       ))}
