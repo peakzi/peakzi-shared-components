@@ -362,6 +362,9 @@
   list-style: none;
   margin: 0;
   padding: var(--space-1) 0;
+  // Override the library's higher-specificity global list padding so host
+  // resets and typography styles cannot flatten the submenu hierarchy.
+  padding-inline-start: 30px !important;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -369,8 +372,8 @@
   visibility: hidden;
   transition: visibility 0s var(--duration-base);
 
-  // Indent sub-items so their text aligns with the parent label
-  // Parent padding(12) + icon(20) + gap(10) = 42px
+  // The list indent (30px) plus the child item padding (12px) aligns
+  // text-only children with the parent label. Icon children remain visibly nested.
   .pz-sidenav__item {
     font-size: var(--text-xs);
     color: var(--fg-3);
