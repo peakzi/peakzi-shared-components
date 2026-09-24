@@ -24,7 +24,17 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "highcharts": "^11.4.8",
+    "highcharts-react-official": "^3.2.1",
+    "leaflet": "^1.9.4",
+    "react-leaflet": "^4.2.1"
+  },
+  "peerDependenciesMeta": {
+    "highcharts": { "optional": true },
+    "highcharts-react-official": { "optional": true },
+    "leaflet": { "optional": true },
+    "react-leaflet": { "optional": true }
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.3.1",
@@ -38,6 +48,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
+    "@types/leaflet": "^1.9.22",
     "@types/node": "^24.13.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
@@ -49,17 +60,27 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-storybook": "^10.6.0",
+    "highcharts": "^11.4.8",
+    "highcharts-react-official": "^3.2.1",
     "jsdom": "^29.1.1",
+    "leaflet": "^1.9.4",
     "playwright": "^1.63.0",
     "prettier": "^3.9.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "react-leaflet": "^4.2.1",
     "sass": "^1.104.1",
     "storybook": "^10.6.0",
     "typescript": "^6.0.3",
     "vite": "^8.3.0",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "react-leaflet": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   },
   "module": "./dist/index.js",
   "types": "./dist/src/index.d.ts",

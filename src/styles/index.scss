@@ -69,3 +69,12 @@
 @use '../components/Section/Section';
 @use '../components/Grid/Grid';
 @use '../components/Stack/Stack';
+
+// 10. Charts & maps
+@use '../components/ColumnChart/ColumnChart';
+@use '../components/TimeSeriesChart/TimeSeriesChart';
+@use '../components/PieChart/PieChart';
+@use '../components/TreeMapChart/TreeMapChart';
+@use '../components/GaugeChart/GaugeChart';
+@use '../components/PyramidChart/PyramidChart';
+@use '../components/RadialGauge/RadialGauge';

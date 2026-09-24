@@ -177,3 +177,29 @@ export type { StackProps, StackGap } from './components/Stack'
 // ---------------------------------------------------------------------------
 export { PeakziLogo } from './components/PeakziLogo'
 export type { PeakziLogoProps, LogoVariant, LogoSize } from './components/PeakziLogo'
+
+// ---------------------------------------------------------------------------
+// Charts & Maps
+// ---------------------------------------------------------------------------
+// highcharts/highcharts-react-official are optional peer dependencies —
+// install them yourself if you use any of these components. See README.
+export { ColumnChart } from './components/ColumnChart'
+export type { ColumnChartProps, ColumnChartSeries, ColumnChartType } from './components/ColumnChart'
+
+export { TimeSeriesChart } from './components/TimeSeriesChart'
+export type { TimeSeriesChartProps, TimeSeriesChartSeries, TimeSeriesChartType } from './components/TimeSeriesChart'
+
+export { PieChart } from './components/PieChart'
+export type { PieChartProps, PieChartSlice } from './components/PieChart'
+
+export { TreeMapChart } from './components/TreeMapChart'
+export type { TreeMapChartProps, TreeMapChartPoint } from './components/TreeMapChart'
+
+export { GaugeChart } from './components/GaugeChart'
+export type { GaugeChartProps } from './components/GaugeChart'
+
+export { PyramidChart } from './components/PyramidChart'
+export type { PyramidChartProps, PyramidChartPoint } from './components/PyramidChart'
+
+export { RadialGauge } from './components/RadialGauge'
+export type { RadialGaugeProps } from './components/RadialGauge'

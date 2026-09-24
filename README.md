@@ -111,6 +111,23 @@ import { Modal } from '@peakzi/components/Modal'
 
 ---
 
+## Charts & Maps
+
+Chart components (`ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `GaugeChart`, `PyramidChart`, `RadialGauge`) are built on [Highcharts](https://www.highcharts.com/), and map components (`GeoMap`) on [Leaflet](https://leafletjs.com/)/[React Leaflet](https://react-leaflet.js.org/). Both are **optional peer dependencies** — they're not bundled into this package, so only repos that actually use a chart or map need to install them:
+
+```bash
+npm install highcharts highcharts-react-official
+npm install leaflet react-leaflet@^4
+```
+
+`react-leaflet` must stay on the `^4` line (not `^5`) unless your app is on React 19 — v5 requires it as a hard peer dependency.
+
+Highcharts requires a commercial license for non-personal projects — confirm licensing is in place before shipping chart components to production, independent of this package.
+
+Full component docs, prop tables, and theming notes land here as each chart/map ships; see Storybook (`Charts` and `Maps` sections) for live, interactive docs in the meantime.
+
+---
+
 ## Automatic element styling
 
 Once `@peakzi/components/styles` is imported and `data-theme` is set on `<html>`, **all native HTML elements are styled automatically** — no class names needed.
