@@ -203,3 +203,6 @@ export type { PyramidChartProps, PyramidChartPoint } from './components/PyramidC
 
 export { RadialGauge } from './components/RadialGauge'
 export type { RadialGaugeProps } from './components/RadialGauge'
+
+export { GeoMap, MapMarker } from './components/GeoMap'
+export type { GeoMapProps, LatLon, MapMarkerProps, MapPoint } from './components/GeoMap'

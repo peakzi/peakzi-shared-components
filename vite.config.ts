@@ -22,6 +22,7 @@ const componentEntries = [
   'EditableField',
   'EmptyState',
   'GaugeChart',
+  'GeoMap',
   'Grid',
   'Input',
   'Modal',

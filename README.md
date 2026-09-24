@@ -94,6 +94,7 @@ export function Example() {
 | **Data Display** | `Table`, `Thead`, `Tbody`, `Tr`, `Th`, `Td`, `Avatar`, `AvatarStack`, `StatCard`, `CopyField`, `DefList`, `EditableField` |
 | **App Shell** | `AppFooter`, `PageHeader`, `SideNav` |
 | **Brand** | `PeakziLogo` |
+| **Charts & Maps** | `ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `GaugeChart`, `PyramidChart`, `RadialGauge`, `GeoMap`, `MapMarker` — see [Charts & Maps](#charts--maps), these need extra peer dependencies |
 
 All named exports and their TypeScript prop types are available from the root import:
 
@@ -113,7 +114,7 @@ import { Modal } from '@peakzi/components/Modal'
 
 ## Charts & Maps
 
-Chart components (`ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `GaugeChart`, `PyramidChart`, `RadialGauge`) are built on [Highcharts](https://www.highcharts.com/), and map components (`GeoMap`) on [Leaflet](https://leafletjs.com/)/[React Leaflet](https://react-leaflet.js.org/). Both are **optional peer dependencies** — they're not bundled into this package, so only repos that actually use a chart or map need to install them:
+Chart components (`ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `GaugeChart`, `PyramidChart`, `RadialGauge`) are built on [Highcharts](https://www.highcharts.com/), and map components (`GeoMap`, `MapMarker`) on [Leaflet](https://leafletjs.com/)/[React Leaflet](https://react-leaflet.js.org/). Both are **optional peer dependencies** — they're not bundled into this package, so only repos that actually use a chart or map need to install them:
 
 ```bash
 npm install highcharts highcharts-react-official
@@ -124,7 +125,129 @@ npm install leaflet react-leaflet@^4
 
 Highcharts requires a commercial license for non-personal projects — confirm licensing is in place before shipping chart components to production, independent of this package.
 
-Full component docs, prop tables, and theming notes land here as each chart/map ships; see Storybook (`Charts` and `Maps` sections) for live, interactive docs in the meantime.
+Every chart/map component accepts `className` for the root element and `testId` (rendered as `data-testid`) for test targeting.
+
+### Theming
+
+Charts default to colors and fonts read live from the design tokens (`--peakzi-purple`, `--fg-1`, `--fg-2`, `--border`, `--font-body`, `--success`, `--danger`, `--warning`, `--info`) — no setup needed, and they follow `[data-theme="dark"]` overrides on re-render. Every chart also accepts explicit color/font props to override this per-instance.
+
+### ColumnChart
+
+Column, bar, and line charts. Pass `data` for one series, or `series` for several named ones (add `stacked` to stack them instead of grouping).
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `data` | `number[]` | — | Single-series values. Ignored if `series` is set. |
+| `series` | `{ name, data, color? }[]` | — | Multiple named series — enables the legend automatically. |
+| `stacked` | `boolean` | `false` | Stack `series` instead of grouping. |
+| `categories` | `string[]` | — | X-axis labels. |
+| `type` | `'column' \| 'bar' \| 'line'` | `'column'` | |
+| `title` / `yAxisTitle` | `string` | — | |
+| `tooltipFormatter` | Highcharts `TooltipFormatterCallbackFunction` | built-in | |
+| `columnWidth` | `number` | `80` | Max point width, px. |
+| `color` | `string` | brand accent | Point/line color for a single `data` series. |
+| `chartHeight` | `number` | `480` | |
+| `isLoading` | `boolean` | `false` | Renders `Skeleton` in place of the chart. |
+
+### TimeSeriesChart
+
+A time-axis line/area/spline chart for trend data at a fixed interval.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `series` | `{ name, data }[]` | — | `data` entries may be `null` to leave gaps. |
+| `pointInterval` / `pointStart` | `number` | — | Milliseconds between points / timestamp (ms) of the first point. |
+| `type` | `'line' \| 'area' \| 'spline'` | `'line'` | |
+| `legendEnabled` | `boolean` | `true` | |
+| `subtitle` | `string` | — | |
+| `onVisibleSeriesChange` | `(names: string[]) => void` | — | Called with the series left visible after a legend toggle. |
+| `tooltipFormatter` | Highcharts `TooltipFormatterCallbackFunction` | — | |
+| `chartHeight` | `number` | `300` | |
+| `isLoading` | `boolean` | `false` | |
+
+### PieChart
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `data` | `{ name: string, value: number }[]` | — | |
+| `title` | `string` | — | |
+| `valueSuffix` | `string` | `'%'` | Appended in the tooltip and data labels. |
+| `chartHeight` | `number` | `400` | |
+| `isLoading` | `boolean` | `false` | |
+
+### TreeMapChart
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `data` | `{ name, value, id?, parent?, color? }[]` | — | `id`/`parent` enable hierarchical (drilldown) treemaps. |
+| `title` | `string` | — | |
+| `valueSuffix` | `string` | `'%'` | |
+| `chartHeight` | `number` | `400` | |
+| `isLoading` | `boolean` | `false` | |
+
+### GaugeChart
+
+A compact solid-gauge for a single KPI value against a max.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` / `maxValue` | `number` | — | |
+| `unit` | `string` | `''` | Appended after the value, e.g. `'%'`. Fully caller-controlled — there's no hardcoded metric-name matching. |
+| `chartHeight` | `number` | `170` | |
+
+### PyramidChart
+
+A funnel/pyramid chart for size-tiered distributions. Values are log-scaled internally for visual balance; the chart still displays and tooltips real counts.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `data` | `[name: string, value: number][]` | — | |
+| `emptyState` | `ReactNode` | `null` | Rendered instead of the chart when every value is zero (or `data` is empty). The chart has no built-in empty state — pass your own message/illustration. |
+| `chartHeight` | `number` | `415` | |
+| `isLoading` | `boolean` | `false` | |
+
+### RadialGauge
+
+A generic full-circle solid-gauge with a slot for center content — the mechanical primitive behind a branded score meter (compose it with your own logo/icon rather than hardcoding one into the chart).
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` / `maxValue` | `number` | — | |
+| `size` | `number` | `140` | Diameter, px. |
+| `colors` | `[string, string]` | brand gradient | Two-stop gradient for the arc fill. |
+| `centerContent` | `ReactNode` | — | Rendered centered over the gauge. |
+
+### GeoMap / MapMarker
+
+`GeoMap` is a `MapContainer`/`TileLayer`/auto-fit-bounds primitive — it renders no markers itself. Compose `MapMarker` for the common point-with-tooltip case, or your own `react-leaflet` layers (`CircleMarker`, `GeoJSON`, ...) as children for anything more custom.
+
+**`GeoMap`**
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `points` | `{ lat, lon }[]` | `[]` | Used only to compute the auto-fit viewport — doesn't render anything. |
+| `center` | `{ lat, lon }` | `points[0]` | Fallback center when `points` is empty. |
+| `zoom` | `number` | `9` | |
+| `boundsPadding` | `[number, number]` | — | Extra px padding around the fitted bounds. |
+| `height` | `number \| string` | `400` | |
+| `isLoading` | `boolean` | `false` | |
+| `children` | `ReactNode` | — | `MapMarker` or other `react-leaflet` layers. |
+
+**`MapMarker`** — takes a single `point: MapPoint`:
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `id` | `string` | — | |
+| `position` | `{ lat, lon }` | — | |
+| `tooltip` | `ReactNode` | — | Shown on hover (or tap, on touch devices). Omit for a bare marker with no tooltip. |
+| `color` | `string` | brand accent / secondary tone if `emphasized` | Pin color for the bundled default icon. |
+| `iconUrl` | `string` | — | Fully custom marker icon — overrides `color` and the bundled default pin entirely. |
+| `iconSize` | `[number, number]` | `[14,14]` / `[20,20]` if `emphasized` | |
+| `emphasized` | `boolean` | `false` | Visually distinguishes one point among many (e.g. "your business" among competitors). |
+
+`GeoMap` imports Leaflet's base CSS itself — no separate `import 'leaflet/dist/leaflet.css'` needed, unlike raw `react-leaflet` usage.
+
+See Storybook's `Charts` and `Maps` sections for live, interactive examples of all of the above.
 
 ---
 
@@ -262,6 +385,9 @@ Components
   Data Display — Avatar, Table, StatCard, CopyField, DefList, EditableField
   App Shell    — AppFooter, PageHeader, SideNav
   Brand        — PeakziLogo
+
+Charts — ColumnChart, TimeSeriesChart, PieChart, TreeMapChart, GaugeChart, PyramidChart, RadialGauge
+Maps   — GeoMap
 ```
 
 Each story includes interactive Controls, a dark/light theme toggle, and an a11y panel.
@@ -287,3 +413,4 @@ The `dist/` folder is gitignored and rebuilt on every publish.
 - [ ] `data-theme` attribute set on `<html>` at startup
 - [ ] No raw hex values in custom styles — use `var(--token-name)` instead
 - [ ] Navigation links use `<Button href="...">` not `<Button onClick>` (for SEO crawlability)
+- [ ] If using any chart/map component: `highcharts` + `highcharts-react-official` and/or `leaflet` + `react-leaflet@^4` installed directly (see [Charts & Maps](#charts--maps))

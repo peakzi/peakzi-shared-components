@@ -1,0 +1,12 @@
+.pz-geo-map {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.pz-map-marker-tooltip {
+  background: var(--surface-1);
+  color: var(--fg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
