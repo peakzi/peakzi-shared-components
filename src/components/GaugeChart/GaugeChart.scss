@@ -1,4 +1,26 @@
 .pz-gauge-chart {
+  width: 100%;
   margin: 0;
   padding: 0;
+
+  &__value {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 0;
+    color: var(--peakzi-purple);
+    font-family: var(--font-body);
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-semibold);
+  }
+
+  &__number,
+  &__unit {
+    width: min-content;
+  }
+
+  &__unit {
+    padding-bottom: var(--space-1);
+    font-size: 0.6em;
+  }
 }

@@ -10,9 +10,17 @@ interface VendorFullscreenElement extends HTMLElement {
 }
 
 interface VendorFullscreenDocument extends Document {
+  webkitFullscreenElement?: Element | null
+  mozFullScreenElement?: Element | null
+  msFullscreenElement?: Element | null
   webkitExitFullscreen?: () => Promise<void>
   mozCancelFullScreen?: () => Promise<void>
   msExitFullscreen?: () => Promise<void>
+}
+
+function getFullscreenElement(): Element | null {
+  const doc = document as VendorFullscreenDocument
+  return doc.fullscreenElement ?? doc.webkitFullscreenElement ?? doc.mozFullScreenElement ?? doc.msFullscreenElement ?? null
 }
 
 export interface ChartSize {
@@ -69,7 +77,8 @@ export function useChartFullscreen<T extends HTMLElement = HTMLElement>({
 
     void (async () => {
       try {
-        if (!document.fullscreenElement) {
+        // Only exit when *this* container owns fullscreen; otherwise take it over.
+        if (getFullscreenElement() !== element) {
           const request =
             element.requestFullscreen?.bind(element) ??
             element.webkitRequestFullscreen?.bind(element) ??
@@ -93,8 +102,14 @@ export function useChartFullscreen<T extends HTMLElement = HTMLElement>({
 
   useEffect(() => {
     const events = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange']
+    // Fullscreen events are document-wide; a chart only reacts when its own
+    // container enters or leaves fullscreen, not when any other element does.
+    let ownsFullscreen = false
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement)
+      const next = !!containerRef.current && getFullscreenElement() === containerRef.current
+      if (next === ownsFullscreen) return
+      ownsFullscreen = next
+      setIsFullscreen(next)
       setWindowSize({ width: window.innerWidth, height: window.innerHeight })
       setResizeTick((tick) => tick + 1)
     }

@@ -94,9 +94,9 @@ export function Example() {
 | **Data Display** | `Table`, `Thead`, `Tbody`, `Tr`, `Th`, `Td`, `Avatar`, `AvatarStack`, `StatCard`, `CopyField`, `DefList`, `EditableField` |
 | **App Shell** | `AppFooter`, `PageHeader`, `SideNav` |
 | **Brand** | `PeakziLogo` |
-| **Charts & Maps** | `ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `GaugeChart`, `PyramidChart`, `RadialGauge`, `GeoMap`, `MapMarker` — see [Charts & Maps](#charts--maps), these need extra peer dependencies |
+| **Charts & Maps** | `ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `GaugeChart`, `PyramidChart`, `RadialGauge`, `GeoMap`, `MapMarker` — **subpath imports only** (`@peakzi/components/ColumnChart`, ...), need extra peer dependencies; see [Charts & Maps](#charts--maps) |
 
-All named exports and their TypeScript prop types are available from the root import:
+All named exports and their TypeScript prop types (except Charts & Maps, see above) are available from the root import:
 
 ```tsx
 import { Button } from '@peakzi/components'
@@ -118,18 +118,33 @@ Chart components (`ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, 
 
 ```bash
 npm install highcharts highcharts-react-official
-npm install leaflet react-leaflet@^4
+npm install leaflet react-leaflet@^5
 ```
 
-`react-leaflet` must stay on the `^4` line (not `^5`) unless your app is on React 19 — v5 requires it as a hard peer dependency.
+The map components target **React Leaflet 5**, which requires **React 19** (`react-leaflet@5` peers on `react`/`react-dom` `^19` and `leaflet` `^1.9`). An app still on React 18 / React Leaflet 4 should upgrade React and its map dependencies before adopting `GeoMap`.
+
+**Import charts and maps from their subpaths — they are not exported from the root entry.** This keeps apps that never render a chart (e.g. ones without Highcharts or Leaflet installed) from requiring those packages or running the shared Highcharts setup just by importing `@peakzi/components`:
+
+```tsx
+import { ColumnChart } from '@peakzi/components/ColumnChart'
+import { GeoMap, MapMarker } from '@peakzi/components/GeoMap'
+```
+
+Subpaths: `ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `GaugeChart`, `PyramidChart`, `RadialGauge`, `GeoMap` (which also exports `MapMarker`). Each subpath exports the component and its prop types.
 
 Highcharts requires a commercial license for non-personal projects — confirm licensing is in place before shipping chart components to production, independent of this package.
 
 Every chart/map component accepts `className` for the root element and `testId` (rendered as `data-testid`) for test targeting.
 
+`ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart` and `PyramidChart` have an export menu with a **View Full Screen** toggle plus PNG/JPEG/SVG/PDF download. `GaugeChart` and `RadialGauge` are fixed-size KPI widgets, so they have neither.
+
 ### Theming
 
-Charts default to colors and fonts read live from the design tokens (`--peakzi-purple`, `--fg-1`, `--fg-2`, `--border`, `--font-body`, `--success`, `--danger`, `--warning`, `--info`) — no setup needed, and they follow `[data-theme="dark"]` overrides on re-render. Every chart also accepts explicit color/font props to override this per-instance.
+Charts and maps take their colors, font, text sizes, weights and radii from the design tokens (`--peakzi-purple`, `--fg-1`, `--fg-2`, `--border`, `--surface-1`, `--font-body`, `--text-*`, `--weight-*`, `--radius-*`, `--info`, ...). There are **no hardcoded fallback values**, so `@peakzi/components/styles` must be imported. If a token doesn't resolve, Highcharts uses its own default for that option.
+
+Switching themes restyles mounted charts immediately: they re-read tokens whenever `data-theme` or `class` changes anywhere in the document (including a scoped `.peakzi-dark` ancestor), with no re-render needed from the caller. Map pins and HTML labels are styled purely by CSS classes. Every chart also accepts explicit color props to override the defaults per instance.
+
+Highcharts can't take `var(--token)` directly: it writes colors as SVG attributes, does its own color math, and serializes exports outside the page. That's why tokens are read as resolved values instead of being passed through.
 
 ### ColumnChart
 
@@ -229,6 +244,7 @@ A generic full-circle solid-gauge with a slot for center content — the mechani
 | `center` | `{ lat, lon }` | `points[0]` | Fallback center when `points` is empty. |
 | `zoom` | `number` | `9` | |
 | `boundsPadding` | `[number, number]` | — | Extra px padding around the fitted bounds. |
+| `maxFitZoom` | `number` | `15` | Zoom cap when auto-fitting several points. A single point uses `zoom`. |
 | `height` | `number \| string` | `400` | |
 | `isLoading` | `boolean` | `false` | |
 | `children` | `ReactNode` | — | `MapMarker` or other `react-leaflet` layers. |
@@ -245,7 +261,9 @@ A generic full-circle solid-gauge with a slot for center content — the mechani
 | `iconSize` | `[number, number]` | `[14,14]` / `[20,20]` if `emphasized` | |
 | `emphasized` | `boolean` | `false` | Visually distinguishes one point among many (e.g. "your business" among competitors). |
 
-`GeoMap` imports Leaflet's base CSS itself — no separate `import 'leaflet/dist/leaflet.css'` needed, unlike raw `react-leaflet` usage.
+**Map CSS comes from the shared stylesheet, not the `GeoMap` JavaScript subpath.** The build extracts Leaflet's base CSS, together with the map, pin and tooltip styles, into `@peakzi/components/styles` (`dist/components.css`). Importing `@peakzi/components/GeoMap` alone does not load it — without `import '@peakzi/components/styles'` tiles render scattered and markers unstyled. Apps that already import the shared styles globally need nothing extra; there's no need to import `leaflet/dist/leaflet.css` separately.
+
+For several `points`, the viewport auto-fits but never zooms past `maxFitZoom` (default `15`). A single point, or points that all coincide, is centered at `zoom` instead of fitted. `MapMarker` `color` must be a valid CSS color (hex, `rgb()`, `hsl()`, a named color or `var(--token)`); anything else is ignored and the pin uses its token default.
 
 See Storybook's `Charts` and `Maps` sections for live, interactive examples of all of the above.
 
@@ -413,4 +431,4 @@ The `dist/` folder is gitignored and rebuilt on every publish.
 - [ ] `data-theme` attribute set on `<html>` at startup
 - [ ] No raw hex values in custom styles — use `var(--token-name)` instead
 - [ ] Navigation links use `<Button href="...">` not `<Button onClick>` (for SEO crawlability)
-- [ ] If using any chart/map component: `highcharts` + `highcharts-react-official` and/or `leaflet` + `react-leaflet@^4` installed directly (see [Charts & Maps](#charts--maps))
+- [ ] If using any chart/map component: `highcharts` + `highcharts-react-official` and/or `leaflet` + `react-leaflet@^5` (React 19) installed directly, imported from subpaths (`@peakzi/components/ColumnChart`, ...), and `@peakzi/components/styles` imported (see [Charts & Maps](#charts--maps))

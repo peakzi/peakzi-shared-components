@@ -1,8 +1,7 @@
-import { useRef } from 'react'
-import type { Chart, Options, SeriesOptionsType } from 'highcharts'
+import type { Options, SeriesOptionsType } from 'highcharts'
 import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { getChartTheme } from '../../internal/chartTheme'
-import { useChartFullscreen } from '../../hooks/ChartFullscreen/useChartFullscreen'
+import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
 export interface PieChartSlice {
@@ -23,43 +22,29 @@ export interface PieChartProps {
 }
 
 export function PieChart({ isLoading = false, data, title, valueSuffix = '%', chartHeight = 400, className, testId }: PieChartProps) {
-  const theme = getChartTheme()
-  const chartRef = useRef<Chart | null>(null)
-
-  const { containerRef, isFullscreen, size, toggleFullscreen } = useChartFullscreen<HTMLElement>({
-    height: chartHeight,
-    onResize: (next) => {
-      const chart = chartRef.current
-      if (!chart) return
-      chart.setSize(next.width, next.height, false)
-      chart.reflow()
-    },
-  })
-
-  const fullscreenMenuItems = [
-    { text: `${isFullscreen ? 'Exit' : 'View'} Full Screen`, onclick: toggleFullscreen },
-    'downloadPNG',
-    'downloadJPEG',
-    'downloadSVG',
-    'downloadPDF',
-  ] as unknown as string[]
+  const { containerRef, isFullscreen, size, theme, exportMenuItems, setChart } = useChartFrame(chartHeight)
 
   const seriesData = data.map((slice) => ({ name: slice.name, y: slice.value }))
 
-  const options: Options = {
+  const options = pruneUndefined<Options>({
     chart: {
       type: 'pie',
       height: size.height,
       width: size.width ?? null,
       backgroundColor: 'transparent',
     },
-    title: { text: title ?? '' },
+    title: {
+      text: title ?? '',
+      style: { color: theme.textPrimary, fontWeight: theme.weightBold, fontFamily: theme.fontFamily },
+    },
     tooltip: {
       useHTML: true,
+      borderRadius: toPx(theme.radiusSm),
+      // HTML tooltips live in the page DOM, so they're styled by class with tokens in PieChart.scss.
       formatter() {
         return `
-          <p style="font-size:14px;"><b>${this.point.name}</b></p>
-          <p style="font-size:14px;">${this.point.y}${valueSuffix}</p>
+          <p class="pz-pie-chart__tooltip"><b>${this.point.name}</b></p>
+          <p class="pz-pie-chart__tooltip">${this.point.y}${valueSuffix}</p>
         `
       },
     },
@@ -70,43 +55,29 @@ export function PieChart({ isLoading = false, data, title, valueSuffix = '%', ch
         dataLabels: {
           enabled: true,
           format: `<b>{point.name}</b>: {point.percentage:.1f} %`,
-          style: { fontSize: '14px', fontFamily: theme.fontFamily },
+          style: { fontSize: theme.textSm, color: theme.textPrimary, fontFamily: theme.fontFamily },
         },
       },
     },
     series: [{ type: 'pie', name: title ?? 'Value', colorByPoint: true, data: seriesData }] as unknown as SeriesOptionsType[],
     credits: { enabled: false },
     exporting: {
-      buttons: { contextButton: { menuItems: fullscreenMenuItems } },
+      buttons: { contextButton: { menuItems: exportMenuItems } },
       enabled: true,
       fallbackToExportServer: false,
     },
-  }
-
-  const containerStyle = {
-    position: 'relative' as const,
-    width: '100%',
-    height: isFullscreen ? '100vh' : '100%',
-    margin: 0,
-    padding: 0,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column' as const,
-  }
+  })
 
   return (
-    <figure ref={containerRef} className={['pz-pie-chart', className].filter(Boolean).join(' ')} style={containerStyle}>
+    <figure
+      ref={containerRef}
+      className={['pz-pie-chart', isFullscreen && 'pz-pie-chart--fullscreen', className].filter(Boolean).join(' ')}
+    >
       {isLoading ? (
-        <Skeleton style={{ width: '100%', height: chartHeight, borderRadius: 8 }} />
+        <Skeleton className="pz-pie-chart__skeleton" height={chartHeight} />
       ) : (
-        <div style={{ width: '100%', height: '100%' }} data-testid={testId}>
-          <HighchartsReact
-            ref={(instance) => {
-              chartRef.current = instance?.chart ?? null
-            }}
-            highcharts={Highcharts}
-            options={options}
-          />
+        <div className="pz-pie-chart__canvas" data-testid={testId}>
+          <HighchartsReact ref={setChart} highcharts={Highcharts} options={options} containerProps={{ className: 'pz-pie-chart__plot' }} />
         </div>
       )}
     </figure>

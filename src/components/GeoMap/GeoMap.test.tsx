@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import L from 'leaflet'
 import { GeoMap } from './GeoMap'
 import { MapMarker } from './MapMarker'
 
@@ -9,6 +10,24 @@ const points = [
 ]
 
 describe('GeoMap', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('centers a single point at `zoom` instead of fitting a zero-area bounds', () => {
+    const setView = vi.spyOn(L.Map.prototype, 'setView')
+    const fitBounds = vi.spyOn(L.Map.prototype, 'fitBounds')
+    render(<GeoMap points={[{ lat: 27.9506, lon: -82.4572 }]} zoom={11} />)
+    expect(setView).toHaveBeenLastCalledWith([27.9506, -82.4572], 11)
+    expect(fitBounds).not.toHaveBeenCalled()
+  })
+
+  it('caps the auto-fit zoom for several points with maxFitZoom', () => {
+    const fitBounds = vi.spyOn(L.Map.prototype, 'fitBounds').mockReturnThis()
+    render(<GeoMap points={points} maxFitZoom={12} boundsPadding={[20, 20]} />)
+    expect(fitBounds).toHaveBeenCalledWith(expect.anything(), { maxZoom: 12, padding: [20, 20] })
+  })
+
   it('renders a skeleton while loading, not the map', () => {
     const { container } = render(<GeoMap isLoading points={points} testId="market-map" />)
     expect(container.querySelector('.pz-skeleton')).toBeInTheDocument()

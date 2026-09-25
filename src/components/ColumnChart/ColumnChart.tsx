@@ -1,8 +1,7 @@
-import { useRef } from 'react'
-import type { Chart, Options, SeriesOptionsType, TooltipFormatterCallbackFunction } from 'highcharts'
+import type { Options, SeriesOptionsType, TooltipFormatterCallbackFunction } from 'highcharts'
 import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { getChartTheme } from '../../internal/chartTheme'
-import { useChartFullscreen } from '../../hooks/ChartFullscreen/useChartFullscreen'
+import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
 export type ColumnChartType = 'column' | 'bar' | 'line'
@@ -51,35 +50,14 @@ export function ColumnChart({
   className,
   testId,
 }: ColumnChartProps) {
-  const theme = getChartTheme()
+  const { containerRef, isFullscreen, size, theme, exportMenuItems, setChart } = useChartFrame(chartHeight)
   const resolvedColor = color ?? theme.primary
   const hasMultipleSeries = !!series
-  const chartRef = useRef<Chart | null>(null)
+  const pointRadius = toPx(theme.radiusXs)
 
-  const { containerRef, isFullscreen, size, toggleFullscreen } = useChartFullscreen<HTMLElement>({
-    height: chartHeight,
-    onResize: (next) => {
-      const chart = chartRef.current
-      if (!chart) return
-      chart.setSize(next.width, next.height, false)
-      chart.reflow()
-    },
-  })
+  const baseTextStyle = { fontSize: theme.textXs, fontWeight: theme.weightRegular, color: theme.textSecondary, fontFamily: theme.fontFamily }
 
-  const baseTextStyle = { fontSize: '12px', fontWeight: 'normal', color: theme.textSecondary, fontFamily: theme.fontFamily }
-
-  // Highcharts supports custom {text, onclick} menu items at runtime, but its
-  // own .d.ts only declares `menuItems?: Array<string>` — a known gap between
-  // the library's real API and its published types.
-  const fullscreenMenuItems = [
-    { text: `${isFullscreen ? 'Exit' : 'View'} Full Screen`, onclick: toggleFullscreen },
-    'downloadPNG',
-    'downloadJPEG',
-    'downloadSVG',
-    'downloadPDF',
-  ] as unknown as string[]
-
-  const options: Options = {
+  const options = pruneUndefined<Options>({
     chart: {
       type,
       height: size.height,
@@ -91,7 +69,7 @@ export function ColumnChart({
     exporting: {
       buttons: {
         contextButton: {
-          menuItems: fullscreenMenuItems,
+          menuItems: exportMenuItems,
         },
       },
       enabled: true,
@@ -109,7 +87,7 @@ export function ColumnChart({
     },
     title: {
       text: title ?? '',
-      style: { fontSize: '16px', fontWeight: 'bold', color: theme.textPrimary, fontFamily: theme.fontFamily },
+      style: { fontSize: theme.textBase, fontWeight: theme.weightBold, color: theme.textPrimary, fontFamily: theme.fontFamily },
     },
     xAxis: {
       categories: categories ?? [],
@@ -122,7 +100,7 @@ export function ColumnChart({
     yAxis: {
       title: {
         text: yAxisTitle ?? '',
-        style: { color: theme.textPrimary, fontSize: '14px', fontWeight: 'bold', fontFamily: theme.fontFamily },
+        style: { color: theme.textPrimary, fontSize: theme.textSm, fontWeight: theme.weightBold, fontFamily: theme.fontFamily },
       },
       minorGridLineWidth: 0,
       gridLineWidth: 1,
@@ -132,7 +110,7 @@ export function ColumnChart({
       labels: { style: baseTextStyle },
     },
     tooltip: {
-      borderRadius: 8,
+      borderRadius: toPx(theme.radiusSm),
       formatter:
         tooltipFormatter ??
         function () {
@@ -146,14 +124,14 @@ export function ColumnChart({
         maxPointWidth: columnWidth,
         pointPadding: 0.1,
         borderWidth: 0,
-        borderRadius: 4,
+        borderRadius: pointRadius,
         color: resolvedColor,
       },
       bar: {
         maxPointWidth: columnWidth,
         pointPadding: 0.1,
         borderWidth: 0,
-        borderRadius: 4,
+        borderRadius: pointRadius,
         color: resolvedColor,
       },
       line: {
@@ -167,36 +145,26 @@ export function ColumnChart({
       : [{ type, data: data ?? [], color: resolvedColor }]) as SeriesOptionsType[],
     legend: {
       enabled: hasMultipleSeries,
-      itemStyle: { ...baseTextStyle, fontWeight: 'bold' },
+      itemStyle: { ...baseTextStyle, fontWeight: theme.weightBold },
     },
     credits: { enabled: false },
     accessibility: { enabled: false },
-  }
-
-  const containerStyle = {
-    position: 'relative' as const,
-    width: '100%',
-    height: isFullscreen ? '100vh' : '100%',
-    margin: 0,
-    padding: 0,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column' as const,
-  }
+  })
 
   return (
-    <figure ref={containerRef} className={['pz-column-chart', className].filter(Boolean).join(' ')} style={containerStyle}>
+    <figure
+      ref={containerRef}
+      className={['pz-column-chart', isFullscreen && 'pz-column-chart--fullscreen', className].filter(Boolean).join(' ')}
+    >
       {isLoading ? (
-        <Skeleton style={{ width: '100%', height: chartHeight, borderRadius: 8 }} />
+        <Skeleton className="pz-column-chart__skeleton" height={chartHeight} />
       ) : (
-        <div style={{ ...containerStyle, flex: 1 }} data-testid={testId}>
+        <div className="pz-column-chart__canvas" data-testid={testId}>
           <HighchartsReact
-            ref={(instance) => {
-              chartRef.current = instance?.chart ?? null
-            }}
+            ref={setChart}
             highcharts={Highcharts}
             options={options}
-            containerProps={{ style: { height: '100%', width: '100%', flex: 1 } }}
+            containerProps={{ className: 'pz-column-chart__plot' }}
           />
         </div>
       )}

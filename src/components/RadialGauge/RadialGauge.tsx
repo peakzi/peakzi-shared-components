@@ -1,7 +1,9 @@
+import { useRef } from 'react'
 import type { ReactNode } from 'react'
 import type { Options, PlotSolidgaugeOptions, SeriesOptionsType } from 'highcharts'
 import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { getChartTheme } from '../../internal/chartTheme'
+import { pruneUndefined } from '../../internal/chartTheme'
+import { useChartTheme } from '../../hooks/ChartTheme/useChartTheme'
 
 export interface RadialGaugeProps {
   value: number
@@ -27,10 +29,12 @@ export interface RadialGaugeProps {
  * building a new gauge from scratch.
  */
 export function RadialGauge({ value, maxValue, size = 140, colors, centerContent, className, testId }: RadialGaugeProps) {
-  const theme = getChartTheme()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const theme = useChartTheme(containerRef)
   const [startColor, endColor] = colors ?? [theme.primary, theme.info]
+  const gradientStops = startColor && endColor ? [[0, startColor], [1, endColor]] : undefined
 
-  const options: Options = {
+  const options = pruneUndefined<Options>({
     chart: {
       type: 'solidgauge',
       backgroundColor: 'transparent',
@@ -65,10 +69,11 @@ export function RadialGauge({ value, maxValue, size = 140, colors, centerContent
     },
     plotOptions: {
       // `borderWidth`/`borderColor` are real, runtime-supported solid-gauge
-      // segment options; Highcharts' own .d.ts omits them here.
+      // segment options; Highcharts' own .d.ts omits them here. The border
+      // matches the surface behind the gauge, so it reads as a gap in both themes.
       solidgauge: {
         borderWidth: 2,
-        borderColor: '#ffffff',
+        borderColor: theme.surface,
         dataLabels: { enabled: false },
       } as unknown as PlotSolidgaugeOptions,
     },
@@ -78,11 +83,11 @@ export function RadialGauge({ value, maxValue, size = 140, colors, centerContent
         name: 'Value',
         data: [
           {
-            color: { linearGradient: { x1: 0, x2: 0, y1: 1, y2: 0 }, stops: [[0, startColor], [1, endColor]] },
+            color: gradientStops ? { linearGradient: { x1: 0, x2: 0, y1: 1, y2: 0 }, stops: gradientStops } : undefined,
             radius: '124%',
             innerRadius: '76%',
             borderWidth: 2,
-            borderColor: 'rgba(255, 255, 255, 0.9)',
+            borderColor: theme.surface,
             y: value,
           },
         ],
@@ -90,20 +95,17 @@ export function RadialGauge({ value, maxValue, size = 140, colors, centerContent
     ] as unknown as SeriesOptionsType[],
     credits: { enabled: false },
     exporting: { enabled: false },
-  }
+  })
 
   return (
     <div
+      ref={containerRef}
       className={['pz-radial-gauge', className].filter(Boolean).join(' ')}
-      style={{ position: 'relative', width: size, height: size }}
+      style={{ width: size, height: size }}
       data-testid={testId}
     >
       <HighchartsReact highcharts={Highcharts} options={options} />
-      {centerContent && (
-        <div className="pz-radial-gauge__center" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {centerContent}
-        </div>
-      )}
+      {centerContent && <div className="pz-radial-gauge__center">{centerContent}</div>}
     </div>
   )
 }

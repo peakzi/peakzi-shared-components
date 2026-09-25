@@ -1,6 +1,28 @@
 .pz-geo-map {
+  width: 100%;
   overflow: hidden;
   border-radius: var(--radius-md);
+
+  &__canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__skeleton {
+    border-radius: var(--radius-sm);
+  }
+}
+
+.pz-map-marker-icon {
+  circle {
+    fill: var(--peakzi-purple);
+    stroke: var(--surface-1);
+    stroke-width: 2;
+  }
+
+  &--emphasized circle {
+    fill: var(--info);
+  }
 }
 
 .pz-map-marker-tooltip {

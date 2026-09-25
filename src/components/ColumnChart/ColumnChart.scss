@@ -1,4 +1,5 @@
+@use '../../styles/chart' as *;
+
 .pz-column-chart {
-  margin: 0;
-  padding: 0;
+  @include chart-frame;
 }

@@ -30,6 +30,11 @@ describe('TreeMapChart', () => {
     expect(container.querySelector('.highcharts-title')?.textContent).toBe('Service Mix')
   })
 
+  it('renders the export menu button that carries the fullscreen toggle', () => {
+    const { container } = render(<TreeMapChart data={data} />)
+    expect(container.querySelector('.highcharts-contextbutton')).toBeInTheDocument()
+  })
+
   it('applies a custom className to the root figure', () => {
     const { container } = render(<TreeMapChart data={data} className="custom-chart" />)
     const figure = container.querySelector('figure')

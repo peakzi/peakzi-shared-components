@@ -1,15 +1,20 @@
+import { useMemo } from 'react'
 import type { ReactNode } from 'react'
-import { useRef } from 'react'
-import type { Chart, Options, PlotSeriesOptions, SeriesOptionsType } from 'highcharts'
+import type { Options, PlotSeriesOptions, SeriesOptionsType } from 'highcharts'
 import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { getChartTheme } from '../../internal/chartTheme'
-import { useChartFullscreen } from '../../hooks/ChartFullscreen/useChartFullscreen'
+import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
 export type PyramidChartPoint = [name: string, value: number]
 
 export interface PyramidChartProps {
   isLoading?: boolean
+  /**
+   * Non-negative counts per tier. Values are log-scaled for display, which is
+   * undefined below zero, so negative or non-finite values are treated as `0`
+   * (with a console warning).
+   */
   data: PyramidChartPoint[]
   /**
    * Rendered instead of the chart when every value is zero (or `data` is empty).
@@ -56,45 +61,37 @@ function reverseConsecutiveZeros(points: PyramidChartPoint[]): PyramidChartPoint
   return result
 }
 
+/** Clamps unsupported (negative / non-finite) values to 0, warning so bad input isn't silently hidden. */
+function sanitizePoints(points: PyramidChartPoint[]): PyramidChartPoint[] {
+  const invalid = points.filter(([, value]) => !Number.isFinite(value) || value < 0)
+  if (invalid.length === 0) return points
+  console.warn(
+    `PyramidChart: values must be non-negative finite numbers; treating as 0: ${invalid.map(([name, value]) => `${name}=${value}`).join(', ')}`,
+  )
+  return points.map(([name, value]) => [name, Number.isFinite(value) && value > 0 ? value : 0])
+}
+
 const toLogScale = (value: number) => Math.log(1 + value)
 const fromLogScale = (logValue: number) => Math.round(Math.exp(logValue) - 1)
 
 export function PyramidChart({ isLoading = false, data, emptyState = null, chartHeight = 415, className, testId }: PyramidChartProps) {
-  const theme = getChartTheme()
-  const chartRef = useRef<Chart | null>(null)
+  const { containerRef, isFullscreen, size, theme, exportMenuItems, setChart } = useChartFrame(chartHeight)
 
-  const { containerRef, isFullscreen, size, toggleFullscreen } = useChartFullscreen<HTMLElement>({
-    height: chartHeight,
-    onResize: (next) => {
-      const chart = chartRef.current
-      if (!chart) return
-      chart.setSize(next.width, next.height, false)
-      chart.reflow()
-    },
-  })
-
-  const isEmpty = data.length === 0 || data.reduce((sum, [, value]) => sum + value, 0) === 0
+  const points = useMemo(() => sanitizePoints(data), [data])
+  const isEmpty = points.every(([, value]) => value === 0)
 
   if (!isLoading && isEmpty) {
     return (
-      <figure className={['pz-pyramid-chart', className].filter(Boolean).join(' ')} style={{ width: '100%', margin: 0 }} data-testid={testId}>
+      <figure className={['pz-pyramid-chart', className].filter(Boolean).join(' ')} data-testid={testId}>
         {emptyState}
       </figure>
     )
   }
 
-  const smoothed = reverseConsecutiveZeros(data)
+  const smoothed = reverseConsecutiveZeros(points)
   const logScaledData = smoothed.map(([name, value]): [string, number] => [name, toLogScale(value)])
 
-  const fullscreenMenuItems = [
-    { text: `${isFullscreen ? 'Exit' : 'View'} Full Screen`, onclick: toggleFullscreen },
-    'downloadPNG',
-    'downloadJPEG',
-    'downloadSVG',
-    'downloadPDF',
-  ] as unknown as string[]
-
-  const options: Options = {
+  const options = pruneUndefined<Options>({
     chart: {
       type: 'pyramid',
       height: size.height,
@@ -108,7 +105,7 @@ export function PyramidChart({ isLoading = false, data, emptyState = null, chart
         dataLabels: {
           alignTo: 'connectors',
           enabled: true,
-          style: { fontSize: '1.4rem', fontFamily: theme.fontFamily },
+          style: { fontSize: theme.textLg, color: theme.textPrimary, fontFamily: theme.fontFamily },
           overflow: 'allow',
           crop: false,
           distance: isFullscreen ? 100 : 15,
@@ -127,7 +124,7 @@ export function PyramidChart({ isLoading = false, data, emptyState = null, chart
             return `${this.point.name} (${fromLogScale(this.point.y ?? 0)})`
           },
           softConnector: true,
-          style: { fontSize: isFullscreen ? '18px' : '16px', fontFamily: theme.fontFamily },
+          style: { fontSize: isFullscreen ? theme.textMd : theme.textBase, fontFamily: theme.fontFamily },
         },
         center: isFullscreen ? ['50%', '50%'] : ['52%', '50%'],
         width: isFullscreen ? '60%' : '100%',
@@ -137,15 +134,16 @@ export function PyramidChart({ isLoading = false, data, emptyState = null, chart
     legend: { enabled: false },
     series: [{ type: 'pyramid', name: 'Value', data: logScaledData }] as unknown as SeriesOptionsType[],
     tooltip: {
-      borderRadius: 8,
+      borderRadius: toPx(theme.radiusSm),
       useHTML: true,
+      // HTML tooltips live in the page DOM, so they're styled by class with tokens in PyramidChart.scss.
       formatter(this: { point: { name: string; y?: number | null } }): string {
         return `
-          <p style="font-size:14px;">Size: <b>${this.point.name}</b></p>
-          <p style="font-size:14px;">Value: <b>${fromLogScale(this.point.y ?? 0)}</b></p>
+          <p class="pz-pyramid-chart__tooltip">Size: <b>${this.point.name}</b></p>
+          <p class="pz-pyramid-chart__tooltip">Value: <b>${fromLogScale(this.point.y ?? 0)}</b></p>
         `
       },
-      style: { color: theme.textPrimary, fontSize: '14px', fontFamily: theme.fontFamily },
+      style: { color: theme.textPrimary, fontSize: theme.textSm, fontFamily: theme.fontFamily },
     },
     responsive: {
       rules: [
@@ -177,29 +175,22 @@ export function PyramidChart({ isLoading = false, data, emptyState = null, chart
     },
     credits: { enabled: false },
     exporting: {
-      buttons: { contextButton: { menuItems: fullscreenMenuItems } },
+      buttons: { contextButton: { menuItems: exportMenuItems } },
       enabled: true,
       fallbackToExportServer: false,
     },
-  }
+  })
 
   return (
     <figure
       ref={containerRef}
-      className={['pz-pyramid-chart', className].filter(Boolean).join(' ')}
-      style={{ position: 'relative', width: '100%', height: isFullscreen ? '100vh' : 'auto', margin: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      className={['pz-pyramid-chart', isFullscreen && 'pz-pyramid-chart--fullscreen', className].filter(Boolean).join(' ')}
     >
       {isLoading ? (
-        <Skeleton style={{ width: '100%', height: chartHeight, borderRadius: 8 }} />
+        <Skeleton className="pz-pyramid-chart__skeleton" height={chartHeight} />
       ) : (
-        <div style={{ width: '100%', height: '100%' }} data-testid={testId}>
-          <HighchartsReact
-            ref={(instance) => {
-              chartRef.current = instance?.chart ?? null
-            }}
-            highcharts={Highcharts}
-            options={options}
-          />
+        <div className="pz-pyramid-chart__canvas" data-testid={testId}>
+          <HighchartsReact ref={setChart} highcharts={Highcharts} options={options} containerProps={{ className: 'pz-pyramid-chart__plot' }} />
         </div>
       )}
     </figure>

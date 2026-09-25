@@ -54,10 +54,48 @@ describe('useChartFullscreen', () => {
     expect(requestFullscreen).toHaveBeenCalledTimes(1)
   })
 
+  it('ignores fullscreen entered by some other element', () => {
+    const { result } = renderHook(() => useChartFullscreen({ height: 320 }))
+    const container = document.createElement('div')
+    Object.defineProperty(result.current.containerRef, 'current', { value: container, writable: true })
+
+    Object.defineProperty(document, 'fullscreenElement', { value: document.createElement('div'), configurable: true })
+    fireFullscreenChange()
+
+    expect(result.current.isFullscreen).toBe(false)
+    expect(result.current.size).toEqual({ width: null, height: 320 })
+  })
+
+  it('exits fullscreen only when its own container owns it, and requests it otherwise', async () => {
+    const requestFullscreen = vi.fn().mockResolvedValue(undefined)
+    const exitFullscreen = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(document, 'exitFullscreen', { value: exitFullscreen, configurable: true })
+    const { result } = renderHook(() => useChartFullscreen({ height: 320 }))
+    const container = Object.assign(document.createElement('div'), { requestFullscreen })
+    Object.defineProperty(result.current.containerRef, 'current', { value: container, writable: true })
+
+    Object.defineProperty(document, 'fullscreenElement', { value: document.createElement('div'), configurable: true })
+    await act(async () => {
+      result.current.toggleFullscreen()
+      await Promise.resolve()
+    })
+    expect(requestFullscreen).toHaveBeenCalledTimes(1)
+    expect(exitFullscreen).not.toHaveBeenCalled()
+
+    Object.defineProperty(document, 'fullscreenElement', { value: container, configurable: true })
+    await act(async () => {
+      result.current.toggleFullscreen()
+      await Promise.resolve()
+    })
+    expect(exitFullscreen).toHaveBeenCalledTimes(1)
+  })
+
   it('switches to window dimensions on fullscreenchange and back on exit', () => {
     const { result } = renderHook(() => useChartFullscreen({ height: 320 }))
+    const container = document.createElement('div')
+    Object.defineProperty(result.current.containerRef, 'current', { value: container, writable: true })
 
-    Object.defineProperty(document, 'fullscreenElement', { value: document.body, configurable: true })
+    Object.defineProperty(document, 'fullscreenElement', { value: container, configurable: true })
     fireFullscreenChange()
 
     expect(result.current.isFullscreen).toBe(true)

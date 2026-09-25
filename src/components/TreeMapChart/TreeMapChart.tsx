@@ -1,6 +1,7 @@
 import type { Options, SeriesOptionsType } from 'highcharts'
 import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { getChartTheme } from '../../internal/chartTheme'
+import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
 export interface TreeMapChartPoint {
@@ -34,10 +35,10 @@ export function TreeMapChart({
   className,
   testId,
 }: TreeMapChartProps) {
-  const theme = getChartTheme()
+  const { containerRef, isFullscreen, size, theme, exportMenuItems, setChart } = useChartFrame(chartHeight)
 
-  const options: Options = {
-    chart: { height: chartHeight, backgroundColor: 'transparent' },
+  const options = pruneUndefined<Options>({
+    chart: { height: size.height, width: size.width ?? null, backgroundColor: 'transparent' },
     drilldown: {
       breadcrumbs: {
         buttonTheme: {
@@ -45,7 +46,7 @@ export function TreeMapChart({
           padding: 8,
           stroke: theme.gridLine,
           'stroke-width': 1,
-          style: { fontWeight: 'bold', fontSize: '14px' },
+          style: { color: theme.textPrimary, fontWeight: theme.weightBold, fontSize: theme.textSm },
         },
         floating: true,
         position: { align: 'right' },
@@ -65,7 +66,7 @@ export function TreeMapChart({
             level: 1,
             dataLabels: {
               enabled: true,
-              style: { fontSize: '14px' },
+              style: { fontSize: theme.textSm, fontFamily: theme.fontFamily },
               useHTML: true,
               formatter(this: { point: { name: string; value?: number } }): string {
                 return `${this.point.name} (${this.point.value}${valueSuffix})`
@@ -81,25 +82,33 @@ export function TreeMapChart({
     ] as unknown as SeriesOptionsType[],
     title: {
       text: title ?? '',
-      style: { color: theme.textPrimary, fontSize: '18px', fontWeight: 'bold', fontFamily: theme.fontFamily },
+      style: { color: theme.textPrimary, fontSize: theme.textMd, fontWeight: theme.weightBold, fontFamily: theme.fontFamily },
     },
     tooltip: {
-      borderRadius: 8,
+      borderRadius: toPx(theme.radiusSm),
       formatter() {
         return `${this.point.name} : ${this.point.options.value}${valueSuffix}`
       },
-      style: { color: theme.textPrimary, fontSize: '14px', fontWeight: 'bold', fontFamily: theme.fontFamily },
+      style: { color: theme.textPrimary, fontSize: theme.textSm, fontWeight: theme.weightBold, fontFamily: theme.fontFamily },
     },
     credits: { enabled: false },
-  }
+    exporting: {
+      buttons: { contextButton: { menuItems: exportMenuItems } },
+      enabled: true,
+      fallbackToExportServer: false,
+    },
+  })
 
   return (
-    <figure className={['pz-treemap-chart', className].filter(Boolean).join(' ')} style={{ width: '100%', margin: 0 }}>
+    <figure
+      ref={containerRef}
+      className={['pz-treemap-chart', isFullscreen && 'pz-treemap-chart--fullscreen', className].filter(Boolean).join(' ')}
+    >
       {isLoading ? (
-        <Skeleton style={{ width: '100%', height: chartHeight, borderRadius: 8 }} />
+        <Skeleton className="pz-treemap-chart__skeleton" height={chartHeight} />
       ) : (
-        <div style={{ width: '100%', height: '100%' }} data-testid={testId}>
-          <HighchartsReact highcharts={Highcharts} options={options} />
+        <div className="pz-treemap-chart__canvas" data-testid={testId}>
+          <HighchartsReact ref={setChart} highcharts={Highcharts} options={options} containerProps={{ className: 'pz-treemap-chart__plot' }} />
         </div>
       )}
     </figure>

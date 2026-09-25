@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { PyramidChart } from './PyramidChart'
 
 const data: Array<[string, number]> = [
@@ -33,6 +33,39 @@ describe('PyramidChart', () => {
     )
     expect(screen.getByTestId('my-empty-state')).toBeInTheDocument()
     expect(container.querySelector('.highcharts-container')).not.toBeInTheDocument()
+  })
+
+  it('renders the chart for values that sum to zero but are not all zero', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const { container } = render(
+      <PyramidChart
+        data={[
+          ['A', 10],
+          ['B', -10],
+        ]}
+        emptyState={<div data-testid="my-empty-state">No data yet</div>}
+      />,
+    )
+    expect(screen.queryByTestId('my-empty-state')).not.toBeInTheDocument()
+    expect(container.querySelector('.highcharts-container')).toBeInTheDocument()
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('B=-10'))
+    warn.mockRestore()
+  })
+
+  it('treats negative and non-finite values as zero, so all-invalid data is empty', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    render(
+      <PyramidChart
+        data={[
+          ['A', -5],
+          ['B', Number.NaN],
+        ]}
+        emptyState={<div data-testid="my-empty-state">No data yet</div>}
+      />,
+    )
+    expect(screen.getByTestId('my-empty-state')).toBeInTheDocument()
+    expect(warn).toHaveBeenCalledTimes(1)
+    warn.mockRestore()
   })
 
   it('renders the caller-supplied emptyState when data is empty', () => {

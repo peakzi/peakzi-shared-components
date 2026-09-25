@@ -28,13 +28,21 @@
     "highcharts": "^11.4.8",
     "highcharts-react-official": "^3.2.1",
     "leaflet": "^1.9.4",
-    "react-leaflet": "^4.2.1"
+    "react-leaflet": "^5.0.0"
   },
   "peerDependenciesMeta": {
-    "highcharts": { "optional": true },
-    "highcharts-react-official": { "optional": true },
-    "leaflet": { "optional": true },
-    "react-leaflet": { "optional": true }
+    "highcharts": {
+      "optional": true
+    },
+    "highcharts-react-official": {
+      "optional": true
+    },
+    "leaflet": {
+      "optional": true
+    },
+    "react-leaflet": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.3.1",
@@ -68,19 +76,13 @@
     "prettier": "^3.9.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "react-leaflet": "^4.2.1",
+    "react-leaflet": "^5.0.0",
     "sass": "^1.104.1",
     "storybook": "^10.6.0",
     "typescript": "^6.0.3",
     "vite": "^8.3.0",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^4.1.11"
-  },
-  "overrides": {
-    "react-leaflet": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
   },
   "module": "./dist/index.js",
   "types": "./dist/src/index.d.ts",

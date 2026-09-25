@@ -1,6 +1,8 @@
+import { useRef } from 'react'
 import type { Options, SeriesOptionsType } from 'highcharts'
 import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { getChartTheme } from '../../internal/chartTheme'
+import { pruneUndefined } from '../../internal/chartTheme'
+import { useChartTheme } from '../../hooks/ChartTheme/useChartTheme'
 
 export interface GaugeChartProps {
   value: number
@@ -14,9 +16,11 @@ export interface GaugeChartProps {
 }
 
 export function GaugeChart({ value, maxValue, unit = '', chartHeight = 170, className, testId }: GaugeChartProps) {
-  const theme = getChartTheme()
+  const containerRef = useRef<HTMLElement>(null)
+  const theme = useChartTheme(containerRef)
+  const gradientStops = theme.primary && theme.info ? [[0, theme.primary], [1, theme.info]] : undefined
 
-  const options: Options = {
+  const options = pruneUndefined<Options>({
     chart: {
       type: 'solidgauge',
       backgroundColor: 'transparent',
@@ -58,11 +62,12 @@ export function GaugeChart({ value, maxValue, unit = '', chartHeight = 170, clas
           borderWidth: 0,
           y: -30,
           useHTML: true,
+          // HTML data labels live in the page DOM, so they're styled by class with tokens in GaugeChart.scss.
           formatter(this: { y?: number | null }): string {
             return `
-              <p style="color:${theme.primary};font-size:38px;font-weight:600;display:flex;align-items:flex-end;justify-content:center">
-                <span style="font-size:1em;width:min-content">${(this.y ?? 0).toLocaleString()}</span>
-                <span style="font-size:0.6em;width:min-content;padding-bottom:4px">${unit}</span>
+              <p class="pz-gauge-chart__value">
+                <span class="pz-gauge-chart__number">${(this.y ?? 0).toLocaleString()}</span>
+                <span class="pz-gauge-chart__unit">${unit}</span>
               </p>
             `
           },
@@ -76,7 +81,7 @@ export function GaugeChart({ value, maxValue, unit = '', chartHeight = 170, clas
         rounded: true,
         data: [
           {
-            color: { linearGradient: { x1: 0, x2: 1, y1: 0, y2: 0 }, stops: [[0, theme.primary], [1, theme.info]] },
+            color: gradientStops ? { linearGradient: { x1: 0, x2: 1, y1: 0, y2: 0 }, stops: gradientStops } : undefined,
             radius: '112%',
             innerRadius: '88%',
             y: value,
@@ -86,10 +91,10 @@ export function GaugeChart({ value, maxValue, unit = '', chartHeight = 170, clas
     ] as unknown as SeriesOptionsType[],
     credits: { enabled: false },
     exporting: { enabled: false },
-  }
+  })
 
   return (
-    <figure className={['pz-gauge-chart', className].filter(Boolean).join(' ')} style={{ width: '100%', margin: 0 }} data-testid={testId}>
+    <figure ref={containerRef} className={['pz-gauge-chart', className].filter(Boolean).join(' ')} data-testid={testId}>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </figure>
   )

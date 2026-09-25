@@ -86,7 +86,7 @@ export default defineConfig({
         /^highcharts\//,
         'leaflet',
         'react-leaflet',
-        'react-leaflet/hooks',
+        /^react-leaflet\//,
       ],
       output: {
         globals: {
