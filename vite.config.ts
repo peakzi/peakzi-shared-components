@@ -14,19 +14,25 @@ const componentEntries = [
   'Button',
   'Card',
   'Checkbox',
+  'ColumnChart',
   'CopyField',
   'CodeSnippet',
   'DefList',
   'Dropdown',
   'EditableField',
   'EmptyState',
+  'GaugeChart',
+  'GeoMap',
   'Grid',
   'Input',
   'Modal',
   'Navbar',
   'PageHeader',
   'PeakziLogo',
+  'PieChart',
   'Progress',
+  'PyramidChart',
+  'RadialGauge',
   'Section',
   'Segmented',
   'SideNav',
@@ -38,7 +44,9 @@ const componentEntries = [
   'Switch',
   'Table',
   'Tabs',
+  'TimeSeriesChart',
   'Tooltip',
+  'TreeMapChart',
 ] as const
 
 const entries = {
@@ -66,13 +74,30 @@ export default defineConfig({
     },
     rollupOptions: {
       // Consumers supply shared runtime dependencies; keep them out of this bundle.
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'lucide-react'],
+      // highcharts/leaflet are optional peers — only consumers using the chart/map
+      // components need to install them, so they must never end up bundled here.
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'lucide-react',
+        'highcharts',
+        'highcharts-react-official',
+        /^highcharts\//,
+        'leaflet',
+        'react-leaflet',
+        /^react-leaflet\//,
+      ],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           'react/jsx-runtime': 'jsxRuntime',
           'lucide-react': 'lucideReact',
+          highcharts: 'Highcharts',
+          'highcharts-react-official': 'HighchartsReact',
+          leaflet: 'L',
+          'react-leaflet': 'ReactLeaflet',
         },
       },
     },

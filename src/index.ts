@@ -177,3 +177,15 @@ export type { StackProps, StackGap } from './components/Stack'
 // ---------------------------------------------------------------------------
 export { PeakziLogo } from './components/PeakziLogo'
 export type { PeakziLogoProps, LogoVariant, LogoSize } from './components/PeakziLogo'
+
+// ---------------------------------------------------------------------------
+// Charts & Maps — intentionally NOT exported from the root entry.
+// ---------------------------------------------------------------------------
+// They depend on the optional peers highcharts/highcharts-react-official and
+// leaflet/react-leaflet. Re-exporting them here would make every root import
+// require those packages and eagerly run the shared Highcharts setup, even in
+// apps that never render a chart. Import them from their subpaths instead:
+//   import { ColumnChart } from '@peakzi/components/ColumnChart'
+//   import { GeoMap, MapMarker } from '@peakzi/components/GeoMap'
+// Available subpaths: ColumnChart, TimeSeriesChart, PieChart, TreeMapChart,
+// GaugeChart, PyramidChart, RadialGauge, GeoMap.

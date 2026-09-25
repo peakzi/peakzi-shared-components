@@ -1,0 +1,13 @@
+@use '../../styles/chart' as *;
+
+.pz-pyramid-chart {
+  @include chart-frame;
+  height: auto;
+  align-items: center;
+  justify-content: center;
+
+  &__tooltip {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+}

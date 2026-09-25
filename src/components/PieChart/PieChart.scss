@@ -1,0 +1,10 @@
+@use '../../styles/chart' as *;
+
+.pz-pie-chart {
+  @include chart-frame;
+
+  &__tooltip {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+}
