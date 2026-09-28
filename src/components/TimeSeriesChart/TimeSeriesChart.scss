@@ -1,0 +1,5 @@
+@use '../../styles/chart' as *;
+
+.pz-timeseries-chart {
+  @include chart-frame;
+}

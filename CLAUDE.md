@@ -8,7 +8,7 @@
 ## What This Repo Is
 
 Package name: `@peakzi/components`
-33 component groups covering every common UI pattern across all Peakzi apps.
+41 component groups covering every common UI pattern across all Peakzi apps.
 
 **Consuming app setup (already done in existing apps — do not repeat):**
 ```tsx
@@ -104,6 +104,26 @@ Package name: `@peakzi/components`
 | Component | Key Props |
 |-----------|-----------|
 | `PeakziLogo` | `variant`: color \| white \| navy. `size`: xs \| sm \| md \| lg \| xl |
+
+### Charts & Maps
+Built on Highcharts / Leaflet, which are **optional peer dependencies**. A consuming app that uses these must install `highcharts` + `highcharts-react-official` and/or `leaflet` + `react-leaflet@^5` (requires React 19) itself. **They are not exported from the root entry.** Import from subpaths (`import { ColumnChart } from '@peakzi/components/ColumnChart'`), and never add them to `src/index.ts`: that would make every root import require the optional peers. Map CSS (including Leaflet's) only ships in `@peakzi/components/styles`. Every component takes `className` and `testId`; most take `isLoading` (renders `Skeleton`) and `chartHeight`.
+
+| Component | Key Props |
+|-----------|-----------|
+| `ColumnChart` | `type`: column \| bar \| line. `data` (one series) or `series` (named, legend on). `stacked`, `categories`, `title`, `yAxisTitle`, `color`, `tooltipFormatter` |
+| `TimeSeriesChart` | `series` (`data` may contain `null` for gaps), `pointStart`, `pointInterval`, `type`: line \| area \| spline. `onVisibleSeriesChange` |
+| `PieChart` | `data`: `{ name, value }[]`, `valueSuffix` |
+| `TreeMapChart` | `data`: `{ name, value, id?, parent?, color? }[]` — `id`/`parent` enable drilldown. `valueSuffix` |
+| `PyramidChart` | `data`: `[name, value][]` (log-scaled for display). `emptyState` slot |
+| `GaugeChart` | `value`, `maxValue`, `unit` — compact KPI gauge |
+| `RadialGauge` | `value`, `maxValue`, `size`, `colors`, `centerContent` slot — compose your own logo/label inside |
+| `GeoMap`, `MapMarker` | `GeoMap`: `points` (auto-fit only, memoize it), `center`, `zoom`, `maxFitZoom`, `height`, `children`. `MapMarker`: `point` with `position`, `tooltip`, `color`, `emphasized`, `iconUrl` |
+
+Chart internals (`src/internal/`, `src/hooks/`) follow the tokens-only rule this way:
+- Highcharts options get **resolved** token values from `useChartTheme` (Highcharts can't take `var()`). There are no hardcoded fallbacks: an unresolved token is dropped via `pruneUndefined` so Highcharts uses its own default.
+- Anything that lives in the page DOM (map pins, `useHTML` labels and tooltips, frame layout) is styled by BEM class in SCSS with `var()`.
+- Fullscreen-capable charts share `useChartFrame` and the `chart-frame` mixin in `src/styles/_chart.scss`.
+- Numbers that describe chart geometry (spacing, pane radii, marker sizes) stay as Highcharts numbers. They aren't CSS.
 
 ---
 

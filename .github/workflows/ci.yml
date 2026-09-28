@@ -1,0 +1,64 @@
+name: CI
+
+# Runs on every PR into main. Both jobs are intended to become required status
+# checks on main once branch protection is set up.
+on:
+  pull_request:
+    branches:
+      - "main"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type checking
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test (with coverage thresholds)
+        run: npm run test:coverage
+
+      - name: Build package
+        run: npm run build
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+  version:
+    name: Version bump
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Require a version bump when shipped files change
+        run: node scripts/check-version.mjs "origin/${{ github.base_ref }}"

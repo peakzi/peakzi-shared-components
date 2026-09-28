@@ -1,0 +1,158 @@
+name: Release
+
+# Every push to main (i.e. every merged PR) runs this end to end:
+#   1. verify    — the same checks as CI, against the merged result
+#   2. publish   — if package.json's version isn't in the registry yet: npm publish,
+#                  then tag vX.Y.Z + GitHub Release with generated notes
+#   3. storybook — build, sync to the public S3 bucket (served straight from
+#                  https://peakzi-storybook.s3.us-east-1.amazonaws.com/index.html)
+# The version itself is bumped in the PR; CI's "Version bump" check enforces it.
+# Tags are an output of this workflow, not a trigger — don't push v* tags by hand.
+on:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One release at a time, never cancelled midway (a half-finished publish or
+# `s3 sync --delete` is worse than waiting).
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  STORYBOOK_BUCKET: peakzi-storybook
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type checking
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test (with coverage thresholds)
+        run: npm run test:coverage
+
+  publish:
+    name: Publish package
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the vX.Y.Z tag and GitHub Release
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@peakzi"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check what needs releasing
+        id: state
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          published=$(npm view "$name@$version" version 2>/dev/null || true)
+          tagged=$(git ls-remote --tags origin "refs/tags/v$version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "publish=$([ -z "$published" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "release=$([ -z "$tagged" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "$name@$version — published: ${published:-no}, tagged: ${tagged:+yes}"
+
+      - name: Build
+        if: steps.state.outputs.publish == 'true'
+        run: npm run build
+
+      # prepublishOnly would re-run typecheck/lint/test/build that already ran above.
+      - name: Publish to GitHub Packages
+        if: steps.state.outputs.publish == 'true'
+        run: npm publish --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Tag and create GitHub Release
+        if: steps.state.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ steps.state.outputs.version }}" \
+            --target "$GITHUB_SHA" \
+            --title "v${{ steps.state.outputs.version }}" \
+            --generate-notes
+
+  storybook:
+    name: Deploy Storybook
+    # Only after the package is published, so the docs never describe an
+    # unreleased version.
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # No CDN in front of the bucket, so these headers are what browsers cache by.
+      # Hashed bundles under assets/ never change, so they may be cached forever.
+      # They go up first, so new HTML never references a missing file.
+      - name: Upload hashed assets
+        run: |
+          aws s3 sync storybook-static/assets/ "s3://$STORYBOOK_BUCKET/assets/" --delete \
+            --cache-control "public, max-age=31536000, immutable"
+
+      # Everything else (HTML, manager/preview entry files, index.json)
+      # revalidates on every load (cheap 304s via ETag), so a deploy is visible
+      # immediately.
+      - name: Upload everything else
+        run: |
+          aws s3 sync storybook-static/ "s3://$STORYBOOK_BUCKET/" --delete \
+            --exclude "assets/*" \
+            --cache-control "no-cache"
