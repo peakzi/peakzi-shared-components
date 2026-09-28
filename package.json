@@ -13,6 +13,7 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src --max-warnings 0",
     "typecheck": "tsc --noEmit",
+    "check:version": "node scripts/check-version.mjs origin/main",
     "prepublishOnly": "npm run typecheck && npm run lint && npm test && npm run build"
   },
   "keywords": [],

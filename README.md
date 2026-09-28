@@ -412,12 +412,18 @@ Each story includes interactive Controls, a dark/light theme toggle, and an a11y
 
 ---
 
-## Publishing
+## Releases & CI
 
-```bash
-# prepublishOnly runs automatically: typecheck → lint → test → build
-npm publish --access public
-```
+Releases are fully automated. **Don't run `npm publish` or push `v*` tags by hand.**
+
+| When | Workflow | What runs |
+|---|---|---|
+| A PR into `main` is opened or updated | `.github/workflows/ci.yml` | **Verify**: typecheck, lint, tests with coverage thresholds, package build, Storybook build. **Version bump**: fails if the PR changes shipped files (`src/`, `assets/`, `package.json`, build config; stories and tests excluded) without raising `version` above `main`'s. |
+| A PR merges (push to `main`) | `.github/workflows/release.yml` | Verify again, then publish `version` to GitHub Packages if it isn't there yet, create tag `vX.Y.Z` and a GitHub Release with generated notes, then deploy Storybook to the public S3 bucket ([peakzi-storybook](https://peakzi-storybook.s3.us-east-1.amazonaws.com/index.html)). |
+
+So the release step is simply **bump `version` in your PR** (`npm version patch|minor|major --no-git-tag-version`). Check it locally with `npm run check:version`. The release workflow can be re-run from the Actions tab (`workflow_dispatch`), and it's idempotent: an already-published version or an existing tag is skipped.
+
+Repository secrets used: `NPM_TOKEN` (GitHub Packages publish), `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (S3 sync to `peakzi-storybook`).
 
 The `dist/` folder is gitignored and rebuilt on every publish.
 
