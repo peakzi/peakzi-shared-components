@@ -83,6 +83,9 @@
   display: flex;
   align-items: flex-start;
   gap: var(--space-2);
+  // Lets the heading itself shrink/wrap correctly when a consumer embeds it as a flex
+  // item in their own layout (e.g. alongside an action icon rendered outside the tag).
+  min-width: 0;
 }
 
 .pz-card__title-icon {
