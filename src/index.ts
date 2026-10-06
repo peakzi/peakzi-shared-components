@@ -68,6 +68,38 @@ export type { TabsProps, TabsVariant, TabListProps, TabProps, TabPanelProps } fr
 export { Navbar, NavBrand, NavLinks, NavLink, NavActions } from './components/Navbar'
 export type { NavbarProps, NavBrandProps, NavLinksProps, NavLinkProps, NavActionsProps } from './components/Navbar'
 
+export { BusinessSiteHeader } from './components/BusinessSiteHeader'
+export type {
+  BusinessSiteHeaderAction,
+  BusinessSiteHeaderAppearance,
+  BusinessSiteHeaderButtonRadius,
+  BusinessSiteHeaderFont,
+  BusinessSiteHeaderIconName,
+  BusinessSiteHeaderLink,
+  BusinessSiteHeaderLogo,
+  BusinessSiteHeaderProps,
+  BusinessSiteHeaderSubmenuLink,
+} from './components/BusinessSiteHeader'
+
+export { BusinessSiteFooter } from './components/BusinessSiteFooter'
+export type {
+  BusinessSiteFooterAppearance,
+  BusinessSiteFooterColumn,
+  BusinessSiteFooterLink,
+  BusinessSiteFooterLogo,
+  BusinessSiteFooterPhone,
+  BusinessSiteFooterProps,
+} from './components/BusinessSiteFooter'
+
+export { BusinessSiteHero } from './components/BusinessSiteHero'
+export type {
+  BusinessSiteHeroAction,
+  BusinessSiteHeroAppearance,
+  BusinessSiteHeroImage,
+  BusinessSiteHeroProps,
+  BusinessSiteHeroRating,
+} from './components/BusinessSiteHero'
+
 export { Breadcrumbs, Pagination } from './components/Breadcrumbs'
 export type { BreadcrumbsProps, BreadcrumbItem, PaginationProps } from './components/Breadcrumbs'
 

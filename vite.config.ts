@@ -11,6 +11,9 @@ const componentEntries = [
   'Badge',
   'Banner',
   'Breadcrumbs',
+  'BusinessSiteHeader',
+  'BusinessSiteFooter',
+  'BusinessSiteHero',
   'Button',
   'Card',
   'Checkbox',
@@ -52,6 +55,7 @@ const componentEntries = [
 const entries = {
   index: resolve(__dirname, 'src/index.ts'),
   styles: resolve(__dirname, 'src/styles.ts'),
+  BusinessSiteHeroCarousel: resolve(__dirname, 'src/components/BusinessSiteHero/carousel/BusinessSiteHeroCarousel.tsx'),
   ...Object.fromEntries(
     componentEntries.map((name) => [name, resolve(__dirname, `src/components/${name}/index.ts`)]),
   ),
@@ -81,6 +85,7 @@ export default defineConfig({
         'react-dom',
         'react/jsx-runtime',
         'lucide-react',
+        /^lucide-react\//,
         'highcharts',
         'highcharts-react-official',
         /^highcharts\//,
