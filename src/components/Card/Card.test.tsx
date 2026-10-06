@@ -141,9 +141,10 @@ describe('CardTitle — titleIcon', () => {
     expect(container.querySelector('.pz-card__title-icon')).not.toBeInTheDocument()
   })
 
-  it('always wraps children in pz-card__title-text', () => {
-    render(<CardTitle>My Title</CardTitle>)
-    expect(screen.getByText('My Title').closest('.pz-card__title-text')).toBeInTheDocument()
+  it('renders plain text children directly, with no wrapper span, when there is no icon', () => {
+    const { container } = render(<CardTitle>My Title</CardTitle>)
+    expect(screen.getByRole('heading')).toHaveTextContent('My Title')
+    expect(container.querySelector('.pz-card__title-text')).not.toBeInTheDocument()
   })
 })
 
@@ -163,6 +164,11 @@ describe('CardTitle — actionButton', () => {
   it('does not render the action wrapper when actionButton is omitted', () => {
     const { container } = render(<CardTitle>Title</CardTitle>)
     expect(container.querySelector('.pz-card__title-action')).not.toBeInTheDocument()
+  })
+
+  it('still wraps the title text in pz-card__title-text when actionButton is present', () => {
+    const { container } = render(<CardTitle actionButton={<button>Go</button>}>Title</CardTitle>)
+    expect(container.querySelector('.pz-card__title-text')).toBeInTheDocument()
   })
 
   it('applies center modifier when centerAlign is true', () => {
@@ -185,11 +191,20 @@ describe('CardTitle — actionButton', () => {
 })
 
 describe('CardBody', () => {
-  it('renders a paragraph with pz-card__body class', () => {
+  it('renders a div with pz-card__body class', () => {
     const { container } = render(<CardBody>Body text</CardBody>)
-    const p = container.querySelector('p.pz-card__body')
-    expect(p).toBeInTheDocument()
-    expect(p).toHaveTextContent('Body text')
+    const body = container.querySelector('div.pz-card__body')
+    expect(body).toBeInTheDocument()
+    expect(body).toHaveTextContent('Body text')
+  })
+
+  it('allows block-level children (e.g. a heading) without invalid nesting', () => {
+    const { container } = render(
+      <CardBody>
+        <h4>State</h4>
+      </CardBody>,
+    )
+    expect(container.querySelector('div.pz-card__body > h4')).toBeInTheDocument()
   })
 })
 

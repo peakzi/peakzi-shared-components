@@ -59,28 +59,40 @@ export interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {
 }
 
 export function CardTitle({ as: Tag = 'h3', titleIcon, actionButton, centerAlign = false, className, children, ...rest }: CardTitleProps) {
+  const hasSlots = Boolean(titleIcon) || Boolean(actionButton)
   return (
     <Tag
       className={['pz-card__title', centerAlign && 'pz-card__title--center', className].filter(Boolean).join(' ')}
       {...rest}
     >
-      {titleIcon && <span className="pz-card__title-icon" aria-hidden="true">{titleIcon}</span>}
-      <span className="pz-card__title-text">{children}</span>
-      {actionButton && <span className="pz-card__title-action">{actionButton}</span>}
+      {hasSlots ? (
+        <>
+          {titleIcon && <span className="pz-card__title-icon" aria-hidden="true">{titleIcon}</span>}
+          <span className="pz-card__title-text">{children}</span>
+          {actionButton && <span className="pz-card__title-action">{actionButton}</span>}
+        </>
+      ) : (
+        // No icon/action slot to lay out alongside — render the heading text as a direct
+        // child instead of wrapping it, so plain titles stay pure text content for SEO/AX.
+        children
+      )}
     </Tag>
   )
 }
 CardTitle.displayName = 'CardTitle'
 
-export interface CardBodyProps extends HTMLAttributes<HTMLParagraphElement> {
+export interface CardBodyProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode
 }
 
+// A <div>, not a <p> — children are arbitrary content (headings, lists, nested cards),
+// and a <p> can only hold phrasing content, so anything block-level inside it produces
+// invalid, auto-closed markup.
 export function CardBody({ className, children, ...rest }: CardBodyProps) {
   return (
-    <p className={['pz-card__body', className].filter(Boolean).join(' ')} {...rest}>
+    <div className={['pz-card__body', className].filter(Boolean).join(' ')} {...rest}>
       {children}
-    </p>
+    </div>
   )
 }
 CardBody.displayName = 'CardBody'

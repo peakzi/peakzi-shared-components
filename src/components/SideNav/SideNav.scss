@@ -152,6 +152,7 @@
 }
 
 .pz-sidenav__group-label {
+  margin: 0;
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-widest);
@@ -237,6 +238,7 @@
 }
 
 .pz-sidenav__item-label {
+  margin: 0;
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
