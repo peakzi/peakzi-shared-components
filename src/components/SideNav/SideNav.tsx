@@ -201,7 +201,7 @@ export function SideNavGroup({ label, children, className, accordion = false, ..
   return (
     <SideNavGroupContext.Provider value={{ accordion, activeId, setActiveId }}>
       <div className={cls} {...rest}>
-        {label && <div className="pz-sidenav__group-label">{label}</div>}
+        {label && <p className="pz-sidenav__group-label">{label}</p>}
         <ul className="pz-sidenav__items" role="list">
           {children}
         </ul>
@@ -271,6 +271,11 @@ export function SideNavItem({
   // data-label powers the CSS-only collapsed tooltip (content: attr(data-label))
   const tooltipLabel = label ?? (typeof children === 'string' ? children : undefined)
 
+  // A <p> is valid content for the <a> below, but not for the <button> fallback
+  // (button only allows phrasing content) — so the label tag follows which one
+  // this item actually renders as.
+  const LabelTag = href ? 'p' : 'span'
+
   const inner = (
     <>
       {icon && (
@@ -278,7 +283,7 @@ export function SideNavItem({
           {icon}
         </span>
       )}
-      <span className="pz-sidenav__item-label">{children}</span>
+      <LabelTag className="pz-sidenav__item-label">{children}</LabelTag>
       {badge != null && <span className="pz-sidenav__item-badge">{badge}</span>}
     </>
   )
