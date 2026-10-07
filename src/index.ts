@@ -100,6 +100,41 @@ export type {
   BusinessSiteHeroRating,
 } from './components/BusinessSiteHero'
 
+export { BusinessSiteServices } from './components/BusinessSiteServices'
+export type {
+  BusinessSiteServiceGroup,
+  BusinessSiteServiceImage,
+  BusinessSiteServiceItem,
+  BusinessSiteServicesAppearance,
+  BusinessSiteServicesLink,
+  BusinessSiteServicesProps,
+  BusinessSiteServiceTier,
+} from './components/BusinessSiteServices'
+
+export { BusinessSiteAreas } from './components/BusinessSiteAreas'
+export type {
+  BusinessSiteArea,
+  BusinessSiteAreasAppearance,
+  BusinessSiteAreasProps,
+} from './components/BusinessSiteAreas'
+
+export { BusinessSiteFaq } from './components/BusinessSiteFaq'
+export type {
+  BusinessSiteFaqAction,
+  BusinessSiteFaqAppearance,
+  BusinessSiteFaqContact,
+  BusinessSiteFaqItem,
+  BusinessSiteFaqProps,
+} from './components/BusinessSiteFaq'
+
+export { BusinessSiteReviews } from './components/BusinessSiteReviews'
+export type {
+  BusinessSiteReview,
+  BusinessSiteReviewsAppearance,
+  BusinessSiteReviewsProps,
+  BusinessSiteReviewsSummary,
+} from './components/BusinessSiteReviews'
+
 export { Breadcrumbs, Pagination } from './components/Breadcrumbs'
 export type { BreadcrumbsProps, BreadcrumbItem, PaginationProps } from './components/Breadcrumbs'
 

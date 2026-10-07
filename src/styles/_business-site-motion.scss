@@ -1,0 +1,184 @@
+// One opt-in motion policy for all Business Site sections. CSS keeps these
+// effects server-safe; content never waits for hydration or a scroll observer.
+:is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-footer) {
+  --pz-business-motion-fast: 0ms;
+  --pz-business-motion-slide: 0ms;
+}
+
+.pz-business-header :is(a, summary),
+.pz-business-hero__action,
+.pz-business-hero__carousel-controls button,
+.pz-business-services a.pz-business-services__card,
+.pz-business-services__view-all,
+.pz-business-areas a.pz-business-areas__tile,
+.pz-business-faq summary,
+.pz-business-faq__actions a,
+.pz-business-reviews a.pz-business-reviews__view-all,
+.pz-business-footer a {
+  transition:
+    transform var(--pz-business-motion-fast, 0ms) ease-out,
+    color var(--pz-business-motion-fast, 0ms) ease-out,
+    border-color var(--pz-business-motion-fast, 0ms) ease-out,
+    background-color var(--pz-business-motion-fast, 0ms) ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-footer)[data-motion='subtle'] {
+    --pz-business-motion-fast: 180ms;
+    --pz-business-motion-slide: 350ms;
+  }
+
+  .pz-business-header[data-motion='subtle'] .pz-business-header__has-submenu details[open] > ul,
+  .pz-business-header[data-motion='subtle'] .pz-business-header__mobile-menu[open] > .pz-business-header__mobile-panel {
+    animation: pz-business-menu-enter 180ms ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pz-business-header[data-motion='subtle'] .pz-business-header__desktop-nav a:hover {
+      color: var(--pz-business-header-link-accent);
+    }
+
+    .pz-business-header[data-motion='subtle'] .pz-business-header__action:hover,
+    .pz-business-hero[data-motion='subtle'] .pz-business-hero__action:hover,
+    .pz-business-hero[data-motion='subtle'] .pz-business-hero__carousel-controls > button:hover,
+    .pz-business-services[data-motion='subtle']:not([data-density='compact']) a.pz-business-services__card:hover,
+    .pz-business-areas[data-motion='subtle']:not([data-density='compact']) a.pz-business-areas__tile:hover {
+      transform: translateY(-2px);
+    }
+
+  }
+
+  // A press takes precedence over the hover lift, including on touchscreens.
+  .pz-business-header[data-motion='subtle'] .pz-business-header__action:active,
+  .pz-business-hero[data-motion='subtle'] .pz-business-hero__action:active,
+  .pz-business-hero[data-motion='subtle'] .pz-business-hero__carousel-controls > button:active {
+    transform: scale(0.98);
+  }
+}
+
+@keyframes pz-business-menu-enter {
+  from { opacity: 0.92; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Service Areas scroll reveal. Scroll-driven CSS animations, so there is no observer
+// or hydration step, and browsers without `animation-timeline` skip the block and
+// render everything in place. Fill is `backwards` only: once an element has fully
+// entered, the normal styles apply again (so the hover lift still works).
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .pz-business-areas[data-motion='subtle'] .pz-business-areas__heading h2,
+    .pz-business-areas[data-motion='subtle'] .pz-business-areas__count,
+    .pz-business-areas[data-motion='subtle'] a.pz-business-areas__tile {
+      animation-name: pz-business-areas-rise;
+      animation-timing-function: ease-out;
+      animation-fill-mode: backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+
+    // The count follows the title a beat later.
+    .pz-business-areas[data-motion='subtle'] .pz-business-areas__count {
+      animation-range: entry 20% entry 100%;
+    }
+
+    .pz-business-areas[data-motion='subtle'] a.pz-business-areas__tile {
+      animation-name: pz-business-areas-pop;
+    }
+  }
+}
+
+@keyframes pz-business-areas-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pz-business-areas-pop {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// Pinned header: a shadow fades in over the first stretch of page scroll so the header reads
+// as lifted off the content. Same CSS-only policy; without `animation-timeline` support the
+// header simply keeps its border.
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .pz-business-header[data-sticky='true'][data-motion='subtle'] {
+      animation: pz-business-header-lift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0px 96px;
+    }
+  }
+}
+
+@keyframes pz-business-header-lift {
+  from { box-shadow: 0 0 0 transparent; }
+  to { box-shadow: 0 6px 20px color-mix(in srgb, var(--pz-business-header-text) 14%, transparent); }
+}
+
+// FAQs. Same CSS-only policy: each effect needs `data-motion='subtle'` and no reduced-motion
+// preference, and is gated on browser support, so anything unsupported just shows the content.
+
+// Plus/minus: the two stacked icons cross-fade and turn into each other (0ms unless motion is on).
+.pz-business-faq__icon > svg {
+  transition:
+    opacity var(--pz-business-motion-fast, 0ms) ease-out,
+    transform var(--pz-business-motion-fast, 0ms) ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  // An answer grows and fades in as its question opens, and out as it closes. `interpolate-size`
+  // lets the height animate to `auto`.
+  @supports selector(::details-content) and (interpolate-size: allow-keywords) {
+    .pz-business-faq[data-motion='subtle'] {
+      interpolate-size: allow-keywords;
+    }
+
+    .pz-business-faq[data-motion='subtle'] .pz-business-faq__item::details-content {
+      block-size: 0;
+      opacity: 0;
+      overflow-y: clip;
+      transition:
+        block-size var(--pz-business-motion-slide) ease,
+        opacity var(--pz-business-motion-slide) ease,
+        content-visibility var(--pz-business-motion-slide) allow-discrete;
+    }
+
+    .pz-business-faq[data-motion='subtle'] .pz-business-faq__item[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+
+  // Browsers without that support still get a short fade-in when an answer opens.
+  @supports not (selector(::details-content) and (interpolate-size: allow-keywords)) {
+    .pz-business-faq[data-motion='subtle'] .pz-business-faq__item[open] > .pz-business-faq__answer {
+      animation: pz-business-faq-answer-in var(--pz-business-motion-fast) ease-out;
+    }
+  }
+
+  // Scroll reveal for the title block, contact card and question rows (same approach as the
+  // service areas). Rows animate their `summary`, which never changes height, not the `details`
+  // box: opening an answer near the bottom of the screen must not pull a row that has already
+  // revealed back into its entry range.
+  @supports (animation-timeline: view()) {
+    .pz-business-faq[data-motion='subtle'] .pz-business-faq__aside > :is(.pz-business-faq__eyebrow, h2, .pz-business-faq__intro, .pz-business-faq__contact),
+    .pz-business-faq[data-motion='subtle'] .pz-business-faq__item > summary {
+      animation-name: pz-business-faq-rise;
+      animation-timing-function: ease-out;
+      animation-fill-mode: backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+@keyframes pz-business-faq-answer-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pz-business-faq-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}

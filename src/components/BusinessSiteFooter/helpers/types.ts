@@ -1,3 +1,5 @@
+import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
+
 export interface BusinessSiteFooterLogo {
   src: string
   alt: string
@@ -30,6 +32,7 @@ export interface BusinessSiteFooterAppearance {
   textColor?: string
   accentColor?: string
   density?: 'comfortable' | 'compact'
+  motion?: BusinessSiteMotion
 }
 
 export interface BusinessSiteFooterProps {

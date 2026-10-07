@@ -13,7 +13,7 @@ import { readableText, safeColor } from '../../utils/siteAppearance'
 
 type Appearance = Required<Pick<BusinessSiteHeaderAppearance,
   'font' | 'backgroundColor' | 'textColor' | 'accentColor' |
-  'itemsPosition' | 'buttonRadius' | 'density' | 'layoutWidth'
+  'itemsPosition' | 'buttonRadius' | 'density' | 'layoutWidth' | 'sticky' | 'motion'
 >>
 
 interface StoryArgs extends Appearance {
@@ -48,6 +48,8 @@ const meta = {
     itemsPosition,
     buttonRadius,
     density,
+    sticky,
+    motion,
   }: StoryArgs) => (
     <BusinessSiteHeader
       logo={logo.src === peakziLogo && readableText('#ffffff', safeColor(backgroundColor, '#ffffff')) === '#ffffff'
@@ -56,7 +58,7 @@ const meta = {
       menu={menu}
       actions={actions}
       currentPath={currentPath}
-      appearance={{ font, backgroundColor, textColor, accentColor, layoutWidth, itemsPosition, buttonRadius, density }}
+      appearance={{ font, backgroundColor, textColor, accentColor, layoutWidth, itemsPosition, buttonRadius, density, sticky, motion }}
     />
   ),
   argTypes: {
@@ -68,6 +70,8 @@ const meta = {
     itemsPosition: { control: 'inline-radio', options: ['left', 'center', 'right'] },
     buttonRadius: { control: 'inline-radio', options: ['2px', '8px', '16px', '32px'] },
     density: { control: 'inline-radio', options: ['comfortable', 'compact'] },
+    sticky: { control: 'boolean', description: 'Pins the header to the top while the page scrolls. Needs no ancestor with an overflow setting.' },
+    motion: { control: 'inline-radio', options: ['none', 'subtle'], description: 'Site-wide setting. Reduced-motion preferences always take priority.' },
     currentPath: {
       control: 'select',
       options: ['/', '/services', '/services/electrical', '/about', '/blogs'],
@@ -100,6 +104,8 @@ const meta = {
     itemsPosition: 'center',
     buttonRadius: '8px',
     density: 'comfortable',
+    sticky: false,
+    motion: 'subtle',
   },
 } satisfies Meta<StoryArgs>
 
@@ -107,6 +113,22 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+export const NoMotion: Story = { args: { motion: 'none' } }
+
+/** Scroll the page: the header stays pinned to the top, and with subtle motion a shadow fades in. */
+export const Sticky: Story = {
+  args: { sticky: true },
+  decorators: [
+    (Story) => (
+      <>
+        <Story />
+        <main style={{ minHeight: '250vh', padding: 'var(--space-8) var(--space-6)' }}>
+          <p>Scroll down. The header stays at the top of the page.</p>
+        </main>
+      </>
+    ),
+  ],
+}
 
 export const Mobile: Story = {
   globals: { viewport: 'mobile2' },

@@ -17,6 +17,7 @@ export function heroStyle(
 
   return {
     '--pz-business-hero-background': safeColor(appearance.backgroundColor, dark ? '#12171c' : '#ffffff'),
+    '--pz-business-hero-gradient-end': safeColor(appearance.gradientEndColor, accent),
     '--pz-business-hero-text': safeColor(appearance.textColor, dark ? '#ffffff' : '#12171c'),
     '--pz-business-hero-accent': accent,
     '--pz-business-hero-on-accent': readableText('#ffffff', accent),

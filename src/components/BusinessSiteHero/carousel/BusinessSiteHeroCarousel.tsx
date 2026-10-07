@@ -7,9 +7,10 @@ import type { BusinessSiteHeroImage } from '../helpers/types'
 export interface BusinessSiteHeroCarouselProps {
   images: readonly BusinessSiteHeroImage[]
   intervalMs: number
+  showBlurredBackdrop?: boolean
 }
 
-export function BusinessSiteHeroCarousel({ images, intervalMs }: BusinessSiteHeroCarouselProps) {
+export function BusinessSiteHeroCarousel({ images, intervalMs, showBlurredBackdrop = false }: BusinessSiteHeroCarouselProps) {
   const [active, setActive] = useState(0)
   const [paused, setPaused] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
@@ -57,6 +58,7 @@ export function BusinessSiteHeroCarousel({ images, intervalMs }: BusinessSiteHer
           aria-hidden={index !== active}
         >
           <img
+            className="pz-business-hero__image-foreground"
             src={image.src}
             alt={image.alt}
             width={image.width}
@@ -64,6 +66,17 @@ export function BusinessSiteHeroCarousel({ images, intervalMs }: BusinessSiteHer
             loading={index === 0 ? 'eager' : 'lazy'}
             fetchPriority={index === 0 ? 'high' : undefined}
           />
+          {showBlurredBackdrop && (
+            <img
+              className="pz-business-hero__image-backdrop"
+              src={image.src}
+              alt=""
+              aria-hidden="true"
+              width={image.width}
+              height={image.height}
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+          )}
         </div>
       ))}
       {images.length > 1 && (

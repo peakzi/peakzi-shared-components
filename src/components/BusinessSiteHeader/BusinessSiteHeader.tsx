@@ -46,6 +46,8 @@ export function BusinessSiteHeader({
       data-layout-width={layoutWidth}
       data-items-position={position}
       data-density={density}
+      data-sticky={appearance.sticky === true ? 'true' : 'false'}
+      data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={headerStyle(appearance)}
     >
       <div className="pz-business-header__inner">

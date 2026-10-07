@@ -1,0 +1,205 @@
+.pz-business-faq {
+  width: 100%;
+  background: var(--pz-business-faq-background, #ffffff);
+  color: var(--pz-business-faq-text, #12171c);
+  font-family: var(--pz-business-faq-font);
+}
+
+.pz-business-faq p { font-family: var(--pz-business-faq-font); }
+
+.pz-business-faq__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: start;
+  gap: clamp(32px, 5vw, 64px);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(48px, 6vw, 80px) 24px;
+  box-sizing: border-box;
+}
+
+.pz-business-faq .pz-business-faq__eyebrow {
+  margin: 0 0 16px;
+  color: var(--pz-business-faq-accent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pz-business-faq h2 {
+  margin: 0;
+  color: var(--pz-business-faq-text);
+  font-family: var(--pz-business-faq-heading-font);
+  font-size: clamp(30px, 3.5vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.pz-business-faq .pz-business-faq__intro {
+  margin: 20px 0 0;
+  color: var(--pz-business-faq-text);
+  line-height: 1.7;
+}
+
+.pz-business-faq__contact {
+  margin-top: 28px;
+  padding: 28px;
+  border-radius: var(--pz-business-faq-radius);
+  background: linear-gradient(145deg, var(--pz-business-faq-contact-background), var(--pz-business-faq-contact-end));
+  color: var(--pz-business-faq-contact-text);
+}
+
+.pz-business-faq__contact h3 {
+  margin: 0;
+  color: inherit;
+  font-family: var(--pz-business-faq-heading-font);
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.pz-business-faq__contact p {
+  margin: 12px 0 0;
+  color: inherit;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.pz-business-faq__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.pz-business-faq__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid currentColor;
+  border-radius: var(--pz-business-faq-radius);
+  background: transparent;
+  color: var(--pz-business-faq-contact-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.pz-business-faq__actions a:hover {
+  background: color-mix(in srgb, var(--pz-business-faq-contact-text) 12%, transparent);
+  color: var(--pz-business-faq-contact-text);
+}
+
+.pz-business-faq__item {
+  border-bottom: 1px dashed color-mix(in srgb, var(--pz-business-faq-accent) 35%, var(--pz-business-faq-background));
+}
+
+.pz-business-faq__item:first-child {
+  border-top: 1px dashed color-mix(in srgb, var(--pz-business-faq-accent) 35%, var(--pz-business-faq-background));
+}
+
+.pz-business-faq__item summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 44px;
+  padding: 24px 4px;
+  color: var(--pz-business-faq-text);
+  font-family: var(--pz-business-faq-heading-font);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  list-style: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.pz-business-faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.pz-business-faq__icon {
+  display: grid;
+  flex: none;
+  margin-top: 3px;
+  color: var(--pz-business-faq-accent);
+}
+
+// Both icons share one grid cell and the open state decides which one shows; the motion
+// partial adds the cross-fade and rotation between them.
+.pz-business-faq__icon > svg {
+  grid-area: 1 / 1;
+}
+
+.pz-business-faq__item .pz-business-faq__collapse {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+.pz-business-faq__item[open] .pz-business-faq__expand {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.pz-business-faq__item[open] .pz-business-faq__collapse {
+  opacity: 1;
+  transform: none;
+}
+
+.pz-business-faq__item summary:hover,
+.pz-business-faq__item[open] summary {
+  color: var(--pz-business-faq-accent);
+}
+
+.pz-business-faq__answer {
+  padding: 0 4px 24px;
+  color: var(--pz-business-faq-text);
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.pz-business-faq__answer > :first-child { margin-top: 0; }
+.pz-business-faq__answer > :last-child { margin-bottom: 0; }
+.pz-business-faq .pz-business-faq__answer :is(p, ul, ol, li, blockquote, h2, h3, h4, h5, h6) { color: inherit; }
+.pz-business-faq__answer :is(p, ul, ol, li, blockquote) { font-size: inherit; line-height: inherit; }
+.pz-business-faq__answer :is(p, ul, ol) { margin-block: 0 16px; }
+.pz-business-faq__answer :is(ul, ol) { padding-left: 24px; }
+.pz-business-faq__answer li + li { margin-top: 6px; }
+.pz-business-faq__answer a { color: var(--pz-business-faq-accent); text-underline-offset: 3px; }
+.pz-business-faq__answer pre { max-width: 100%; overflow-x: auto; }
+.pz-business-faq__answer img { max-width: 100%; height: auto; }
+.pz-business-faq__answer table { display: block; max-width: 100%; overflow-x: auto; }
+
+.pz-business-faq summary:focus-visible,
+.pz-business-faq__answer a:focus-visible {
+  outline: 2px solid var(--pz-business-faq-accent);
+  outline-offset: 3px;
+}
+
+.pz-business-faq__actions a:focus-visible {
+  outline: 2px solid var(--pz-business-faq-contact-text);
+  outline-offset: 3px;
+}
+
+.pz-business-faq[data-density='compact'] .pz-business-faq__inner { gap: 28px; padding-block: 28px; }
+.pz-business-faq[data-density='compact'] h2 { font-size: clamp(26px, 3vw, 34px); }
+.pz-business-faq[data-density='compact'] .pz-business-faq__contact { margin-top: 20px; padding: 20px; }
+.pz-business-faq[data-density='compact'] summary { padding-block: 14px; font-size: 16px; }
+.pz-business-faq[data-density='compact'] .pz-business-faq__answer { padding-bottom: 16px; }
+
+@media (max-width: 760px) {
+  .pz-business-faq__inner { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-inline: 20px; }
+  .pz-business-faq h2 { font-size: 28px; }
+  .pz-business-faq__contact { padding: 24px; }
+  .pz-business-faq__actions a { flex: 1 1 auto; }
+  .pz-business-faq__item summary { gap: 12px; font-size: 17px; padding-block: 20px; }
+}

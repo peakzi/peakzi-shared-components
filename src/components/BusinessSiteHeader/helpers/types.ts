@@ -1,3 +1,5 @@
+import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
+
 export type BusinessSiteHeaderIconName = string
 export type BusinessSiteHeaderFont = string
 export type BusinessSiteHeaderButtonRadius = '2px' | '8px' | '16px' | '32px'
@@ -42,6 +44,10 @@ export interface BusinessSiteHeaderAppearance {
   itemsPosition?: 'left' | 'center' | 'right'
   buttonRadius?: BusinessSiteHeaderButtonRadius
   density?: 'comfortable' | 'compact'
+  /** Pin the header to the top of the viewport while the page scrolls; off by default. No ancestor may set `overflow`. */
+  sticky?: boolean
+  /** Site-wide motion preference; disabled by default. */
+  motion?: BusinessSiteMotion
 }
 
 export interface BusinessSiteHeaderProps {

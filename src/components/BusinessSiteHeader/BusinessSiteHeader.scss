@@ -19,6 +19,11 @@
     --pz-business-header-gap: 12px;
   }
 
+  &[data-sticky='true'] {
+    position: sticky;
+    top: 0;
+  }
+
   a {
     color: inherit;
     text-decoration: none;
@@ -51,6 +56,11 @@
   summary::-webkit-details-marker {
     display: none;
   }
+}
+
+// Anchor jumps and keyboard focus should land below a pinned header, not under it.
+html:has(.pz-business-header[data-sticky='true']) {
+  scroll-padding-top: 5rem;
 }
 
 .pz-business-header__inner {
@@ -138,7 +148,7 @@
 }
 
 .pz-business-header__has-submenu summary svg {
-  transition: transform 120ms ease;
+  transition: transform var(--pz-business-motion-fast, 0ms) ease;
 }
 
 .pz-business-header__has-submenu details[open] > summary svg {

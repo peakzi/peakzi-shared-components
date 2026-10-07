@@ -1,3 +1,5 @@
+export type BusinessSiteMotion = 'none' | 'subtle'
+
 const FONT_PRESETS: Record<string, string> = {
   archivo: '"Archivo", Arial, sans-serif',
   'plex-sans': '"IBM Plex Sans", Arial, sans-serif',

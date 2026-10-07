@@ -46,6 +46,7 @@ export function BusinessSiteFooter({
     <footer
       className={['pz-business-footer', className].filter(Boolean).join(' ')}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
+      data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={footerStyle(appearance)}
     >
       <div className="pz-business-footer__inner">

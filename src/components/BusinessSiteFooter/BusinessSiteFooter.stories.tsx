@@ -20,7 +20,7 @@ const meta = {
       },
     },
   },
-  render: ({ font, backgroundColor, textColor, accentColor, density, ...props }: StoryArgs) => {
+  render: ({ font, backgroundColor, textColor, accentColor, density, motion, ...props }: StoryArgs) => {
     const demoLogo = props.logo?.src === peakziLogoWhite || props.logo?.src === peakziLogoColor
     const lightLogo = readableText('#ffffff', safeColor(backgroundColor, '#12171c')) === '#ffffff'
     const logo = demoLogo && props.logo
@@ -31,7 +31,7 @@ const meta = {
       <BusinessSiteFooter
         {...props}
         logo={logo}
-        appearance={{ font, backgroundColor, textColor, accentColor, density }}
+        appearance={{ font, backgroundColor, textColor, accentColor, density, motion }}
       />
     )
   },
@@ -41,6 +41,7 @@ const meta = {
     textColor: { control: 'color', description: 'Applied exactly. Check contrast against the background in the Accessibility panel.' },
     accentColor: { control: 'color', description: 'Used for the phone link and link hover. Check contrast against the background.' },
     density: { control: 'inline-radio', options: ['comfortable', 'compact'] },
+    motion: { control: 'inline-radio', options: ['none', 'subtle'] },
     logo: { control: 'object', description: 'The demo logo switches variants with the background. Custom logos stay unchanged.' },
     addressLines: { control: 'object' },
     phone: { control: 'object' },
@@ -76,6 +77,7 @@ const meta = {
     textColor: '#f7f9fb',
     accentColor: '#a5c9ee',
     density: 'comfortable',
+    motion: 'subtle',
   },
 } satisfies Meta<StoryArgs>
 
@@ -83,6 +85,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+export const NoMotion: Story = { args: { motion: 'none' } }
 
 export const Mobile: Story = {
   globals: { viewport: 'mobile2' },

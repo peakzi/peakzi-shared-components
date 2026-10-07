@@ -28,6 +28,21 @@ const props: BusinessSiteHeaderProps = {
 }
 
 describe('BusinessSiteHeader', () => {
+  it.each([undefined, 'none', 'subtle'] as const)('uses the site motion setting %s without hiding links', (motion) => {
+    const html = renderToStaticMarkup(<BusinessSiteHeader {...props} appearance={{ motion }} />)
+    expect(html).toContain(`data-motion="${motion ?? 'none'}"`)
+    expect(html).toContain('href="/services/rewiring"')
+  })
+
+  it.each([[undefined, 'false'], [false, 'false'], [true, 'true']] as const)(
+    'pins the header only when sticky is %s',
+    (sticky, expected) => {
+      const html = renderToStaticMarkup(<BusinessSiteHeader {...props} appearance={{ sticky }} />)
+      expect(html).toContain(`data-sticky="${expected}"`)
+      expect(html).toContain('href="/services/rewiring"')
+    },
+  )
+
   it('server-renders crawlable anchors for the logo, menu, submenu, and actions', () => {
     const html = renderToStaticMarkup(<BusinessSiteHeader {...props} />)
     expect(html).toContain('href="/services/rewiring"')

@@ -61,6 +61,9 @@ export function BusinessSiteHero({
   rating,
   actions = [],
   images,
+  imageFit = 'cover',
+  imageBackdrop = 'solid',
+  imagePosition = 'center',
   layout,
   contentOrder = 'text-first',
   background = 'surface',
@@ -81,9 +84,11 @@ export function BusinessSiteHero({
     : requestedLayout === 'split' && photos.length === 0 && !aside ? 'flat'
       : requestedLayout
   const showMedia = resolvedLayout === 'background' || (resolvedLayout === 'split' && !aside)
+  const showBlurredBackdrop = showMedia && imageFit === 'contain' && imageBackdrop === 'blur'
   const showAside = Boolean(aside) && (resolvedLayout === 'split' || resolvedLayout === 'background')
   const imageFirst = resolvedLayout === 'split' && contentOrder === 'image-first'
-  const autoplay = intervalMs === 0 ? 0 : Number.isFinite(intervalMs) ? Math.max(2000, intervalMs) : 5000
+  const motion = appearance.motion === 'subtle' ? 'subtle' : 'none'
+  const autoplay = motion === 'none' || intervalMs === 0 ? 0 : Number.isFinite(intervalMs) ? Math.max(2000, intervalMs) : 5000
   const validActions = actions.filter((action) => safeHref(action?.href) && action.label?.trim())
   const ratingLabel = rating?.label?.trim()
   const ratingIcon = ratingLabel ? businessSiteIcon(rating?.iconName) : null
@@ -91,16 +96,29 @@ export function BusinessSiteHero({
   const media = showMedia && photos.length > 0 && (
     <div className="pz-business-hero__media">
       {photos.length > 1 ? (
-        <BusinessSiteHeroCarousel images={photos} intervalMs={autoplay} />
+        <BusinessSiteHeroCarousel images={photos} intervalMs={autoplay} showBlurredBackdrop={showBlurredBackdrop} />
       ) : (
-        <img
-          src={photos[0]!.src}
-          alt={photos[0]!.alt}
-          width={photos[0]!.width}
-          height={photos[0]!.height}
-          loading="eager"
-          fetchPriority="high"
-        />
+        <>
+          <img
+            className="pz-business-hero__image-foreground"
+            src={photos[0]!.src}
+            alt={photos[0]!.alt}
+            width={photos[0]!.width}
+            height={photos[0]!.height}
+            loading="eager"
+            fetchPriority="high"
+          />
+          {showBlurredBackdrop && (
+            <img
+              className="pz-business-hero__image-backdrop"
+              src={photos[0]!.src}
+              alt=""
+              aria-hidden="true"
+              width={photos[0]!.width}
+              height={photos[0]!.height}
+            />
+          )}
+        </>
       )}
     </div>
   )
@@ -112,11 +130,15 @@ export function BusinessSiteHero({
     <section
       className={['pz-business-hero', className].filter(Boolean).join(' ')}
       data-layout={resolvedLayout}
+      data-image-fit={imageFit === 'contain' ? 'contain' : 'cover'}
+      data-image-backdrop={showBlurredBackdrop ? 'blur' : 'solid'}
+      data-image-position={imagePosition === 'left' || imagePosition === 'right' ? imagePosition : 'center'}
       data-content-order={imageFirst ? 'image-first' : 'text-first'}
       data-surface={background}
       data-align={align === 'center' && !showAside ? 'center' : 'left'}
       data-size={headlineSize(title, requestedSize)}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
+      data-motion={motion}
       data-has-aside={showAside || (resolvedLayout === 'split' && Boolean(aside))}
       style={heroStyle(appearance, resolvedLayout, background, overlay)}
     >
@@ -124,18 +146,24 @@ export function BusinessSiteHero({
       <div className="pz-business-hero__inner">
         {imageFirst && splitVisual}
         <div className="pz-business-hero__copy">
-          {eyebrow?.trim() && <span className="pz-business-hero__eyebrow">{eyebrow.trim()}</span>}
-          <h1 className="pz-business-hero__headline">{title}</h1>
+          <div className="pz-business-hero__lead">
+            {eyebrow?.trim() && <span className="pz-business-hero__eyebrow">{eyebrow.trim()}</span>}
+            <h1 className="pz-business-hero__headline">{title}</h1>
+          </div>
           {answer?.trim() && <p className="pz-business-hero__answer">{answer.trim()}</p>}
-          {ratingLabel && (
-            <div className="pz-business-hero__rating">
-              {ratingIcon && rating?.iconPosition !== 'after' && <span className="pz-business-hero__rating-icon" aria-hidden="true">{ratingIcon}</span>}
-              <span>{ratingLabel}</span>
-              {ratingIcon && rating?.iconPosition === 'after' && <span className="pz-business-hero__rating-icon" aria-hidden="true">{ratingIcon}</span>}
+          {(ratingLabel || validActions.length > 0) && (
+            <div className="pz-business-hero__engagement">
+              {ratingLabel && (
+                <div className="pz-business-hero__rating">
+                  {ratingIcon && rating?.iconPosition !== 'after' && <span className="pz-business-hero__rating-icon" aria-hidden="true">{ratingIcon}</span>}
+                  <span>{ratingLabel}</span>
+                  {ratingIcon && rating?.iconPosition === 'after' && <span className="pz-business-hero__rating-icon" aria-hidden="true">{ratingIcon}</span>}
+                </div>
+              )}
+              {validActions.length > 0 && (
+                <div className="pz-business-hero__actions">{validActions.map(actionLink)}</div>
+              )}
             </div>
-          )}
-          {validActions.length > 0 && (
-            <div className="pz-business-hero__actions">{validActions.map(actionLink)}</div>
           )}
         </div>
         {!imageFirst && splitVisual}

@@ -29,6 +29,12 @@ afterEach(() => {
 })
 
 describe('BusinessSiteHero', () => {
+  it.each([undefined, 'none', 'subtle'] as const)('uses the site motion setting %s without hiding the headline', (motion) => {
+    const html = renderToStaticMarkup(<BusinessSiteHero {...props} appearance={{ motion }} />)
+    expect(html).toContain(`data-motion="${motion ?? 'none'}"`)
+    expect(html).toContain('Electrical work for your home</h1>')
+  })
+
   it('puts the h1, answer, rating label, and crawlable actions in initial HTML', () => {
     const html = renderToStaticMarkup(<BusinessSiteHero {...props} />)
     expect(html.match(/<h1\b/g)).toHaveLength(1)
@@ -40,6 +46,15 @@ describe('BusinessSiteHero', () => {
     expect(html).toContain('href="tel:+15125550188"')
     expect(html).toContain('alt="Front of the client home"')
     expect(html).toContain('width="800" height="640"')
+  })
+
+  it('keeps a single copy of the answer while exposing the mobile hero sections', () => {
+    const html = renderToStaticMarkup(<BusinessSiteHero {...props} />)
+    expect(html.match(/Local electricians serving Austin with clear estimates\./g)).toHaveLength(1)
+    expect(html).toContain('class="pz-business-hero__lead"')
+    expect(html).toContain('class="pz-business-hero__engagement"')
+    expect(html).toContain('class="pz-business-hero__answer"')
+    expect(html).toContain('class="pz-business-hero__media"')
   })
 
   it('requires a real headline and does not emit links or images with unsafe URLs', () => {
@@ -103,6 +118,47 @@ describe('BusinessSiteHero', () => {
     expect(screen.queryByRole('img')).toBeNull()
   })
 
+  it('supports full-image fit while keeping cover as the default', () => {
+    const defaultHtml = renderToStaticMarkup(<BusinessSiteHero {...props} />)
+    const fullImageHtml = renderToStaticMarkup(<BusinessSiteHero {...props} imageFit="contain" layout="background" />)
+    expect(defaultHtml).toContain('data-image-fit="cover"')
+    expect(defaultHtml).toContain('data-image-position="center"')
+    expect(fullImageHtml).toContain('data-image-fit="contain"')
+    expect(fullImageHtml).toContain('data-image-position="center"')
+    expect(fullImageHtml).toContain('data-layout="background"')
+    const rightAlignedHtml = renderToStaticMarkup(<BusinessSiteHero {...props} imagePosition="right" />)
+    expect(rightAlignedHtml).toContain('data-image-position="right"')
+  })
+
+  it('adds decorative blurred copies for split or background + contain when requested', () => {
+    const blurredCarousel = renderToStaticMarkup(<BusinessSiteHero
+      {...props}
+      layout="background"
+      imageFit="contain"
+      imageBackdrop="blur"
+    />)
+    expect(blurredCarousel).toContain('data-image-backdrop="blur"')
+    expect(blurredCarousel.match(/class="pz-business-hero__image-backdrop"/g)).toHaveLength(images.length)
+    expect(blurredCarousel).toContain('alt="" aria-hidden="true"')
+
+    const blurredSingle = renderToStaticMarkup(<BusinessSiteHero
+      {...props}
+      images={[images[0]!]}
+      layout="background"
+      imageFit="contain"
+      imageBackdrop="blur"
+    />)
+    expect(blurredSingle.match(/class="pz-business-hero__image-backdrop"/g)).toHaveLength(1)
+
+    const split = renderToStaticMarkup(<BusinessSiteHero {...props} imageFit="contain" imageBackdrop="blur" />)
+    expect(split).toContain('data-image-backdrop="blur"')
+    expect(split.match(/class="pz-business-hero__image-backdrop"/g)).toHaveLength(images.length)
+
+    const coveredSplit = renderToStaticMarkup(<BusinessSiteHero {...props} imageFit="cover" imageBackdrop="blur" />)
+    expect(coveredSplit).toContain('data-image-backdrop="solid"')
+    expect(coveredSplit).not.toContain('class="pz-business-hero__image-backdrop"')
+  })
+
   it('uses the requested split order in the DOM, including the aside slot', () => {
     const textFirst = renderToStaticMarkup(<BusinessSiteHero {...props} />)
     const imageFirst = renderToStaticMarkup(<BusinessSiteHero {...props} contentOrder="image-first" />)
@@ -126,11 +182,13 @@ describe('BusinessSiteHero', () => {
       layout="flat"
       background="gradient"
       actions={[{ id: 'book', label: 'Book', href: 'https://example.com/book', type: 'primary', newTab: true }]}
-      appearance={{ backgroundColor: '#102030', textColor: '#fefefe', accentColor: '#ff7700', buttonRadius: '16px' }}
+      appearance={{ backgroundColor: '#102030', gradientEndColor: '#30343b', textColor: '#fefefe', accentColor: '#ff7700', buttonRadius: '16px' }}
     />)
     const hero = container.querySelector('section')!
     expect(hero.getAttribute('data-surface')).toBe('gradient')
     expect(hero.getAttribute('style')).toContain('--pz-business-hero-text: #fefefe')
+    expect(hero.getAttribute('style')).toContain('--pz-business-hero-gradient-end: #30343b')
+    expect(hero.getAttribute('style')).toContain('--pz-business-hero-accent: #ff7700')
     expect(hero.getAttribute('style')).toContain('--pz-business-hero-radius: 16px')
     expect(screen.getByRole('link', { name: 'Book' })).toHaveAttribute('rel', 'noopener noreferrer')
   })
@@ -149,7 +207,7 @@ describe('BusinessSiteHero', () => {
 
   it('auto-advances until hovered and resumes afterward', () => {
     vi.useFakeTimers()
-    const { container } = render(<BusinessSiteHero {...props} intervalMs={2000} />)
+    const { container } = render(<BusinessSiteHero {...props} intervalMs={2000} appearance={{ motion: 'subtle' }} />)
     const slides = container.querySelectorAll('.pz-business-hero__slide')
     const carousel = screen.getByRole('region', { name: 'Photos' })
     act(() => vi.advanceTimersByTime(2000))
@@ -169,9 +227,54 @@ describe('BusinessSiteHero', () => {
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
     }))
-    const { container } = render(<BusinessSiteHero {...props} intervalMs={2000} />)
+    const { container } = render(<BusinessSiteHero {...props} intervalMs={2000} appearance={{ motion: 'subtle' }} />)
     act(() => vi.advanceTimersByTime(8000))
     expect(container.querySelector('.pz-business-hero__slide[data-active="true"] img'))
       .toHaveAttribute('alt', 'Front of the client home')
+  })
+
+  it('stops autoplay when motion is disabled, while manual controls still work', () => {
+    vi.useFakeTimers()
+    const { container, rerender } = render(<BusinessSiteHero {...props} intervalMs={2000} appearance={{ motion: 'subtle' }} />)
+    act(() => vi.advanceTimersByTime(2000))
+    rerender(<BusinessSiteHero {...props} intervalMs={2000} appearance={{ motion: 'none' }} />)
+    act(() => vi.advanceTimersByTime(8000))
+    expect(container.querySelector('.pz-business-hero__slide[data-active="true"] img'))
+      .toHaveAttribute('alt', 'Technician at work')
+    fireEvent.click(screen.getByRole('button', { name: 'Previous photo' }))
+    expect(container.querySelector('.pz-business-hero__slide[data-active="true"] img'))
+      .toHaveAttribute('alt', 'Front of the client home')
+  })
+
+  it.each([undefined, 'none'] as const)('does not start autoplay with motion %s', (motion) => {
+    vi.useFakeTimers()
+    const { container } = render(<BusinessSiteHero {...props} intervalMs={2000} appearance={{ motion }} />)
+    act(() => vi.advanceTimersByTime(8000))
+    expect(container.querySelector('.pz-business-hero__slide[data-active="true"] img'))
+      .toHaveAttribute('alt', 'Front of the client home')
+  })
+
+  it('reacts to changes in the visitor motion preference and removes its listener', () => {
+    vi.useFakeTimers()
+    let onChange: (() => void) | undefined
+    const media = {
+      matches: false,
+      addEventListener: vi.fn((_event: string, listener: () => void) => { onChange = listener }),
+      removeEventListener: vi.fn(),
+    }
+    vi.stubGlobal('matchMedia', () => media)
+    const { container, unmount } = render(<BusinessSiteHero {...props} intervalMs={2000} appearance={{ motion: 'subtle' }} />)
+    act(() => vi.advanceTimersByTime(2000))
+    act(() => { media.matches = true; onChange?.() })
+    act(() => vi.advanceTimersByTime(8000))
+    expect(container.querySelector('.pz-business-hero__slide[data-active="true"] img'))
+      .toHaveAttribute('alt', 'Technician at work')
+    act(() => { media.matches = false; onChange?.() })
+    act(() => vi.advanceTimersByTime(2000))
+    expect(container.querySelector('.pz-business-hero__slide[data-active="true"] img'))
+      .toHaveAttribute('alt', 'Front of the client home')
+    unmount()
+    expect(media.removeEventListener).toHaveBeenCalledWith('change', onChange)
+    expect(vi.getTimerCount()).toBe(0)
   })
 })

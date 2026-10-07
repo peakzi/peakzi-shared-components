@@ -19,6 +19,12 @@ const props: BusinessSiteFooterProps = {
 }
 
 describe('BusinessSiteFooter', () => {
+  it.each([undefined, 'none', 'subtle'] as const)('uses the site motion setting %s without hiding contact details', (motion) => {
+    const html = renderToStaticMarkup(<BusinessSiteFooter {...props} appearance={{ motion }} />)
+    expect(html).toContain(`data-motion="${motion ?? 'none'}"`)
+    expect(html).toContain('href="tel:+15125550188"')
+  })
+
   it('server-renders crawlable contact details and real navigation links', () => {
     const html = renderToStaticMarkup(<BusinessSiteFooter {...props} />)
     expect(html).toContain('<footer')

@@ -8,10 +8,11 @@ import type {
 } from './BusinessSiteHero'
 
 type Appearance = Required<Pick<BusinessSiteHeroAppearance,
-  'font' | 'headingFont' | 'backgroundColor' | 'textColor' | 'accentColor' | 'buttonRadius' | 'density'
+  'font' | 'headingFont' | 'backgroundColor' | 'textColor' | 'accentColor' | 'buttonRadius' | 'density' | 'motion'
 >>
 
 interface StoryArgs extends Omit<BusinessSiteHeroProps, 'appearance' | 'aside'>, Appearance {
+  gradientEndColor?: string
   showFormSlot: boolean
 }
 
@@ -50,32 +51,37 @@ const meta = {
     },
   },
   render: ({
-    font, headingFont, backgroundColor, textColor, accentColor, buttonRadius, density,
+    font, headingFont, backgroundColor, gradientEndColor, textColor, accentColor, buttonRadius, density, motion,
     showFormSlot, ...hero
   }: StoryArgs) => (
     <BusinessSiteHero
       {...hero}
-      appearance={{ font, headingFont, backgroundColor, textColor, accentColor, buttonRadius, density }}
+      appearance={{ font, headingFont, backgroundColor, gradientEndColor, textColor, accentColor, buttonRadius, density, motion }}
       aside={showFormSlot ? formSlot : undefined}
     />
   ),
   argTypes: {
     layout: { control: 'inline-radio', options: ['flat', 'split', 'background'] },
+    imageFit: { control: 'inline-radio', options: ['cover', 'contain'], description: 'Contain shows the entire image, with empty space when its aspect ratio differs from the frame.' },
+    imageBackdrop: { control: 'inline-radio', options: ['solid', 'blur'], description: 'In split or background + contain mode, fill the surrounding space with a blurred copy of the image.' },
+    imagePosition: { control: 'inline-radio', options: ['left', 'center', 'right'], description: 'Horizontal placement of images within the hero frame.' },
     contentOrder: {
       control: 'inline-radio',
       options: ['text-first', 'image-first'],
-      description: 'In a split layout, choose which column appears first on both desktop and mobile.',
+      description: 'In a split layout, choose the desktop column order. On mobile, the headline and actions lead, followed by the image and full answer.',
     },
     background: { control: 'select', options: ['surface', 'tint', 'soft', 'gradient', 'ink'] },
     align: { control: 'inline-radio', options: ['left', 'center'] },
     headlineSize: { control: 'select', options: ['auto', 'xl', 'lg', 'md', 'sm'] },
     overlay: { control: { type: 'range', min: 0.55, max: 0.85, step: 0.01 } },
-    intervalMs: { control: { type: 'number', min: 0, step: 1000 }, description: 'Carousel autoplay; 0 disables it.' },
+    intervalMs: { control: { type: 'number', min: 0, step: 1000 }, description: 'Carousel autoplay with subtle motion; 0 disables it. Reduced motion also stops autoplay.' },
     buttonRadius: { control: 'inline-radio', options: ['2px', '8px', '16px', '32px'] },
     density: { control: 'inline-radio', options: ['comfortable', 'compact'] },
+    motion: { control: 'inline-radio', options: ['none', 'subtle'] },
     font: { control: 'text' },
     headingFont: { control: 'text' },
     backgroundColor: { control: 'color' },
+    gradientEndColor: { control: 'color', description: 'Gradient endpoint; defaults to the accent color when unset.' },
     textColor: { control: 'color' },
     accentColor: { control: 'color' },
     images: { control: 'object' },
@@ -94,6 +100,9 @@ const meta = {
     ],
     images,
     layout: 'split',
+    imageFit: 'cover',
+    imageBackdrop: 'solid',
+    imagePosition: 'center',
     contentOrder: 'text-first',
     background: 'surface',
     align: 'left',
@@ -107,6 +116,7 @@ const meta = {
     accentColor: '#1d4f8c',
     buttonRadius: '8px',
     density: 'comfortable',
+    motion: 'subtle',
     showFormSlot: false,
   },
 } satisfies Meta<StoryArgs>
@@ -115,6 +125,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+export const NoMotion: Story = { args: { motion: 'none' } }
 
 export const Flat: Story = {
   args: { layout: 'flat', images: [], align: 'center', background: 'tint' },
@@ -122,6 +133,18 @@ export const Flat: Story = {
 
 export const SplitSinglePhoto: Story = {
   args: { layout: 'split', images: [images[0]!] },
+}
+
+export const SplitFullImages: Story = {
+  args: {
+    layout: 'split',
+    imageFit: 'contain',
+    imageBackdrop: 'blur',
+    background: 'gradient',
+    backgroundColor: '#12171c',
+    gradientEndColor: '#30343b',
+    textColor: '#ffffff',
+  },
 }
 
 export const ImageFirst: Story = {
@@ -137,6 +160,18 @@ export const BackgroundCarousel: Story = {
     layout: 'background',
     textColor: '#ffffff',
     backgroundColor: '#12171c',
+    accentColor: '#f6c54b',
+  },
+}
+
+export const FullBackgroundImages: Story = {
+  args: {
+    layout: 'background',
+    imageFit: 'contain',
+    imageBackdrop: 'blur',
+    backgroundColor: '#12171c',
+    gradientEndColor: '#30343b',
+    textColor: '#ffffff',
     accentColor: '#f6c54b',
   },
 }
@@ -168,6 +203,7 @@ export const BackgroundCarouselWithFormSlot: Story = {
 }
 
 export const Mobile: Story = {
+  globals: { viewport: 'mobile2' },
   render: (args) => (
     <div style={{ width: 390, maxWidth: '100%', marginInline: 'auto' }}>
       <BusinessSiteHero
@@ -183,7 +219,7 @@ export const Mobile: Story = {
         appearance={{
           font: args.font, headingFont: args.headingFont, backgroundColor: args.backgroundColor,
           textColor: args.textColor, accentColor: args.accentColor,
-          buttonRadius: args.buttonRadius, density: args.density,
+          buttonRadius: args.buttonRadius, density: args.density, motion: args.motion,
         }}
       />
     </div>
