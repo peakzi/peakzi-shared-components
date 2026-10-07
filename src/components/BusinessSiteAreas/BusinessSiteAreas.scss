@@ -1,0 +1,229 @@
+.pz-business-areas {
+  --pz-business-areas-background: #ffffff;
+  --pz-business-areas-text: #12171c;
+  --pz-business-areas-accent: #1d4f8c;
+  --pz-business-areas-font: 'IBM Plex Sans', Arial, sans-serif;
+  --pz-business-areas-heading-font: 'Archivo', Arial, sans-serif;
+  --pz-business-areas-radius: 8px;
+  width: 100%;
+  background: var(--pz-business-areas-fill, var(--pz-business-areas-background));
+  color: var(--pz-business-areas-text);
+  font-family: var(--pz-business-areas-font);
+}
+
+.pz-business-areas__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(48px, 6vw, 80px) 24px;
+  box-sizing: border-box;
+}
+
+.pz-business-areas[data-density='compact'] .pz-business-areas__inner {
+  gap: 16px;
+  padding-block: 28px;
+}
+
+.pz-business-areas__heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pz-business-areas__heading h2 {
+  min-width: 0;
+  margin: 0;
+  color: var(--pz-business-areas-text);
+  font-family: var(--pz-business-areas-heading-font);
+  font-size: clamp(30px, 3.5vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.pz-business-areas[data-density='compact'] .pz-business-areas__heading h2 {
+  font-size: clamp(26px, 3vw, 34px);
+}
+
+.pz-business-areas__count {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  text-align: right;
+
+  strong {
+    color: var(--pz-business-areas-accent);
+    font-family: var(--pz-business-areas-heading-font);
+    font-size: clamp(36px, 4.5vw, 56px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+  }
+
+  span {
+    color: var(--pz-business-areas-accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+}
+
+.pz-business-areas[data-density='compact'] .pz-business-areas__count strong {
+  font-size: clamp(30px, 3.2vw, 40px);
+}
+
+.pz-business-areas__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.pz-business-areas[data-density='compact'] .pz-business-areas__grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0 18px;
+}
+
+.pz-business-areas a.pz-business-areas__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  text-align: center;
+  padding: 11px 12px;
+  border: 1px solid color-mix(in srgb, var(--pz-business-areas-text) 16%, transparent);
+  border-radius: var(--pz-business-areas-radius);
+  background: color-mix(in srgb, var(--pz-business-areas-text) 4%, transparent);
+  color: var(--pz-business-areas-accent);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.pz-business-areas__tile svg {
+  flex: none;
+}
+
+.pz-business-areas__tile span {
+  min-width: 0;
+  text-wrap: balance;
+}
+
+.pz-business-areas a.pz-business-areas__tile:hover {
+  border-color: var(--pz-business-areas-accent);
+  background: color-mix(in srgb, var(--pz-business-areas-accent) 12%, transparent);
+}
+
+.pz-business-areas a.pz-business-areas__tile:focus-visible {
+  outline: 2px solid var(--pz-business-areas-accent);
+  outline-offset: 3px;
+}
+
+.pz-business-areas[data-density='compact'] .pz-business-areas__tile {
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 4px;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--pz-business-areas-text) 12%, transparent);
+  border-radius: 0;
+  background: transparent;
+}
+
+.pz-business-areas[data-density='compact'] .pz-business-areas__tile svg {
+  width: 15px;
+  height: 15px;
+}
+
+.pz-business-areas[data-density='compact'] .pz-business-areas__tile:hover {
+  background: color-mix(in srgb, var(--pz-business-areas-accent) 8%, transparent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+// The light end of a gradient washes out accent-colored text, so on a gradient the city names
+// and the count label use the section's text color (the one the title already uses); the accent
+// stays on the pin icons, the count and the hover/focus states.
+.pz-business-areas[data-surface='gradient'] a.pz-business-areas__tile {
+  color: var(--pz-business-areas-text);
+}
+
+.pz-business-areas[data-surface='gradient'] .pz-business-areas__tile svg {
+  color: var(--pz-business-areas-accent);
+}
+
+.pz-business-areas[data-surface='gradient'] .pz-business-areas__count span {
+  color: var(--pz-business-areas-text);
+}
+
+@media (max-width: 960px) {
+  .pz-business-areas[data-density='compact'] .pz-business-areas__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .pz-business-areas__inner {
+    padding-inline: 20px;
+  }
+
+  .pz-business-areas__heading {
+    gap: 12px;
+  }
+
+  .pz-business-areas__heading h2 {
+    font-size: 28px;
+  }
+
+  .pz-business-areas__count {
+    gap: 4px;
+
+    strong {
+      font-size: 32px;
+    }
+
+    span {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+  }
+
+  .pz-business-areas[data-density='compact'] .pz-business-areas__count strong {
+    font-size: 30px;
+  }
+
+  .pz-business-areas__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pz-business-areas[data-density='compact'] .pz-business-areas__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+  }
+
+  .pz-business-areas__grid {
+    gap: 10px;
+  }
+
+  .pz-business-areas a.pz-business-areas__tile {
+    gap: 8px;
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  .pz-business-areas__tile svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .pz-business-areas__tile {
+    overflow-wrap: anywhere;
+  }
+}
