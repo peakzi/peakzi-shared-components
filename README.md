@@ -146,6 +146,8 @@ Switching themes restyles mounted charts immediately: they re-read tokens whenev
 
 Highcharts can't take `var(--token)` directly: it writes colors as SVG attributes, does its own color math, and serializes exports outside the page. That's why tokens are read as resolved values instead of being passed through.
 
+The exception is per-series/per-point color cycling on multi-series or multi-point charts (`ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `PyramidChart`): none of these impose a brand palette by default — series/points that don't set their own `color` fall through to Highcharts' own stock palette, same as an app using Highcharts with no theme at all. Pass `colors` on any of them to cycle a different palette instead.
+
 ### ColumnChart
 
 Column, bar, and line charts. Pass `data` for one series, or `series` for several named ones (add `stacked` to stack them instead of grouping).
@@ -161,6 +163,7 @@ Column, bar, and line charts. Pass `data` for one series, or `series` for severa
 | `tooltipFormatter` | Highcharts `TooltipFormatterCallbackFunction` | built-in | |
 | `columnWidth` | `number` | `80` | Max point width, px. |
 | `color` | `string` | brand accent | Point/line color for a single `data` series. |
+| `colors` | `string[]` | Highcharts' stock palette | Cycled across `series` entries that don't set their own `color`. |
 | `chartHeight` | `number` | `480` | |
 | `isLoading` | `boolean` | `false` | Renders `Skeleton` in place of the chart. |
 
@@ -177,6 +180,7 @@ A time-axis line/area/spline chart for trend data at a fixed interval.
 | `subtitle` | `string` | — | |
 | `onVisibleSeriesChange` | `(names: string[]) => void` | — | Called with the series left visible after a legend toggle. |
 | `tooltipFormatter` | Highcharts `TooltipFormatterCallbackFunction` | — | |
+| `colors` | `string[]` | Highcharts' stock palette | Cycled across `series`. |
 | `chartHeight` | `number` | `300` | |
 | `isLoading` | `boolean` | `false` | |
 
@@ -187,6 +191,7 @@ A time-axis line/area/spline chart for trend data at a fixed interval.
 | `data` | `{ name: string, value: number }[]` | — | |
 | `title` | `string` | — | |
 | `valueSuffix` | `string` | `'%'` | Appended in the tooltip and data labels. |
+| `colors` | `string[]` | Highcharts' stock palette | Cycled across slices. |
 | `chartHeight` | `number` | `400` | |
 | `isLoading` | `boolean` | `false` | |
 
@@ -197,6 +202,7 @@ A time-axis line/area/spline chart for trend data at a fixed interval.
 | `data` | `{ name, value, id?, parent?, color? }[]` | — | `id`/`parent` enable hierarchical (drilldown) treemaps. |
 | `title` | `string` | — | |
 | `valueSuffix` | `string` | `'%'` | |
+| `colors` | `string[]` | Highcharts' stock palette | Cycled across nodes that don't set their own `color`. |
 | `chartHeight` | `number` | `400` | |
 | `isLoading` | `boolean` | `false` | |
 
@@ -218,6 +224,7 @@ A funnel/pyramid chart for size-tiered distributions. Values are log-scaled inte
 |---|---|---|---|
 | `data` | `[name: string, value: number][]` | — | |
 | `emptyState` | `ReactNode` | `null` | Rendered instead of the chart when every value is zero (or `data` is empty). The chart has no built-in empty state — pass your own message/illustration. |
+| `colors` | `string[]` | Highcharts' stock palette | Cycled across tiers. |
 | `chartHeight` | `number` | `415` | |
 | `isLoading` | `boolean` | `false` | |
 

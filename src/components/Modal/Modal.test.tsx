@@ -138,4 +138,23 @@ describe('Modal', () => {
     renderModal({ size: 'xl' })
     expect(document.body.querySelector('.pz-modal--xl')).toBeInTheDocument()
   })
+
+  it('hides the close button when not dismissible', () => {
+    renderModal({ dismissible: false })
+    expect(screen.queryByRole('button', { name: 'Close dialog' })).not.toBeInTheDocument()
+  })
+
+  it('ignores Escape when not dismissible', () => {
+    const onClose = vi.fn()
+    renderModal({ onClose, dismissible: false })
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('ignores backdrop clicks when not dismissible', () => {
+    const onClose = vi.fn()
+    renderModal({ onClose, dismissible: false })
+    fireEvent.mouseDown(document.body.querySelector('.pz-modal-backdrop')!)
+    expect(onClose).not.toHaveBeenCalled()
+  })
 })

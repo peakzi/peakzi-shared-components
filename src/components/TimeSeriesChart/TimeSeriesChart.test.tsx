@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
 import { TimeSeriesChart } from './TimeSeriesChart'
 
 const series = [{ name: 'Visits', data: [10, 20, 15, 30] }]
+
+afterEach(() => document.documentElement.style.removeProperty('--surface-1'))
 
 describe('TimeSeriesChart', () => {
   it('renders a skeleton while loading, not the chart', () => {
@@ -43,5 +45,41 @@ describe('TimeSeriesChart', () => {
     const figure = container.querySelector('figure')
     expect(figure?.className).toContain('pz-timeseries-chart')
     expect(figure?.className).toContain('custom-chart')
+  })
+
+  it('wraps a palette shorter than the series count instead of leaving a series uncolored', () => {
+    const { container } = render(
+      <TimeSeriesChart
+        series={[
+          { name: 'A', data: [1, 2] },
+          { name: 'B', data: [2, 3] },
+          { name: 'C', data: [3, 4] },
+        ]}
+        colors={['#111111', '#222222']}
+      />,
+    )
+    const strokes = Array.from(container.querySelectorAll('path.highcharts-graph')).map((p) => p.getAttribute('stroke'))
+    expect(strokes).toEqual(['#111111', '#222222', '#111111'])
+  })
+
+  it('keeps wrapping correctly when a mounted chart is switched to a shorter palette', () => {
+    const threeSeries = [
+      { name: 'A', data: [1, 2] },
+      { name: 'B', data: [2, 3] },
+      { name: 'C', data: [3, 4] },
+    ]
+    const { container, rerender } = render(<TimeSeriesChart series={threeSeries} />)
+
+    rerender(<TimeSeriesChart series={threeSeries} colors={['#111111', '#222222']} />)
+    const strokes = Array.from(container.querySelectorAll('path.highcharts-graph')).map((p) => p.getAttribute('stroke'))
+    expect(strokes).toEqual(['#111111', '#222222', '#111111'])
+  })
+
+  it('themes the export menu from design tokens instead of Highcharts defaults', async () => {
+    document.documentElement.style.setProperty('--surface-1', 'rgb(10, 20, 30)')
+    const { container } = render(<TimeSeriesChart series={series} />)
+    fireEvent.click(container.querySelector('.highcharts-contextbutton')!)
+    await waitFor(() => expect(document.querySelector('.highcharts-menu')).toBeInTheDocument())
+    expect((document.querySelector('.highcharts-menu') as HTMLElement).style.background).toBe('rgb(10, 20, 30)')
   })
 })

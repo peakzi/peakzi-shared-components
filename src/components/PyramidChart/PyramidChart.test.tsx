@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { PyramidChart } from './PyramidChart'
 
 const data: Array<[string, number]> = [
@@ -8,6 +8,8 @@ const data: Array<[string, number]> = [
   ['51-200', 40],
   ['200+', 10],
 ]
+
+afterEach(() => document.documentElement.style.removeProperty('--surface-1'))
 
 describe('PyramidChart', () => {
   it('renders a skeleton while loading, not the chart', () => {
@@ -91,5 +93,19 @@ describe('PyramidChart', () => {
     const figure = container.querySelector('figure')
     expect(figure?.className).toContain('pz-pyramid-chart')
     expect(figure?.className).toContain('custom-chart')
+  })
+
+  it('cycles distinct colors across tiers', () => {
+    const { container } = render(<PyramidChart data={data} />)
+    const fills = Array.from(container.querySelectorAll('.highcharts-point')).map((p) => p.getAttribute('fill'))
+    expect(new Set(fills).size).toBe(data.length)
+  })
+
+  it('themes the export menu from design tokens instead of Highcharts defaults', async () => {
+    document.documentElement.style.setProperty('--surface-1', 'rgb(10, 20, 30)')
+    const { container } = render(<PyramidChart data={data} />)
+    fireEvent.click(container.querySelector('.highcharts-contextbutton')!)
+    await waitFor(() => expect(document.querySelector('.highcharts-menu')).toBeInTheDocument())
+    expect((document.querySelector('.highcharts-menu') as HTMLElement).style.background).toBe('rgb(10, 20, 30)')
   })
 })

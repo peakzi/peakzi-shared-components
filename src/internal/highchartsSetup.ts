@@ -28,3 +28,6 @@ export const HighchartsReact = resolvedHighchartsReact as typeof HighchartsReact
 
 export { Highcharts }
 export type { Options as HighchartsOptions, SeriesOptionsType, TooltipFormatterContextObject } from 'highcharts'
+
+// Highcharts' own stock palette, for charts to explicitly restore when `colors` is unset.
+export const defaultSeriesColors = Highcharts.getOptions().colors

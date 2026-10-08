@@ -30,6 +30,8 @@ export interface ModalProps {
   /** Footer slot — typically action buttons */
   footer?: ReactNode
   children?: ReactNode
+  /** Disables Escape, backdrop click, and the close button, for a flow the viewer must complete. Defaults to `true`. */
+  dismissible?: boolean
 }
 
 export function Modal({
@@ -41,6 +43,7 @@ export function Modal({
   size,
   footer,
   children,
+  dismissible = true,
 }: ModalProps) {
   const generatedId = useId()
   const labelId = `pz-modal-${generatedId}`
@@ -56,7 +59,7 @@ export function Modal({
     const previousOverflow = document.body.style.overflow
 
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape' && dismissible) onClose()
     }
 
     document.addEventListener('keydown', handleKey)
@@ -70,12 +73,12 @@ export function Modal({
       document.body.style.overflow = previousOverflow
       previouslyFocused?.focus()
     }
-  }, [open, onClose])
+  }, [open, onClose, dismissible])
 
   if (!open) return null
 
   const handleBackdropClick: MouseEventHandler<HTMLDivElement> = (e) => {
-    if (e.target === e.currentTarget) onClose()
+    if (dismissible && e.target === e.currentTarget) onClose()
   }
 
   const handleDialogKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -133,14 +136,16 @@ export function Modal({
               </p>
             )}
           </div>
-          <button
-            type="button"
-            className="pz-modal__close"
-            onClick={onClose}
-            aria-label="Close dialog"
-          >
-            <X size={16} aria-hidden />
-          </button>
+          {dismissible && (
+            <button
+              type="button"
+              className="pz-modal__close"
+              onClick={onClose}
+              aria-label="Close dialog"
+            >
+              <X size={16} aria-hidden />
+            </button>
+          )}
         </div>
 
         {/* Body */}

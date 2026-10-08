@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import type { ReactNode } from 'react'
 import type { Options, PlotSeriesOptions, SeriesOptionsType } from 'highcharts'
-import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
+import { chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
@@ -22,6 +22,8 @@ export interface PyramidChartProps {
    * your own illustration/message/retry action.
    */
   emptyState?: ReactNode
+  /** Palette cycled across tiers. Defaults to Highcharts' own stock palette. */
+  colors?: string[]
   chartHeight?: number
   className?: string
   /** Rendered as `data-testid` on the chart's root element. */
@@ -74,7 +76,7 @@ function sanitizePoints(points: PyramidChartPoint[]): PyramidChartPoint[] {
 const toLogScale = (value: number) => Math.log(1 + value)
 const fromLogScale = (logValue: number) => Math.round(Math.exp(logValue) - 1)
 
-export function PyramidChart({ isLoading = false, data, emptyState = null, chartHeight = 415, className, testId }: PyramidChartProps) {
+export function PyramidChart({ isLoading = false, data, emptyState = null, colors, chartHeight = 415, className, testId }: PyramidChartProps) {
   const { containerRef, isFullscreen, size, theme, exportMenuItems, setChart } = useChartFrame(chartHeight)
 
   const points = useMemo(() => sanitizePoints(data), [data])
@@ -92,6 +94,7 @@ export function PyramidChart({ isLoading = false, data, emptyState = null, chart
   const logScaledData = smoothed.map(([name, value]): [string, number] => [name, toLogScale(value)])
 
   const options = pruneUndefined<Options>({
+    colors: colors ?? defaultSeriesColors,
     chart: {
       type: 'pyramid',
       height: size.height,
@@ -132,8 +135,10 @@ export function PyramidChart({ isLoading = false, data, emptyState = null, chart
       } as unknown as PlotSeriesOptions,
     },
     legend: { enabled: false },
-    series: [{ type: 'pyramid', name: 'Value', data: logScaledData }] as unknown as SeriesOptionsType[],
+    series: [{ type: 'pyramid', name: 'Value', colorByPoint: true, data: logScaledData }] as unknown as SeriesOptionsType[],
     tooltip: {
+      backgroundColor: theme.surface,
+      borderColor: theme.gridLine,
       borderRadius: toPx(theme.radiusSm),
       useHTML: true,
       // HTML tooltips live in the page DOM, so they're styled by class with tokens in PyramidChart.scss.
@@ -179,6 +184,7 @@ export function PyramidChart({ isLoading = false, data, emptyState = null, chart
       enabled: true,
       fallbackToExportServer: false,
     },
+    navigation: chartExportMenuTheme(theme),
   })
 
   return (

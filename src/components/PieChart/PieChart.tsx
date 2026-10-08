@@ -1,6 +1,6 @@
 import type { Options, SeriesOptionsType } from 'highcharts'
-import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
+import { chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
@@ -15,18 +15,21 @@ export interface PieChartProps {
   title?: string
   /** Suffix appended to values in the tooltip and data labels, e.g. `'%'` */
   valueSuffix?: string
+  /** Palette cycled across slices. Defaults to Highcharts' own stock palette. */
+  colors?: string[]
   chartHeight?: number
   className?: string
   /** Rendered as `data-testid` on the chart's root element. */
   testId?: string
 }
 
-export function PieChart({ isLoading = false, data, title, valueSuffix = '%', chartHeight = 400, className, testId }: PieChartProps) {
+export function PieChart({ isLoading = false, data, title, valueSuffix = '%', colors, chartHeight = 400, className, testId }: PieChartProps) {
   const { containerRef, isFullscreen, size, theme, exportMenuItems, setChart } = useChartFrame(chartHeight)
 
   const seriesData = data.map((slice) => ({ name: slice.name, y: slice.value }))
 
   const options = pruneUndefined<Options>({
+    colors: colors ?? defaultSeriesColors,
     chart: {
       type: 'pie',
       height: size.height,
@@ -39,6 +42,8 @@ export function PieChart({ isLoading = false, data, title, valueSuffix = '%', ch
     },
     tooltip: {
       useHTML: true,
+      backgroundColor: theme.surface,
+      borderColor: theme.gridLine,
       borderRadius: toPx(theme.radiusSm),
       // HTML tooltips live in the page DOM, so they're styled by class with tokens in PieChart.scss.
       formatter() {
@@ -66,6 +71,7 @@ export function PieChart({ isLoading = false, data, title, valueSuffix = '%', ch
       enabled: true,
       fallbackToExportServer: false,
     },
+    navigation: chartExportMenuTheme(theme),
   })
 
   return (

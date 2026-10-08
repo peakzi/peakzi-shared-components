@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
 import { TreeMapChart } from './TreeMapChart'
 
 const data = [
@@ -7,6 +7,8 @@ const data = [
   { name: 'Electrical', value: 30 },
   { name: 'HVAC', value: 25 },
 ]
+
+afterEach(() => document.documentElement.style.removeProperty('--surface-1'))
 
 describe('TreeMapChart', () => {
   it('renders a skeleton while loading, not the chart', () => {
@@ -40,5 +42,32 @@ describe('TreeMapChart', () => {
     const figure = container.querySelector('figure')
     expect(figure?.className).toContain('pz-treemap-chart')
     expect(figure?.className).toContain('custom-chart')
+  })
+
+  it('cycles distinct colors across nodes that do not set their own', () => {
+    const { container } = render(<TreeMapChart data={data} />)
+    const fills = Array.from(container.querySelectorAll('.highcharts-point')).map((p) => p.getAttribute('fill'))
+    expect(new Set(fills).size).toBe(3)
+  })
+
+  it('reverts to the default palette when a custom one is removed', () => {
+    const { container, rerender } = render(<TreeMapChart data={data} colors={['#111111', '#222222', '#333333']} />)
+    expect(Array.from(container.querySelectorAll('.highcharts-point')).map((p) => p.getAttribute('fill'))).toEqual([
+      '#111111',
+      '#222222',
+      '#333333',
+    ])
+
+    rerender(<TreeMapChart data={data} />)
+    const fills = Array.from(container.querySelectorAll('.highcharts-point')).map((p) => p.getAttribute('fill'))
+    expect(fills).not.toContain('#111111')
+  })
+
+  it('themes the export menu from design tokens instead of Highcharts defaults', async () => {
+    document.documentElement.style.setProperty('--surface-1', 'rgb(10, 20, 30)')
+    const { container } = render(<TreeMapChart data={data} />)
+    fireEvent.click(container.querySelector('.highcharts-contextbutton')!)
+    await waitFor(() => expect(document.querySelector('.highcharts-menu')).toBeInTheDocument())
+    expect((document.querySelector('.highcharts-menu') as HTMLElement).style.background).toBe('rgb(10, 20, 30)')
   })
 })
