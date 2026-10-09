@@ -71,29 +71,6 @@ describe('BusinessSiteContentList', () => {
     expect(screen.queryByRole('link', { name: /view all/i })).toBeNull()
   })
 
-  it('renders optional thumbnails only with valid image data', () => {
-    const html = renderToStaticMarkup(
-      <BusinessSiteContentList
-        items={[{
-          id: '1', title: 'With image', href: '/blogs/1',
-          image: { src: '/thumb.jpg', alt: 'A thumbnail', width: 640, height: 400 },
-        }]}
-      />
-    )
-    expect(html).toContain('src="/thumb.jpg"')
-    expect(html).toContain('alt="A thumbnail"')
-
-    const unsafe = renderToStaticMarkup(
-      <BusinessSiteContentList
-        items={[{
-          id: '1', title: 'Unsafe image', href: '/blogs/1',
-          image: { src: 'javascript:alert(1)', alt: 'Bad', width: 640, height: 400 },
-        }]}
-      />
-    )
-    expect(unsafe).not.toContain('<img')
-  })
-
   it('uses site appearance tokens and compact density', () => {
     const { container } = render(
       <BusinessSiteContentList

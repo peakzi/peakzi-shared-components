@@ -20,7 +20,6 @@ const items: BusinessSiteContentListItem[] = [
     excerpt: 'A dripping faucet wastes water and money. Here is how to diagnose and fix the most common causes yourself.',
     category: 'Plumbing',
     date: 'Jan 12, 2026',
-    image: { src: '/demo-assets/hero-example-service.svg', alt: 'Illustration of a plumbing fix', width: 800, height: 500 },
   },
   {
     id: '2',
@@ -95,12 +94,6 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
 export const NoMotion: Story = { args: { motion: 'none' } }
-
-export const WithoutImages: Story = {
-  args: {
-    items: items.map(({ image: _image, ...item }) => item),
-  },
-}
 
 export const Loading: Story = {
   args: { isLoading: true, loadingCount: 3 },

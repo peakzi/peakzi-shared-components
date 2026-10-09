@@ -138,7 +138,6 @@ export type {
 export { BusinessSiteContentList } from './components/BusinessSiteContentList'
 export type {
   BusinessSiteContentListAppearance,
-  BusinessSiteContentListImage,
   BusinessSiteContentListItem,
   BusinessSiteContentListLink,
   BusinessSiteContentListProps,

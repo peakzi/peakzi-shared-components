@@ -1,13 +1,6 @@
 import type { ReactNode } from 'react'
 import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
 
-export interface BusinessSiteContentListImage {
-  src: string
-  alt: string
-  width: number
-  height: number
-}
-
 export interface BusinessSiteContentListItem {
   id: string
   title: string
@@ -17,7 +10,6 @@ export interface BusinessSiteContentListItem {
   category?: string
   /** Pre-formatted display date — this package does not parse or format dates. */
   date?: string
-  image?: BusinessSiteContentListImage
   actionLabel?: string
 }
 

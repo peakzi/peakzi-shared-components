@@ -8,7 +8,6 @@ import type {
 
 export type {
   BusinessSiteContentListAppearance,
-  BusinessSiteContentListImage,
   BusinessSiteContentListItem,
   BusinessSiteContentListLink,
   BusinessSiteContentListProps,
@@ -16,11 +15,6 @@ export type {
 
 function ContentListCard({ item }: { item: BusinessSiteContentListItem }) {
   const href = safeHref(item.href)
-  const imageSrc = safeHref(item.image?.src, true)
-  const image = imageSrc && item.image?.alt?.trim() && Number.isFinite(item.image.width) &&
-    item.image.width > 0 && Number.isFinite(item.image.height) && item.image.height > 0
-    ? { ...item.image, src: imageSrc, alt: item.image.alt.trim() }
-    : null
   const category = item.category?.trim()
   const date = item.date?.trim()
   const actionLabel = item.actionLabel?.trim() || 'Read more'
@@ -28,30 +22,18 @@ function ContentListCard({ item }: { item: BusinessSiteContentListItem }) {
 
   const content = (
     <>
-      {image && (
-        <img
-          className="pz-business-content-list__image"
-          src={image.src}
-          alt={image.alt}
-          width={image.width}
-          height={image.height}
-          loading="lazy"
-        />
+      {(category || date) && (
+        <div className="pz-business-content-list__meta">
+          {category && <span className="pz-business-content-list__category">{category}</span>}
+          {date && <span className="pz-business-content-list__date">{date}</span>}
+        </div>
       )}
-      <div className="pz-business-content-list__card-content">
-        {(category || date) && (
-          <div className="pz-business-content-list__meta">
-            {category && <span className="pz-business-content-list__category">{category}</span>}
-            {date && <span className="pz-business-content-list__date">{date}</span>}
-          </div>
-        )}
-        <h3 className="pz-business-content-list__card-title">{item.title.trim()}</h3>
-        {hasExcerpt && <div className="pz-business-content-list__excerpt">{item.excerpt}</div>}
-        <span className="pz-business-content-list__action">
-          {actionLabel}
-          <ArrowRight aria-hidden="true" size={16} />
-        </span>
-      </div>
+      <h3 className="pz-business-content-list__card-title">{item.title.trim()}</h3>
+      {hasExcerpt && <div className="pz-business-content-list__excerpt">{item.excerpt}</div>}
+      <span className="pz-business-content-list__action">
+        {actionLabel}
+        <ArrowRight aria-hidden="true" size={16} />
+      </span>
     </>
   )
 
