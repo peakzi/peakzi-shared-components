@@ -18,6 +18,7 @@ const componentEntries = [
   'BusinessSiteAreas',
   'BusinessSiteFaq',
   'BusinessSiteReviews',
+  'BusinessSiteContentList',
   'Button',
   'Card',
   'Checkbox',
