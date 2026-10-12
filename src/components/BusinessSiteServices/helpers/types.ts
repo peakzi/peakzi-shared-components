@@ -26,6 +26,9 @@ export interface BusinessSiteServiceItem {
 export interface BusinessSiteServiceGroup {
   id: string
   trade: string
+  /** Complete trade heading supplied by the website API. */
+  title?: string
+  iconName?: string
   services: readonly BusinessSiteServiceItem[]
   totalCount?: number
 }
@@ -34,7 +37,11 @@ export interface BusinessSiteServicesAppearance {
   font?: string
   headingFont?: string
   backgroundColor?: string
+  gradientStartColor?: string
+  gradientEndColor?: string
+  /** Legacy override, used only when no gradient palette is supplied. */
   textColor?: string
+  /** Legacy override, used only when no gradient palette is supplied. */
   accentColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
   density?: 'comfortable' | 'compact'

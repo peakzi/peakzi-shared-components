@@ -27,10 +27,18 @@ export interface BusinessSiteFaqAppearance {
   font?: string
   headingFont?: string
   backgroundColor?: string
+  /** Shared website gradient used by the contact card and disclosure controls. */
+  gradientStartColor?: string
+  gradientEndColor?: string
+  /** Legacy override, used only when no gradient palette is supplied. */
   textColor?: string
+  /** Legacy override, used only when no gradient palette is supplied. */
   accentColor?: string
+  /** Legacy contact color, superseded by gradientStartColor. */
   contactBackgroundColor?: string
+  /** Legacy contact color, superseded by gradientEndColor. */
   contactGradientEndColor?: string
+  /** Legacy override, used only when no gradient palette is supplied. */
   contactTextColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
   density?: 'comfortable' | 'compact'

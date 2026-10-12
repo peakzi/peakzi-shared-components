@@ -12,8 +12,10 @@ export interface BusinessSiteHeroCarouselProps {
 
 export function BusinessSiteHeroCarousel({ images, intervalMs, showBlurredBackdrop = false }: BusinessSiteHeroCarouselProps) {
   const [active, setActive] = useState(0)
-  const [paused, setPaused] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [focused, setFocused] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
+  const paused = hovered || focused
 
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return
@@ -39,11 +41,11 @@ export function BusinessSiteHeroCarousel({ images, intervalMs, showBlurredBackdr
       aria-roledescription="carousel"
       aria-label="Photos"
       aria-live="off"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocusCapture={() => setFocused(true)}
       onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false)
+        if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false)
       }}
       onKeyDown={(event) => {
         if (event.key === 'ArrowLeft') { event.preventDefault(); go(-1) }

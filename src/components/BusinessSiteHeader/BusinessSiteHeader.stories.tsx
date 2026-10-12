@@ -132,6 +132,13 @@ export const Sticky: Story = {
 
 export const Mobile: Story = {
   globals: { viewport: 'mobile2' },
+  decorators: [
+    (Story) => <><Story /><main style={{ minHeight: '200vh', padding: '24px' }}>
+      <h1>Mobile menu preview</h1>
+      <p>Open Menu: the page dims and stops scrolling. Call and booking actions are inside the menu.</p>
+      <p>The menu can scroll on short screens. Close it or press Escape to return to the page.</p>
+    </main></>,
+  ],
 }
 
 export const WarmCompact: Story = {

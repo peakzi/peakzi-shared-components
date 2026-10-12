@@ -14,6 +14,38 @@ const groups: BusinessSiteServiceGroup[] = [{
 }]
 
 describe('BusinessSiteServices', () => {
+  it('uses the table or linked grid independently for each trade', () => {
+    const { container } = render(<BusinessSiteServices groups={[
+      { ...groups[0]!, title: 'Our Plumbing Services in DFW', services: [
+        { id: 'one', title: 'Water heater', href: '/services/heater', tiers: [{ label: 'Repair', value: '$100' }] },
+        { id: 'two', title: 'Drain cleaning', href: '/services/drains' },
+      ] },
+      { id: 'hvac', trade: 'HVAC', title: 'Our HVAC Services in DFW', services: [{ id: 'heating', title: 'Heating system', href: '/services/heating' }] },
+    ]} />)
+    expect(screen.getByRole('heading', { name: 'Our Plumbing Services in DFW', level: 2 })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Our HVAC Services in DFW', level: 2 })).toBeInTheDocument()
+    expect(screen.getAllByRole('table')).toHaveLength(1)
+    expect(container.querySelectorAll('.pz-business-services__group[data-layout="prices"]')).toHaveLength(1)
+    expect(container.querySelectorAll('.pz-business-services__group[data-layout="grid"]')).toHaveLength(1)
+    expect(screen.getByRole('link', { name: 'Heating system' })).toHaveAttribute('href', '/services/heating')
+    expect(screen.getByText('Services and prices')).toBeInTheDocument()
+  })
+
+  it('uses the linked-grid view when all supplied price cells are blank', () => {
+    const { container } = render(<BusinessSiteServices groups={[{
+      ...groups[0]!, services: [{ id: 'one', title: 'Service', tiers: [{ label: 'Repair', value: ' ' }] }],
+    }]} />)
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
+    expect(container.querySelector('[data-layout="grid"]')).toBeInTheDocument()
+    expect(screen.getByText('Services')).toBeInTheDocument()
+  })
+
+  it('escapes supplied trade titles and falls back to the trade for a blank title', () => {
+    const html = renderToStaticMarkup(<BusinessSiteServices groups={[{ ...groups[0]!, title: '<script>Plumbing</script>' }]} />)
+    expect(html).toContain('&lt;script&gt;Plumbing&lt;/script&gt;')
+    expect(html).not.toContain('<script>')
+    expect(renderToStaticMarkup(<BusinessSiteServices groups={[{ ...groups[0]!, title: ' ' }]} />)).toContain('<h2>Plumbing</h2>')
+  })
   it.each([undefined, 'none', 'subtle'] as const)('uses the site motion setting %s without hiding services', (motion) => {
     const html = renderToStaticMarkup(<BusinessSiteServices groups={groups} appearance={{ motion }} />)
     expect(html).toContain(`data-motion="${motion ?? 'none'}"`)

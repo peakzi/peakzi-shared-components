@@ -18,6 +18,9 @@ const componentEntries = [
   'BusinessSiteAreas',
   'BusinessSiteFaq',
   'BusinessSiteReviews',
+  'BusinessSiteOffers',
+  'BusinessSiteProjectGallery',
+  'BusinessSiteBlogs',
   'Button',
   'Card',
   'Checkbox',
@@ -60,6 +63,10 @@ const entries = {
   index: resolve(__dirname, 'src/index.ts'),
   styles: resolve(__dirname, 'src/styles.ts'),
   BusinessSiteHeroCarousel: resolve(__dirname, 'src/components/BusinessSiteHero/carousel/BusinessSiteHeroCarousel.tsx'),
+  BusinessSiteHeaderMenuBehavior: resolve(__dirname, 'src/components/BusinessSiteHeader/menu-behavior/HeaderMenuBehavior.tsx'),
+  BusinessSiteOffersCarousel: resolve(__dirname, 'src/components/BusinessSiteOffers/carousel/BusinessSiteOffersCarousel.tsx'),
+  BusinessSiteCardCarousel: resolve(__dirname, 'src/components/BusinessSiteCardCarousel/BusinessSiteCardCarousel.tsx'),
+  BusinessSiteAreasMap: resolve(__dirname, 'src/components/BusinessSiteAreas/map/BusinessSiteAreasMap.tsx'),
   ...Object.fromEntries(
     componentEntries.map((name) => [name, resolve(__dirname, `src/components/${name}/index.ts`)]),
   ),
@@ -98,6 +105,9 @@ export default defineConfig({
         /^react-leaflet\//,
       ],
       output: {
+        // Keep the client boundary on extracted chunks too, not only their entry facades.
+        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteAreas\/map\/BusinessSiteAreasMap)\.tsx$/.test(id.replace(/\\/g, '/')))
+          ? '"use client";' : '',
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',

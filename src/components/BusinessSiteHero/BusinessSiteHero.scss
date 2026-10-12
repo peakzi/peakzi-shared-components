@@ -315,8 +315,8 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -327,11 +327,16 @@
 
 .pz-business-hero__carousel-dots {
   display: flex;
-  overflow-x: auto;
-  max-width: min(100%, 360px);
+  flex: 0 1 220px;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 220px;
+  justify-content: center;
 }
 
 .pz-business-hero__carousel-dots button {
+  flex: 1 1 24px;
+  max-width: 44px;
   background: transparent;
 }
 

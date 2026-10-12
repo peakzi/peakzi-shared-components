@@ -50,6 +50,16 @@ describe('GeoMap', () => {
     expect(container.querySelector('.leaflet-container')).toBeInTheDocument()
   })
 
+  it('keeps OpenStreetMap attribution visible without the Leaflet branding prefix', () => {
+    const { container } = render(<GeoMap points={points} />)
+    const credits = container.querySelectorAll('.leaflet-control-attribution')
+    expect(credits).toHaveLength(1)
+    expect(credits[0]).toHaveTextContent('© OpenStreetMap contributors')
+    expect(credits[0]).not.toHaveTextContent('Leaflet')
+    expect(screen.getByRole('link', { name: 'OpenStreetMap' }))
+      .toHaveAttribute('href', 'https://www.openstreetmap.org/copyright')
+  })
+
   it('renders children (e.g. MapMarker) inside the map', () => {
     const { container } = render(
       <GeoMap points={points}>
