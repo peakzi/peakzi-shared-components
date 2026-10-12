@@ -1,0 +1,30 @@
+.pz-business-card-carousel { position: relative; display: flow-root; padding-inline: 36px; }
+.pz-business-card-carousel[data-single='true'] { padding-inline: 0; }
+.pz-business-card-carousel .pz-business-card-carousel__list {
+  display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 32px) / 3);
+  align-items: stretch; gap: 16px; margin: 16px -8px 0; padding: 8px; list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
+  scroll-padding-inline: 8px; scrollbar-width: none;
+}
+.pz-business-card-carousel__list::-webkit-scrollbar { display: none; }
+.pz-business-card-carousel .pz-business-card-carousel__list[data-single='true'] { grid-auto-columns: 100%; }
+.pz-business-card-carousel__list > li { display: flex; min-width: 0; margin: 0; padding: 0; scroll-snap-align: start; }
+.pz-business-card-carousel__list:focus-visible { outline: 2px solid var(--pz-business-carousel-text); outline-offset: 2px; }
+.pz-business-card-carousel__controls { position: absolute; inset: 16px 0 0; display: flex; align-items: center; justify-content: space-between; pointer-events: none; }
+.pz-business-card-carousel .pz-business-card-carousel__controls button {
+  display: inline-flex; flex: none; align-items: center; justify-content: center;
+  width: 48px; height: 48px; padding: 0;
+  border: 1px solid color-mix(in srgb, var(--pz-business-carousel-text) 20%, var(--pz-business-carousel-background));
+  border-radius: 50%; background: var(--pz-business-carousel-background); color: var(--pz-business-carousel-text);
+  cursor: pointer; pointer-events: auto;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--pz-business-carousel-text) 8%, transparent);
+}
+.pz-business-card-carousel__controls button:disabled { opacity: 0.35; cursor: default; }
+.pz-business-card-carousel__controls button:focus-visible { outline: 2px solid var(--pz-business-carousel-text); outline-offset: 2px; }
+
+@media (max-width: 960px) {
+  .pz-business-card-carousel .pz-business-card-carousel__list { grid-auto-columns: calc((100% - 16px) / 2); }
+}
+@media (max-width: 600px) {
+  .pz-business-card-carousel .pz-business-card-carousel__list { grid-auto-columns: 90%; }
+}

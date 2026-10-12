@@ -20,7 +20,7 @@ describe('BusinessSiteAreas', () => {
 
     expect(html).toContain('<h2>Areas we serve</h2>')
     expect(html).toContain('<strong>2</strong>')
-    expect(html).toContain('Cities served')
+    expect(html).toContain('<span>cities</span>')
     expect(html).toContain('href="/cities/allen-tx"')
     expect(html).toContain('href="/cities/plano-tx"')
     expect(html).toContain('Allen, TX')
@@ -68,10 +68,35 @@ describe('BusinessSiteAreas', () => {
 
     expect(html).toContain('<h2>Our service area</h2>')
     expect(html).toContain('<strong>1</strong>')
-    expect(html).toContain('City served')
+    expect(html).toContain('<span>city</span>')
     expect(html).toContain('data-density="compact"')
     expect(html).toContain('--pz-business-areas-background:#101820')
     expect(html).toContain('--pz-business-areas-text:#ffffff')
     expect(html).toContain('--pz-business-areas-accent:#8cc4ff')
+  })
+
+  it('renders the map slot without moving city links out of the initial HTML', () => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas
+      areas={[{ id: 'allen', label: 'Allen, TX', href: '/cities/allen-tx' }]}
+      map={<div>Map island</div>}
+    />)
+    expect(html).toContain('data-layout="map"')
+    expect(html).toContain('class="pz-business-areas__panel"')
+    expect(html).toContain('aria-label="Cities served"')
+    expect(html).toContain('data-area-id="allen"')
+    expect(html).toContain('href="/cities/allen-tx"')
+    expect(html).toContain('Map island')
+    expect(html.indexOf('Allen, TX')).toBeLessThan(html.indexOf('Map island'))
+  })
+
+  it('uses the list-only layout without a map and supports custom count/eyebrow labels', () => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas
+      areas={[{ id: 'allen', label: 'Allen, TX', href: '/cities/allen-tx' }]}
+      countLabel="locations" eyebrow="Our coverage"
+    />)
+    expect(html).toContain('data-layout="list"')
+    expect(html).not.toContain('class="pz-business-areas__map"')
+    expect(html).toContain('Our coverage')
+    expect(html).toContain('<span>locations</span>')
   })
 })

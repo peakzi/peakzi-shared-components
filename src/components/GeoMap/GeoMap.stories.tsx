@@ -10,7 +10,7 @@ const meta: Meta<typeof GeoMap> = {
     docs: {
       description: {
         component:
-          'A Leaflet map container with auto-fit-bounds mechanics. Renders no markers itself — compose `MapMarker` (below) or your own `react-leaflet` layers (`CircleMarker`, `GeoJSON`, ...) as children. Requires `leaflet` and `react-leaflet@^4` as peer dependencies.',
+          'A Leaflet map container with auto-fit-bounds mechanics. Renders no markers itself — compose `MapMarker` (below) or your own `react-leaflet` layers (`CircleMarker`, `GeoJSON`, ...) as children. Requires `leaflet` and `react-leaflet@^5` as peer dependencies. OpenStreetMap attribution remains visible; the optional Leaflet branding prefix is disabled.',
       },
     },
   },

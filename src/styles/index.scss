@@ -45,6 +45,10 @@
 @use '../components/BusinessSiteAreas/BusinessSiteAreas';
 @use '../components/BusinessSiteFaq/BusinessSiteFaq';
 @use '../components/BusinessSiteReviews/BusinessSiteReviews';
+@use '../components/BusinessSiteOffers/BusinessSiteOffers';
+@use '../components/BusinessSiteProjectGallery/BusinessSiteProjectGallery';
+@use '../components/BusinessSiteBlogs/BusinessSiteBlogs';
+@use '../components/BusinessSiteCardCarousel/BusinessSiteCardCarousel';
 @use 'business-site-motion';
 @use '../components/Breadcrumbs/Breadcrumbs';
 @use '../components/Alert/Alert';

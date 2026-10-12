@@ -1,4 +1,5 @@
-import { Menu } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
+import { HeaderMenuBehavior } from './menu-behavior/HeaderMenuBehavior'
 import { headerStyle } from './helpers/appearance'
 import { actionLink, navItems, safeHref } from './helpers/links'
 import type { BusinessSiteHeaderProps } from './helpers/types'
@@ -37,8 +38,6 @@ export function BusinessSiteHeader({
     ),
   )
   const validActions = actions.filter((action) => safeHref(action.href) && action.label?.trim())
-  const primaryAction = validActions.find((action) => action.type === 'primary')
-  const mobileMenuActions = validActions.filter((action) => action !== primaryAction)
 
   return (
     <header
@@ -50,6 +49,7 @@ export function BusinessSiteHeader({
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={headerStyle(appearance)}
     >
+      <HeaderMenuBehavior />
       <div className="pz-business-header__inner">
         <a className="pz-business-header__brand" href={logoHref}>
           {logoSrc ? (
@@ -76,22 +76,24 @@ export function BusinessSiteHeader({
         </div>
 
         <div className="pz-business-header__mobile-controls">
-          {primaryAction && actionLink(primaryAction, 'pz-business-header__mobile-primary')}
-          {(validMenu.length > 0 || mobileMenuActions.length > 0) && (
+          {(validMenu.length > 0 || validActions.length > 0) && (
             <details className="pz-business-header__mobile-menu">
               <summary aria-label="Menu">
-                <Menu aria-hidden="true" size={22} strokeWidth={1.75} />
-                <span>Menu</span>
+                <Menu className="pz-business-header__menu-closed" aria-hidden="true" size={22} strokeWidth={1.75} />
+                <span className="pz-business-header__menu-closed">Menu</span>
+                <X className="pz-business-header__menu-open" aria-hidden="true" size={22} strokeWidth={1.75} />
+                <span className="pz-business-header__menu-open">Close</span>
               </summary>
+              <div className="pz-business-header__mobile-backdrop" aria-hidden="true" />
               <div className="pz-business-header__mobile-panel">
                 {validMenu.length > 0 && (
                   <nav aria-label={navigationLabel}>
                     <ul>{navItems(validMenu, currentPath)}</ul>
                   </nav>
                 )}
-                {mobileMenuActions.length > 0 && (
+                {validActions.length > 0 && (
                   <div className="pz-business-header__mobile-actions">
-                    {mobileMenuActions.map((action) => actionLink(action))}
+                    {validActions.map((action) => actionLink(action))}
                   </div>
                 )}
               </div>

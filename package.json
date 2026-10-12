@@ -1,6 +1,6 @@
 {
   "name": "@peakzi/components",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Peakzi shared component library — brand-consistent UI for all Peakzi websites",
   "main": "./dist/index.cjs",
   "scripts": {
@@ -95,6 +95,11 @@
     },
     "./styles": "./dist/components.css",
     "./assets/*": "./assets/*",
+    "./BusinessSiteAreasMap": {
+      "types": "./dist/src/components/BusinessSiteAreas/map/BusinessSiteAreasMap.d.ts",
+      "import": "./dist/BusinessSiteAreasMap.js",
+      "require": "./dist/BusinessSiteAreasMap.cjs"
+    },
     "./*": {
       "types": "./dist/src/components/*/index.d.ts",
       "import": "./dist/*.js",

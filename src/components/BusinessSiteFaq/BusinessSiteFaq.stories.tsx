@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { BusinessSiteFaq } from './BusinessSiteFaq'
 import type { BusinessSiteFaqAppearance, BusinessSiteFaqProps } from './helpers/types'
 
-type Appearance = Required<BusinessSiteFaqAppearance>
+type Appearance = Required<Omit<BusinessSiteFaqAppearance, 'textColor' | 'accentColor' | 'contactBackgroundColor' | 'contactGradientEndColor' | 'contactTextColor'>>
 interface StoryArgs extends Omit<BusinessSiteFaqProps, 'appearance'>, Appearance {}
 
 const meta = {
@@ -13,8 +13,8 @@ const meta = {
     layout: 'fullscreen',
     docs: { description: { component: 'Server-safe FAQ section with native single-open disclosure controls. All answers are included in the initial HTML; the consuming app supplies tenant content and optional formatted answers.' } },
   },
-  render: ({ font, headingFont, backgroundColor, textColor, accentColor, contactBackgroundColor, contactGradientEndColor, contactTextColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
-    <BusinessSiteFaq {...props} appearance={{ font, headingFont, backgroundColor, textColor, accentColor, contactBackgroundColor, contactGradientEndColor, contactTextColor, buttonRadius, density, motion }} />
+  render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
+    <BusinessSiteFaq {...props} appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion }} />
   ),
   argTypes: {
     items: { control: 'object' },
@@ -23,11 +23,8 @@ const meta = {
     font: { control: 'text' },
     headingFont: { control: 'text' },
     backgroundColor: { control: 'color' },
-    textColor: { control: 'color' },
-    accentColor: { control: 'color' },
-    contactBackgroundColor: { control: 'color' },
-    contactGradientEndColor: { control: 'color' },
-    contactTextColor: { control: 'color' },
+    gradientStartColor: { control: 'color' },
+    gradientEndColor: { control: 'color' },
     buttonRadius: { control: 'inline-radio', options: ['2px', '8px', '16px', '32px'] },
     density: { control: 'inline-radio', options: ['comfortable', 'compact'] },
     motion: { control: 'inline-radio', options: ['none', 'subtle'] },
@@ -50,11 +47,8 @@ const meta = {
     font: 'IBM Plex Sans',
     headingFont: 'Archivo',
     backgroundColor: '#ffffff',
-    textColor: '#12171c',
-    accentColor: '#1d4f8c',
-    contactBackgroundColor: '#12171c',
-    contactGradientEndColor: '#716a64',
-    contactTextColor: '#ffffff',
+    gradientStartColor: '#12171c',
+    gradientEndColor: '#716a64',
     buttonRadius: '8px',
     density: 'comfortable',
     motion: 'subtle',
@@ -66,7 +60,8 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
 export const Compact: Story = { args: { density: 'compact' } }
-export const Dark: Story = { args: { backgroundColor: '#12171c', textColor: '#ffffff', accentColor: '#a5c9ee' } }
+export const Dark: Story = { args: { backgroundColor: '#12171c' } }
+export const AlternatePalette: Story = { args: { backgroundColor: '#fff8ee', gradientStartColor: '#17392f', gradientEndColor: '#416951' } }
 export const WithoutContact: Story = { args: { contact: { title: '' } } }
 export const AllClosed: Story = { args: { defaultOpenFirst: false } }
 export const NoMotion: Story = { args: { motion: 'none' } }

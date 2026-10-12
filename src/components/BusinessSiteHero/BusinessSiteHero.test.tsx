@@ -118,6 +118,31 @@ describe('BusinessSiteHero', () => {
     expect(screen.queryByRole('img')).toBeNull()
   })
 
+  it('renders URL-only photos without fabricated width or height attributes', () => {
+    const urlOnly = images.map(({ src, alt }) => ({ src, alt }))
+    const { container, rerender } = render(<BusinessSiteHero {...props} images={urlOnly} imageFit="contain" imageBackdrop="blur" />)
+    expect(container.querySelectorAll('.pz-business-hero__image-foreground')).toHaveLength(2)
+    expect(container.querySelector('.pz-business-hero__image-backdrop')).toBeInTheDocument()
+    for (const image of container.querySelectorAll('img')) {
+      expect(image).not.toHaveAttribute('width')
+      expect(image).not.toHaveAttribute('height')
+    }
+    expect(screen.getByRole('button', { name: 'Next photo' })).toBeInTheDocument()
+    rerender(<BusinessSiteHero {...props} images={[urlOnly[0]!]} />)
+    expect(screen.getByAltText('Front of the client home')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Next photo' })).not.toBeInTheDocument()
+  })
+
+  it.each([
+    { width: 0, height: 640 }, { width: 800, height: -1 },
+    { width: Number.NaN, height: 640 }, { width: 800, height: Number.POSITIVE_INFINITY },
+    { width: 800 }, { height: 640 },
+  ])('still rejects invalid or incomplete supplied image dimensions: %j', (dimensions) => {
+    const html = renderToStaticMarkup(<BusinessSiteHero {...props} images={[{ src: '/invalid.jpg', alt: 'Invalid dimensions', ...dimensions }]} />)
+    expect(html).toContain('data-layout="flat"')
+    expect(html).not.toContain('<img')
+  })
+
   it('supports full-image fit while keeping cover as the default', () => {
     const defaultHtml = renderToStaticMarkup(<BusinessSiteHero {...props} />)
     const fullImageHtml = renderToStaticMarkup(<BusinessSiteHero {...props} imageFit="contain" layout="background" />)
