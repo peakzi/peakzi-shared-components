@@ -35,6 +35,8 @@ export interface BusinessSiteContentListProps {
   title?: string
   eyebrow?: string
   intro?: string
+  /** Default 'grid' arranges items in a responsive multi-column grid; 'stack' renders a single column. */
+  layout?: 'grid' | 'stack'
   isLoading?: boolean
   /** Shown instead of the grid when there are no items. Omit to render nothing when empty. */
   emptyMessage?: string

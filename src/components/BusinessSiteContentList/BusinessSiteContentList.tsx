@@ -47,6 +47,7 @@ export function BusinessSiteContentList({
   title = 'Latest resources',
   eyebrow = 'Resources',
   intro,
+  layout = 'grid',
   isLoading = false,
   emptyMessage,
   loadingCount = 3,
@@ -69,6 +70,7 @@ export function BusinessSiteContentList({
       id={sectionId}
       aria-labelledby={headingId}
       className={['pz-business-content-list', className].filter(Boolean).join(' ')}
+      data-layout={layout === 'stack' ? 'stack' : 'grid'}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={contentListStyle(appearance)}

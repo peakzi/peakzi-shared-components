@@ -71,6 +71,10 @@
   gap: var(--pz-business-content-list-gap);
 }
 
+.pz-business-content-list[data-layout='stack'] .pz-business-content-list__grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .pz-business-content-list__card {
   display: flex;
   flex: 1;
@@ -86,8 +90,14 @@
   text-decoration: none;
 }
 
+// Matches the global `a:not(.pz-btn)` selector specificity to beat its hover underline.
+a.pz-business-content-list__card {
+  text-decoration: none;
+}
+
 a.pz-business-content-list__card:hover {
   border-color: var(--pz-business-content-list-accent);
+  text-decoration: none;
 }
 
 a.pz-business-content-list__card:focus-visible,

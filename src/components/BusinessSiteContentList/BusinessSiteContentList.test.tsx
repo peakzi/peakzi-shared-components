@@ -10,6 +10,14 @@ const items: BusinessSiteContentListItem[] = [
 ]
 
 describe('BusinessSiteContentList', () => {
+  it('defaults to the grid layout and switches to stack via the layout prop', () => {
+    const { container: gridContainer } = render(<BusinessSiteContentList items={items} />)
+    expect(gridContainer.querySelector('section')).toHaveAttribute('data-layout', 'grid')
+
+    const { container: stackContainer } = render(<BusinessSiteContentList items={items} layout="stack" />)
+    expect(stackContainer.querySelector('section')).toHaveAttribute('data-layout', 'stack')
+  })
+
   it.each([undefined, 'none', 'subtle'] as const)('uses the site motion setting %s without hiding items', (motion) => {
     const html = renderToStaticMarkup(<BusinessSiteContentList items={items} appearance={{ motion }} />)
     expect(html).toContain(`data-motion="${motion ?? 'none'}"`)

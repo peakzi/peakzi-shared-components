@@ -47,7 +47,7 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Responsive, server-rendered content card grid used for blog, FAQ, and career listing pages. Items carry a pre-formatted date and an already-rendered excerpt (plain text or markup from the consuming app\'s own markdown renderer) — this package never parses markdown or dates itself. Appearance can be mapped from site-wide tenant settings.',
+        component: 'Responsive, server-rendered content card grid used for blog, FAQ, and career listing pages. Items carry a pre-formatted date and an already-rendered excerpt (plain text or markup from the consuming app\'s own markdown renderer) — this package never parses markdown or dates itself. `layout` defaults to a multi-column grid; set it to \'stack\' for a single-column list. Appearance can be mapped from site-wide tenant settings.',
       },
     },
   },
@@ -60,6 +60,7 @@ const meta = {
   argTypes: {
     items: { control: 'object' },
     viewAll: { control: 'object' },
+    layout: { control: 'inline-radio', options: ['grid', 'stack'] },
     isLoading: { control: 'boolean' },
     loadingCount: { control: 'number' },
     emptyMessage: { control: 'text' },
@@ -77,6 +78,7 @@ const meta = {
     title: 'Tips & insights',
     eyebrow: 'Resources',
     intro: 'Guides, how-tos, and industry updates from our team.',
+    layout: 'grid',
     viewAll: { label: 'View all resources', href: '/blogs' },
     font: 'IBM Plex Sans',
     headingFont: 'Archivo',
@@ -94,6 +96,10 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
 export const NoMotion: Story = { args: { motion: 'none' } }
+
+export const Stack: Story = {
+  args: { layout: 'stack' },
+}
 
 export const Loading: Story = {
   args: { isLoading: true, loadingCount: 3 },
