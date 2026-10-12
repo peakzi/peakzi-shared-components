@@ -1,6 +1,6 @@
 import type { Options, SeriesOptionsType } from 'highcharts'
-import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
+import { chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
@@ -20,6 +20,8 @@ export interface TreeMapChartProps {
   title?: string
   /** Suffix appended to values in the tooltip and data labels, e.g. `'%'` */
   valueSuffix?: string
+  /** Palette cycled across nodes. Defaults to Highcharts' own stock palette. */
+  colors?: string[]
   chartHeight?: number
   className?: string
   /** Rendered as `data-testid` on the chart's root element. */
@@ -31,6 +33,7 @@ export function TreeMapChart({
   data,
   title,
   valueSuffix = '%',
+  colors,
   chartHeight = 400,
   className,
   testId,
@@ -38,6 +41,7 @@ export function TreeMapChart({
   const { containerRef, isFullscreen, size, theme, exportMenuItems, setChart } = useChartFrame(chartHeight)
 
   const options = pruneUndefined<Options>({
+    colors: colors ?? defaultSeriesColors,
     chart: { height: size.height, width: size.width ?? null, backgroundColor: 'transparent' },
     drilldown: {
       breadcrumbs: {
@@ -60,6 +64,7 @@ export function TreeMapChart({
         layoutAlgorithm: 'squarified',
         allowTraversingTree: true,
         animationLimit: 1000,
+        colorByPoint: true,
         dataLabels: { enabled: false },
         levels: [
           {
@@ -85,6 +90,8 @@ export function TreeMapChart({
       style: { color: theme.textPrimary, fontSize: theme.textMd, fontWeight: theme.weightBold, fontFamily: theme.fontFamily },
     },
     tooltip: {
+      backgroundColor: theme.surface,
+      borderColor: theme.gridLine,
       borderRadius: toPx(theme.radiusSm),
       formatter() {
         return `${this.point.name} : ${this.point.options.value}${valueSuffix}`
@@ -97,6 +104,7 @@ export function TreeMapChart({
       enabled: true,
       fallbackToExportServer: false,
     },
+    navigation: chartExportMenuTheme(theme),
   })
 
   return (

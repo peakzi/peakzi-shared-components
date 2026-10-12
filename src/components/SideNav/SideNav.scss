@@ -239,6 +239,9 @@
 
 .pz-sidenav__item-label {
   margin: 0;
+  // Overrides the global `p` element reset for this link's label.
+  font: inherit;
+  color: inherit;
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;

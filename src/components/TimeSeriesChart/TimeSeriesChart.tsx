@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Options, Series, SeriesOptionsType, TooltipFormatterCallbackFunction } from 'highcharts'
-import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
+import { chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
@@ -22,6 +22,8 @@ export interface TimeSeriesChartProps {
   tooltipFormatter?: TooltipFormatterCallbackFunction
   legendEnabled?: boolean
   type?: TimeSeriesChartType
+  /** Palette cycled across series. Defaults to Highcharts' own stock palette. */
+  colors?: string[]
   chartHeight?: number
   subtitle?: string
   /** Called with the names of series left visible after the viewer toggles the legend */
@@ -39,6 +41,7 @@ export function TimeSeriesChart({
   tooltipFormatter,
   legendEnabled = true,
   type = 'line',
+  colors,
   chartHeight = 300,
   subtitle,
   onVisibleSeriesChange,
@@ -49,15 +52,18 @@ export function TimeSeriesChart({
   const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set())
 
   const baseTextStyle = { fontSize: theme.textXs, fontWeight: theme.weightRegular, color: theme.textSecondary, fontFamily: theme.fontFamily }
+  const activeColors = colors ?? defaultSeriesColors ?? []
 
-  const seriesWithColorIndex = series.map((entry, index) => ({
+  // Re-wrapped every render — Highcharts caches colorIndex at creation, doesn't re-wrap it on its own.
+  const seriesOptions = series.map((entry, index) => ({
     type,
     name: entry.name,
     data: entry.data,
-    colorIndex: index,
+    ...(activeColors.length > 0 ? { colorIndex: index % activeColors.length } : {}),
   })) as unknown as SeriesOptionsType[]
 
   const options = pruneUndefined<Options>({
+    colors: colors ?? defaultSeriesColors,
     chart: {
       type,
       height: size.height,
@@ -71,6 +77,7 @@ export function TimeSeriesChart({
       enabled: true,
       fallbackToExportServer: false,
     },
+    navigation: chartExportMenuTheme(theme),
     responsive: {
       rules: [
         {
@@ -99,6 +106,8 @@ export function TimeSeriesChart({
       labels: { style: baseTextStyle },
     },
     tooltip: {
+      backgroundColor: theme.surface,
+      borderColor: theme.gridLine,
       borderRadius: toPx(theme.radiusSm),
       ...(tooltipFormatter ? { formatter: tooltipFormatter } : {}),
       style: baseTextStyle,
@@ -129,7 +138,7 @@ export function TimeSeriesChart({
         },
       },
     },
-    series: seriesWithColorIndex,
+    series: seriesOptions,
     legend: {
       enabled: legendEnabled,
       itemStyle: { ...baseTextStyle, fontWeight: theme.weightBold },

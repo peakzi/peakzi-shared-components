@@ -1,6 +1,6 @@
 import type { Options, SeriesOptionsType, TooltipFormatterCallbackFunction } from 'highcharts'
-import { Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { pruneUndefined, toPx } from '../../internal/chartTheme'
+import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
+import { chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
@@ -28,6 +28,8 @@ export interface ColumnChartProps {
   columnWidth?: number
   /** Default point/line color when a single `data` series is used. Defaults to the design system's brand accent. */
   color?: string
+  /** Palette cycled across series. Defaults to Highcharts' own stock palette. */
+  colors?: string[]
   chartHeight?: number
   className?: string
   /** Rendered as `data-testid` on the chart's root element. */
@@ -46,6 +48,7 @@ export function ColumnChart({
   tooltipFormatter,
   columnWidth = 80,
   color,
+  colors,
   chartHeight = 480,
   className,
   testId,
@@ -54,10 +57,12 @@ export function ColumnChart({
   const resolvedColor = color ?? theme.primary
   const hasMultipleSeries = !!series
   const pointRadius = toPx(theme.radiusXs)
+  const activeColors = colors ?? defaultSeriesColors ?? []
 
   const baseTextStyle = { fontSize: theme.textXs, fontWeight: theme.weightRegular, color: theme.textSecondary, fontFamily: theme.fontFamily }
 
   const options = pruneUndefined<Options>({
+    colors: colors ?? defaultSeriesColors,
     chart: {
       type,
       height: size.height,
@@ -75,6 +80,7 @@ export function ColumnChart({
       enabled: true,
       fallbackToExportServer: false,
     },
+    navigation: chartExportMenuTheme(theme),
     responsive: {
       rules: [
         {
@@ -110,6 +116,8 @@ export function ColumnChart({
       labels: { style: baseTextStyle },
     },
     tooltip: {
+      backgroundColor: theme.surface,
+      borderColor: theme.gridLine,
       borderRadius: toPx(theme.radiusSm),
       formatter:
         tooltipFormatter ??
@@ -125,23 +133,29 @@ export function ColumnChart({
         pointPadding: 0.1,
         borderWidth: 0,
         borderRadius: pointRadius,
-        color: resolvedColor,
       },
       bar: {
         maxPointWidth: columnWidth,
         pointPadding: 0.1,
         borderWidth: 0,
         borderRadius: pointRadius,
-        color: resolvedColor,
       },
       line: {
-        color: resolvedColor,
         lineWidth: 3,
-        marker: { enabled: true, radius: 4, fillColor: resolvedColor },
+        marker: { enabled: true, radius: 4 },
       },
     },
     series: (hasMultipleSeries
-      ? series.map((entry) => ({ type, name: entry.name, data: entry.data, color: entry.color }))
+      ? series.map((entry, index) => ({
+          type,
+          name: entry.name,
+          data: entry.data,
+          ...(entry.color
+            ? { color: entry.color }
+            : activeColors.length > 0
+              ? { colorIndex: index % activeColors.length }
+              : {}),
+        }))
       : [{ type, data: data ?? [], color: resolvedColor }]) as SeriesOptionsType[],
     legend: {
       enabled: hasMultipleSeries,

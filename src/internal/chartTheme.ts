@@ -14,6 +14,7 @@ const TOKENS = {
   textSecondary: '--fg-2',
   gridLine: '--border',
   surface: '--surface-1',
+  bgMuted: '--bg-muted',
   fontFamily: '--font-body',
   success: '--success',
   danger: '--danger',
@@ -56,6 +57,37 @@ export function isSameChartTheme(a: ChartTheme, b: ChartTheme): boolean {
 export function toPx(value: string | undefined): number | undefined {
   const parsed = value === undefined ? NaN : parseFloat(value)
   return Number.isNaN(parsed) ? undefined : parsed
+}
+
+/** Themed `navigation` options — the export button and menu are plain HTML/SVG with their own hardcoded defaults, not read from CSS like the rest of the chart. */
+export function chartExportMenuTheme(theme: ChartTheme) {
+  return {
+    buttonOptions: {
+      symbolFill: theme.textSecondary,
+      symbolStroke: theme.textSecondary,
+      theme: {
+        fill: 'transparent',
+        states: {
+          hover: { fill: theme.bgMuted },
+          select: { fill: theme.bgMuted },
+        },
+      },
+    },
+    menuStyle: {
+      background: theme.surface,
+      border: theme.gridLine ? `1px solid ${theme.gridLine}` : undefined,
+      borderRadius: toPx(theme.radiusSm),
+    },
+    menuItemStyle: {
+      color: theme.textPrimary,
+      fontSize: theme.textSm,
+      fontFamily: theme.fontFamily,
+    },
+    menuItemHoverStyle: {
+      background: theme.bgMuted,
+      color: theme.textPrimary,
+    },
+  }
 }
 
 /** `T` with every property, at any depth, also accepting `undefined`. */
