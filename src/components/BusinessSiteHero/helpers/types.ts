@@ -4,8 +4,8 @@ import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
 export interface BusinessSiteHeroImage {
   src: string
   alt: string
-  width: number
-  height: number
+  width?: number
+  height?: number
 }
 
 export interface BusinessSiteHeroAction {

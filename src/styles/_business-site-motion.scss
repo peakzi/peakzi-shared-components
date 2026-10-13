@@ -1,6 +1,6 @@
 // One opt-in motion policy for all Business Site sections. CSS keeps these
 // effects server-safe; content never waits for hydration or a scroll observer.
-:is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-footer) {
+:is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-offers, .pz-business-gallery, .pz-business-blogs, .pz-business-footer) {
   --pz-business-motion-fast: 0ms;
   --pz-business-motion-slide: 0ms;
 }
@@ -14,6 +14,10 @@
 .pz-business-faq summary,
 .pz-business-faq__actions a,
 .pz-business-reviews a.pz-business-reviews__view-all,
+.pz-business-offers a,
+.pz-business-offers__controls button,
+.pz-business-gallery a,
+.pz-business-blogs a,
 .pz-business-footer a {
   transition:
     transform var(--pz-business-motion-fast, 0ms) ease-out,
@@ -23,7 +27,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  :is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-footer)[data-motion='subtle'] {
+  :is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-offers, .pz-business-gallery, .pz-business-blogs, .pz-business-footer)[data-motion='subtle'] {
     --pz-business-motion-fast: 180ms;
     --pz-business-motion-slide: 350ms;
   }
@@ -40,6 +44,7 @@
 
     .pz-business-header[data-motion='subtle'] .pz-business-header__action:hover,
     .pz-business-hero[data-motion='subtle'] .pz-business-hero__action:hover,
+    .pz-business-offers[data-motion='subtle'] .pz-business-offers__action:hover,
     .pz-business-hero[data-motion='subtle'] .pz-business-hero__carousel-controls > button:hover,
     .pz-business-services[data-motion='subtle']:not([data-density='compact']) a.pz-business-services__card:hover,
     .pz-business-areas[data-motion='subtle']:not([data-density='compact']) a.pz-business-areas__tile:hover {
@@ -180,5 +185,215 @@
 
 @keyframes pz-business-faq-rise {
   from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Blogs and reviews. Everything needs `data-motion='subtle'` and no reduced-motion
+// preference, and is gated on browser support, so anything unsupported just shows the content.
+
+// Smooth the small details that otherwise snap: the title colour, the arrows, the shifting row
+// text, the row numbers and the card shadow (0ms unless motion is on).
+.pz-business-blogs h3 {
+  transition: color var(--pz-business-motion-fast, 0ms) ease-out;
+}
+
+.pz-business-blogs a.pz-business-blogs__card,
+.pz-business-reviews__review {
+  transition:
+    transform var(--pz-business-motion-fast, 0ms) ease-out,
+    color var(--pz-business-motion-fast, 0ms) ease-out,
+    border-color var(--pz-business-motion-fast, 0ms) ease-out,
+    background-color var(--pz-business-motion-fast, 0ms) ease-out,
+    box-shadow var(--pz-business-motion-fast, 0ms) ease-out;
+}
+
+.pz-business-blogs svg,
+.pz-business-blogs__list-content,
+.pz-business-blogs__number,
+.pz-business-reviews__view-all svg,
+.pz-business-reviews blockquote,
+.pz-business-reviews__preview {
+  transition: transform var(--pz-business-motion-fast, 0ms) ease-out;
+}
+
+.pz-business-blogs__number {
+  transform-origin: left center;
+}
+
+.pz-business-blogs__cover img {
+  transition: transform var(--pz-business-motion-slide, 0ms) ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  // Hover (and keyboard focus) feedback: the featured card lifts and its photo slowly zooms, rows
+  // slide their text and pop their number, arrows nudge, and the button's sheen sweeps across.
+  .pz-business-blogs[data-motion='subtle']:not([data-density='compact']) a.pz-business-blogs__card:is(:hover, :focus-visible),
+  .pz-business-reviews[data-motion='subtle']:not([data-density='compact']) .pz-business-reviews__review:is(:hover, :focus-within) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  }
+
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__card:is(:hover, :focus-visible) .pz-business-blogs__cover[data-image-kind='cover'] img {
+    transform: scale(1.05);
+  }
+
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__list-link:is(:hover, :focus-visible) .pz-business-blogs__list-content,
+  .pz-business-reviews[data-motion='subtle'][data-density='compact'] .pz-business-reviews__review:is(:hover, :focus-within) :is(blockquote, .pz-business-reviews__preview) {
+    transform: translateX(4px);
+  }
+
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__list-link:is(:hover, :focus-visible) .pz-business-blogs__number {
+    transform: scale(1.15);
+  }
+
+  .pz-business-blogs[data-motion='subtle'] :is(a.pz-business-blogs__card, a.pz-business-blogs__view-all):is(:hover, :focus-visible) svg,
+  .pz-business-reviews[data-motion='subtle'] a.pz-business-reviews__view-all:is(:hover, :focus-visible) svg {
+    transform: translate(2px, -2px);
+  }
+
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__view-all:is(:hover, :focus-visible),
+  .pz-business-reviews[data-motion='subtle'] a.pz-business-reviews__view-all:is(:hover, :focus-visible) {
+    transform: translateY(-2px);
+    background-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  // Titles underline with a fade instead of snapping on.
+  .pz-business-blogs[data-motion='subtle'] :is(a.pz-business-blogs__card, a.pz-business-blogs__list-link) h3 {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+    transition:
+      color var(--pz-business-motion-fast, 0ms) ease-out,
+      text-decoration-color var(--pz-business-motion-fast, 0ms) ease-out;
+  }
+
+  .pz-business-blogs[data-motion='subtle'] :is(a.pz-business-blogs__card, a.pz-business-blogs__list-link):is(:hover, :focus-visible) h3 {
+    text-decoration-color: currentColor;
+  }
+
+  // The button carries a soft highlight band parked off its left edge; hover sweeps it across.
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__view-all,
+  .pz-business-reviews[data-motion='subtle'] a.pz-business-reviews__view-all {
+    background-image: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.3) 50%, transparent 60%);
+    background-repeat: no-repeat;
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    transition:
+      transform var(--pz-business-motion-fast, 0ms) ease-out,
+      color var(--pz-business-motion-fast, 0ms) ease-out,
+      border-color var(--pz-business-motion-fast, 0ms) ease-out,
+      background-color var(--pz-business-motion-fast, 0ms) ease-out,
+      background-position var(--pz-business-motion-slide, 0ms) ease-out;
+  }
+
+  // Keep the blog button's theme gradient beneath its animated highlight band.
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__view-all {
+    background-image:
+      linear-gradient(105deg, transparent 40%, color-mix(in srgb, var(--pz-business-blogs-background) 30%, transparent) 50%, transparent 60%),
+      var(--pz-business-blogs-fill);
+    background-size: 300% 100%, 100% 100%;
+    background-position: 100% 0, 0 0;
+  }
+
+  // A press takes precedence over the hover lift, including on touchscreens. The card's lift rule
+  // carries an extra `:not()`, so its press rule does too.
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__view-all:active,
+  .pz-business-reviews[data-motion='subtle'] a.pz-business-reviews__view-all:active {
+    transform: scale(0.98);
+  }
+
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__card:active,
+  .pz-business-blogs[data-motion='subtle']:not([data-density='compact']) a.pz-business-blogs__card:active {
+    transform: scale(0.985);
+  }
+
+  .pz-business-blogs[data-motion='subtle']:not([data-density='compact']) a.pz-business-blogs__card:active {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__list-link:active .pz-business-blogs__list-content {
+    transform: translateX(2px);
+  }
+
+  .pz-business-reviews[data-motion='subtle'] .pz-business-reviews__text[open] > blockquote {
+    animation: pz-business-reviews-text-in var(--pz-business-motion-fast) ease-out;
+  }
+
+  // Scroll reveal for the heading, every article and the button (same approach as the service
+  // areas). The tall featured card finishes early so it isn't half-faded for a long scroll, and
+  // the count follows the title a beat later.
+  @supports (animation-timeline: view()) {
+    .pz-business-blogs[data-motion='subtle'] .pz-business-blogs__header :is(.pz-business-blogs__eyebrow, h2),
+    .pz-business-blogs[data-motion='subtle'] .pz-business-blogs__count,
+    .pz-business-blogs[data-motion='subtle'] .pz-business-blogs__article,
+    .pz-business-blogs[data-motion='subtle'] .pz-business-blogs__footer,
+    .pz-business-reviews[data-motion='subtle'] .pz-business-reviews__aside > *,
+    .pz-business-reviews[data-motion='subtle'] .pz-business-reviews__list > li {
+      animation-name: pz-business-section-rise;
+      animation-timing-function: ease-out;
+      animation-fill-mode: backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+
+    .pz-business-blogs[data-motion='subtle'] .pz-business-blogs__count,
+    .pz-business-reviews[data-motion='subtle'] .pz-business-reviews__summary {
+      animation-range: entry 20% entry 100%;
+    }
+
+    .pz-business-blogs[data-motion='subtle'] .pz-business-blogs__featured-layout > .pz-business-blogs__article,
+    .pz-business-reviews[data-motion='subtle']:not([data-density='compact']) .pz-business-reviews__list > li:first-child {
+      animation-range: entry 0% entry 55%;
+    }
+
+    // A view timeline follows the nearest scroll container, and `overflow: hidden` makes one. The
+    // card and its cover only need to clip, so clip without scrolling: that keeps everything
+    // inside them (the cover photo and the card text) tracking the viewport.
+    .pz-business-blogs[data-motion='subtle'] :is(.pz-business-blogs__card, .pz-business-blogs__cover) {
+      overflow: clip;
+    }
+
+    // Inside the featured card the meta, title, summary and link rise in one after another as
+    // they scroll into view, a beat after the card itself.
+    .pz-business-blogs[data-motion='subtle'] .pz-business-blogs__featured-layout > .pz-business-blogs__article .pz-business-blogs__content > *,
+    .pz-business-reviews[data-motion='subtle'] .pz-business-reviews__featured > * {
+      animation-name: pz-business-section-rise-small;
+      animation-timing-function: ease-out;
+      animation-fill-mode: backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+
+    // A cover photo is slightly oversized and drifts as the card passes through the viewport,
+    // for a little depth. It uses the individual `scale`/`translate` properties so the hover zoom
+    // (which uses `transform`) still composes with it.
+    .pz-business-blogs[data-motion='subtle'] .pz-business-blogs__cover[data-image-kind='cover'] img {
+      scale: 1.1;
+      animation: pz-business-blogs-drift linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+
+@keyframes pz-business-section-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pz-business-section-rise-small {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pz-business-blogs-drift {
+  from { translate: 0 -4%; }
+  to { translate: 0 4%; }
+}
+
+@keyframes pz-business-reviews-text-in {
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }

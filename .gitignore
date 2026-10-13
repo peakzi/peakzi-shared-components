@@ -6,5 +6,6 @@ coverage/
 *.local
 .DS_Store
 .vscode/
+*.tsbuildinfo
 
 *storybook.log

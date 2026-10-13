@@ -8,6 +8,10 @@ export interface BusinessSiteReview {
   rating?: number | null
   /** ISO date or timestamp supplied by the API. */
   reviewDate?: string | null
+  /** Backend-supplied topics. Each topic counts once per displayed review. */
+  tags?: readonly string[]
+  /** Literal phrases to highlight; review wording is never replaced. */
+  highlightedPhrases?: readonly string[]
 }
 
 export interface BusinessSiteReviewsSummary {
@@ -21,8 +25,9 @@ export interface BusinessSiteReviewsAppearance {
   font?: string
   headingFont?: string
   backgroundColor?: string
-  textColor?: string
-  accentColor?: string
+  /** Shared dark gradient used by the summary and review-card stars. */
+  gradientStartColor?: string
+  gradientEndColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
   density?: 'comfortable' | 'compact'
   motion?: BusinessSiteMotion

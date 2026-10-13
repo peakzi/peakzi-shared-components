@@ -60,18 +60,35 @@ describe('BusinessSiteHeader', () => {
     expect(desktopNav.querySelector('details')).toBeInTheDocument()
   })
 
-  it('renders a native mobile menu and primary action', () => {
+  it('keeps every mobile action inside the native menu, not beside its toggle', () => {
     const { container } = render(<BusinessSiteHeader {...props} />)
     const mobile = container.querySelector('.pz-business-header__mobile-controls')!
-    expect(mobile.querySelector('details > summary')).toHaveTextContent('Menu')
+    expect(mobile.querySelector('details > summary')).toHaveAttribute('aria-label', 'Menu')
     expect(within(mobile as HTMLElement).getAllByRole('link', { name: 'Book online', hidden: true }))
       .toHaveLength(1)
+    const panel = mobile.querySelector('.pz-business-header__mobile-actions')!
+    expect(within(panel as HTMLElement).getByRole('link', { name: 'Call us', hidden: true })).toHaveAttribute('href', 'tel:+15551234567')
+    expect(within(panel as HTMLElement).getByRole('link', { name: 'Book online', hidden: true })).toHaveAttribute('href', '/book')
+    expect(mobile.querySelector(':scope > a')).not.toBeInTheDocument()
   })
 
-  it('omits an empty mobile menu when the primary action is the only control', () => {
+  it('provides a mobile menu even when there is only one action and no navigation', () => {
     const { container } = render(<BusinessSiteHeader {...props} menu={[]} actions={[props.actions![1]!]} />)
+    expect(container.querySelector('.pz-business-header__mobile-menu')).toBeInTheDocument()
+    expect(container.querySelector('.pz-business-header__mobile-actions')).toHaveTextContent('Book online')
+  })
+
+  it('omits mobile controls when no valid links or actions are supplied', () => {
+    const { container } = render(<BusinessSiteHeader {...props} menu={[]} actions={[]} />)
     expect(container.querySelector('.pz-business-header__mobile-menu')).not.toBeInTheDocument()
-    expect(container.querySelector('.pz-business-header__mobile-primary')).toHaveTextContent('Book online')
+    expect(container.querySelector('.pz-business-header__mobile-backdrop')).not.toBeInTheDocument()
+  })
+
+  it('keeps desktop actions separate from the mobile menu', () => {
+    const { container } = render(<BusinessSiteHeader {...props} />)
+    const desktop = container.querySelector('.pz-business-header__desktop-actions')!
+    expect(within(desktop as HTMLElement).getByRole('link', { name: 'Call us' })).toBeInTheDocument()
+    expect(within(desktop as HTMLElement).getByRole('link', { name: 'Book online' })).toBeInTheDocument()
   })
 
   it('applies validated appearance options without silently replacing selected colors', () => {

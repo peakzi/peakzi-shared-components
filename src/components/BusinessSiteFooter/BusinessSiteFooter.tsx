@@ -46,6 +46,7 @@ export function BusinessSiteFooter({
     <footer
       className={['pz-business-footer', className].filter(Boolean).join(' ')}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
+      data-has-navigation={linkColumns.length > 0}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={footerStyle(appearance)}
     >
@@ -85,7 +86,7 @@ export function BusinessSiteFooter({
         </div>
 
         <div className="pz-business-footer__bottom">
-          <span>© {year} {name}. All rights reserved.</span>
+          <span>© {year} {name}{name.endsWith('.') ? '' : '.'} All rights reserved.</span>
           {legalLinks.length > 0 && (
             <nav aria-label="Legal navigation">
               <ul>{legalLinks.map((link) => <li key={link.id}>{footerLink(link)}</li>)}</ul>

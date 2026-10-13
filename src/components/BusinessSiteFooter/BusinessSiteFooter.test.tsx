@@ -74,6 +74,13 @@ describe('BusinessSiteFooter', () => {
     expect(html).not.toContain('<nav')
     expect(html).not.toContain('href=')
     expect(html).not.toContain('123 Example Street')
+    expect(html).toContain('data-has-navigation="false"')
+  })
+
+  it('does not duplicate a period after an already-punctuated name', () => {
+    const html = renderToStaticMarkup(<BusinessSiteFooter businessName="Griffin Plumbing, Inc." copyrightYear={2026} />)
+    expect(html).toContain('Griffin Plumbing, Inc. All rights reserved.')
+    expect(html).not.toContain('Inc..')
   })
 
   it('validates appearance tokens and preserves an explicitly selected text color', () => {

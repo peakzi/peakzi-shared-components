@@ -27,8 +27,10 @@ function headlineSize(headline: string, requested: BusinessSiteHeroProps['headli
 function validImages(images: BusinessSiteHeroProps['images']): BusinessSiteHeroImage[] {
   return (images ?? []).flatMap((image) => {
     const src = safeHref(image?.src, true)
-    if (!src || !image.alt?.trim() || !Number.isFinite(image.width) || image.width <= 0 ||
-      !Number.isFinite(image.height) || image.height <= 0) return []
+    if (!src || !image.alt?.trim()) return []
+    const hasDimensions = image.width !== undefined || image.height !== undefined
+    if (hasDimensions && (typeof image.width !== 'number' || !Number.isFinite(image.width) || image.width <= 0 ||
+      typeof image.height !== 'number' || !Number.isFinite(image.height) || image.height <= 0)) return []
     return [{ ...image, src, alt: image.alt.trim() }]
   })
 }

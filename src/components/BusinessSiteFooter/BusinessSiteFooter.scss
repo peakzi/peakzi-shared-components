@@ -36,7 +36,7 @@
 .pz-business-footer__inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 48px 22px 24px;
+  padding: 48px 24px 24px;
   box-sizing: border-box;
 }
 
@@ -53,6 +53,10 @@
 
 .pz-business-footer__brand {
   min-width: 0;
+}
+
+.pz-business-footer[data-has-navigation='false'] .pz-business-footer__content {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .pz-business-footer__logo {

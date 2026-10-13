@@ -1,47 +1,18 @@
 import type { CSSProperties } from 'react'
-import { MapPin } from 'lucide-react'
 import { safeColor, safeFont } from '../../utils/siteAppearance'
-import type { BusinessSiteMotion } from '../../utils/siteAppearance'
 import { safeHref } from '../../utils/safeHref'
 
-export interface BusinessSiteArea {
-  id: string
-  label: string
-  href: string
-}
-
-export interface BusinessSiteAreasAppearance {
-  font?: string
-  headingFont?: string
-  backgroundColor?: string
-  /** Optional second color; when set the background becomes a gradient from backgroundColor to this (same name as the hero's). */
-  gradientEndColor?: string
-  /** Gradient angle in degrees (0-360). Default 135. */
-  gradientAngle?: number
-  textColor?: string
-  accentColor?: string
-  buttonRadius?: '2px' | '8px' | '16px' | '32px'
-  density?: 'comfortable' | 'compact'
-  /** Site-wide motion setting; disabled by default. `subtle` adds the scroll reveal. Reduced-motion preferences always win. */
-  motion?: BusinessSiteMotion
-}
-
-export interface BusinessSiteAreasProps {
-  areas: readonly BusinessSiteArea[]
-  title?: string
-  /** Label under the big city count. Default: "Cities served" ("City served" for one). */
-  countLabel?: string
-  appearance?: BusinessSiteAreasAppearance
-  sectionId?: string
-  className?: string
-}
+import type { BusinessSiteAreasProps } from './helpers/types'
+export type { BusinessSiteArea, BusinessSiteAreasAppearance, BusinessSiteAreasProps } from './helpers/types'
 
 const RADII = ['2px', '8px', '16px', '32px'] as const
 
 export function BusinessSiteAreas({
   areas,
   title = 'Areas we serve',
+  eyebrow = 'Service area',
   countLabel,
+  map,
   appearance = {},
   sectionId,
   className,
@@ -75,27 +46,36 @@ export function BusinessSiteAreas({
     <section
       id={sectionId}
       className={['pz-business-areas', className].filter(Boolean).join(' ')}
+      data-layout={map ? 'map' : 'list'}
       data-surface={gradientEnd ? 'gradient' : 'solid'}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={style}
     >
       <div className="pz-business-areas__inner">
-        <div className="pz-business-areas__heading">
-          <h2>{title.trim() || 'Areas we serve'}</h2>
-          <div className="pz-business-areas__count">
-            <strong>{count}</strong>
-            <span>{countLabel?.trim() || (count === 1 ? 'City served' : 'Cities served')}</span>
+        <div className="pz-business-areas__panel">
+          <div className="pz-business-areas__heading">
+            <div>
+              {eyebrow.trim() && <p className="pz-business-areas__eyebrow">{eyebrow.trim()}</p>}
+              <h2>{title.trim() || 'Areas we serve'}</h2>
+            </div>
+            <div className="pz-business-areas__count">
+              <strong>{count}</strong>
+              <span>{countLabel?.trim() || (count === 1 ? 'city' : 'cities')}</span>
+            </div>
           </div>
+          <ul className="pz-business-areas__grid" aria-label="Cities served">
+            {visibleAreas.map((area) => (
+              <li key={area.id}>
+                <a className="pz-business-areas__tile" href={area.href} data-area-id={area.id}>
+                  <span aria-hidden="true" className="pz-business-areas__bullet" />
+                  <span>{area.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="pz-business-areas__grid">
-          {visibleAreas.map((area) => (
-            <a className="pz-business-areas__tile" href={area.href} key={area.id}>
-              <MapPin size={17} aria-hidden="true" />
-              <span>{area.label}</span>
-            </a>
-          ))}
-        </div>
+        {map && <div className="pz-business-areas__map">{map}</div>}
       </div>
     </section>
   )

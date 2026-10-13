@@ -1,7 +1,7 @@
 import 'leaflet/dist/leaflet.css'
 import { useEffect } from 'react'
 import type { ReactNode } from 'react'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { AttributionControl, MapContainer, TileLayer, useMap } from 'react-leaflet'
 import { findExtremeCorners } from '../../internal/findExtremeCorners'
 import { Skeleton } from '../Progress'
 
@@ -16,6 +16,7 @@ export interface GeoMapProps {
   /** Fallback center when `points` is empty */
   center?: LatLon
   zoom?: number
+  scrollWheelZoom?: boolean
   /** Extra pixel padding around the auto-fit viewport */
   boundsPadding?: [number, number]
   /**
@@ -71,6 +72,7 @@ export function GeoMap({
   points = [],
   center,
   zoom = 9,
+  scrollWheelZoom = true,
   boundsPadding,
   maxFitZoom = 15,
   isLoading = false,
@@ -95,10 +97,11 @@ export function GeoMap({
 
   return (
     <div className={['pz-geo-map', className].filter(Boolean).join(' ')} style={{ height }} data-testid={testId}>
-      <MapContainer center={[initialCenter.lat, initialCenter.lon]} zoom={zoom} scrollWheelZoom className="pz-geo-map__canvas">
+      <MapContainer center={[initialCenter.lat, initialCenter.lon]} zoom={zoom} scrollWheelZoom={scrollWheelZoom} attributionControl={false} className="pz-geo-map__canvas">
+        <AttributionControl prefix={false} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {points.length > 0 && <FitBounds points={points} zoom={zoom} maxZoom={maxFitZoom} {...(boundsPadding ? { padding: boundsPadding } : {})} />}
         {children}
