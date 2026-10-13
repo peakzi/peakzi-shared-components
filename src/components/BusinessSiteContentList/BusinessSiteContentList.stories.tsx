@@ -6,11 +6,7 @@ import type {
   BusinessSiteContentListProps,
 } from './helpers/types'
 
-type Appearance = Required<Pick<BusinessSiteContentListAppearance,
-  'font' | 'headingFont' | 'backgroundColor' | 'textColor' | 'accentColor' | 'buttonRadius' | 'density' | 'motion'
->>
-
-interface StoryArgs extends Omit<BusinessSiteContentListProps, 'appearance'>, Appearance {}
+interface StoryArgs extends Omit<BusinessSiteContentListProps, 'appearance'>, Required<Omit<BusinessSiteContentListAppearance, 'textColor' | 'accentColor'>> {}
 
 const items: BusinessSiteContentListItem[] = [
   {
@@ -19,7 +15,9 @@ const items: BusinessSiteContentListItem[] = [
     href: '/blogs/leaky-faucet',
     excerpt: 'A dripping faucet wastes water and money. Here is how to diagnose and fix the most common causes yourself.',
     category: 'Plumbing',
-    date: 'Jan 12, 2026',
+    readingTime: '5 min read',
+    publishedOn: '2026-01-12',
+    image: { src: '/demo-assets/hero-example-service.svg', alt: 'Illustration of a plumbing repair' },
   },
   {
     id: '2',
@@ -27,7 +25,8 @@ const items: BusinessSiteContentListItem[] = [
     href: '/blogs/water-heater-signs',
     excerpt: 'From rusty water to strange noises, these are the warning signs homeowners should never ignore.',
     category: 'Plumbing',
-    date: 'Dec 28, 2025',
+    readingTime: '4 min read',
+    publishedOn: '2025-12-28',
   },
   {
     id: '3',
@@ -35,9 +34,12 @@ const items: BusinessSiteContentListItem[] = [
     href: '/blogs/hvac-checklist',
     excerpt: 'Keep your system running efficiently all year with this simple seasonal checklist.',
     category: 'HVAC',
-    date: 'Dec 10, 2025',
+    readingTime: '6 min read',
+    publishedOn: '2025-12-10',
   },
 ]
+
+const fallbackImage = { src: '/demo-assets/peakzi-logo-color.png', alt: 'Company logo' }
 
 const meta = {
   title: 'Components/Business Site/Content List',
@@ -47,14 +49,14 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Responsive, server-rendered content card grid used for blog, FAQ, and career listing pages. Items carry a pre-formatted date and an already-rendered excerpt (plain text or markup from the consuming app\'s own markdown renderer) — this package never parses markdown or dates itself. `layout` defaults to a multi-column grid; set it to \'stack\' for a single-column list. Appearance can be mapped from site-wide tenant settings.',
+        component: 'Responsive, server-rendered content card grid used for blog, FAQ, and career listing pages. Items carry an ISO `publishedOn` date and an already-rendered excerpt (plain text or markup from the consuming app\'s own markdown renderer) — this package never parses markdown itself. Each item can supply its own `image`; when absent, `fallbackImage` (e.g. the business logo) is used, or set `showImages={false}` to omit imagery entirely (e.g. FAQ listings). `layout` defaults to a multi-column grid; set it to \'stack\' for the compact variant — a single-column row list with a thumbnail on the left, tighter spacing, and a smaller type scale. Appearance is driven by a `gradientStartColor`/`gradientEndColor` palette (text, accents, and the view-all button all derive from it) — `textColor`/`accentColor` remain as a legacy fallback only when no palette is supplied.',
       },
     },
   },
-  render: ({ font, headingFont, backgroundColor, textColor, accentColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
+  render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, motion, ...props }: StoryArgs) => (
     <BusinessSiteContentList
       {...props}
-      appearance={{ font, headingFont, backgroundColor, textColor, accentColor, buttonRadius, density, motion }}
+      appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, motion }}
     />
   ),
   argTypes: {
@@ -64,13 +66,14 @@ const meta = {
     isLoading: { control: 'boolean' },
     loadingCount: { control: 'number' },
     emptyMessage: { control: 'text' },
+    showImages: { control: 'boolean' },
+    fallbackImage: { control: 'object' },
     font: { control: 'text' },
     headingFont: { control: 'text' },
     backgroundColor: { control: 'color' },
-    textColor: { control: 'color' },
-    accentColor: { control: 'color' },
+    gradientStartColor: { control: 'color' },
+    gradientEndColor: { control: 'color' },
     buttonRadius: { control: 'inline-radio', options: ['2px', '8px', '16px', '32px'] },
-    density: { control: 'inline-radio', options: ['comfortable', 'compact'] },
     motion: { control: 'inline-radio', options: ['none', 'subtle'] },
   },
   args: {
@@ -80,13 +83,14 @@ const meta = {
     intro: 'Guides, how-tos, and industry updates from our team.',
     layout: 'grid',
     viewAll: { label: 'View all resources', href: '/blogs' },
+    showImages: true,
+    fallbackImage,
     font: 'IBM Plex Sans',
     headingFont: 'Archivo',
     backgroundColor: '#ffffff',
-    textColor: '#12171c',
-    accentColor: '#1d4f8c',
+    gradientStartColor: '#12171c',
+    gradientEndColor: '#716a64',
     buttonRadius: '8px',
-    density: 'comfortable',
     motion: 'subtle',
   },
 } satisfies Meta<StoryArgs>
@@ -109,14 +113,21 @@ export const Empty: Story = {
   args: { items: [], emptyMessage: 'No results found for this category.' },
 }
 
-export const Dark: Story = {
-  args: { backgroundColor: '#12171c', textColor: '#ffffff', accentColor: '#9ec7ff' },
-}
-
-export const Compact: Story = {
-  args: { density: 'compact' },
+export const AlternatePalette: Story = {
+  args: { backgroundColor: '#fff8ee', gradientStartColor: '#17392f', gradientEndColor: '#416951' },
 }
 
 export const Mobile: Story = {
   parameters: { viewport: { defaultViewport: 'mobile1' } },
+}
+
+export const LogoFallback: Story = {
+  args: {
+    items: items.map((item) => ({ ...item, image: undefined })),
+    fallbackImage,
+  },
+}
+
+export const NoImages: Story = {
+  args: { showImages: false },
 }
