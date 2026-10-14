@@ -1,8 +1,6 @@
 import type { BusinessSiteReview } from './types'
 
-export function validReviewRating(value: number | null | undefined): value is number {
-  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 5
-}
+export { validReviewRating } from '../../../utils/reviewRating'
 
 export function uniqueReviews(items: readonly BusinessSiteReview[]): BusinessSiteReview[] {
   const ids = new Set<string>()

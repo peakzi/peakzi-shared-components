@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { ArrowUpRight, CalendarDays, Calculator, Phone, Star } from 'lucide-react'
+import { ArrowUpRight, Award, BadgeCheck, CalendarDays, Calculator, Check, ClipboardCheck, Clock, DollarSign, Phone, ShieldCheck, Star, Tag } from 'lucide-react'
 import type { IconName } from 'lucide-react/dynamic'
 
 const STATIC_ICONS = {
@@ -8,6 +8,15 @@ const STATIC_ICONS = {
   calculator: Calculator,
   'arrow-up-right': ArrowUpRight,
   star: Star,
+  // Value Showcase chips render above the fold; keep them out of the lazy path.
+  award: Award,
+  'dollar-sign': DollarSign,
+  'shield-check': ShieldCheck,
+  'badge-check': BadgeCheck,
+  clock: Clock,
+  'clipboard-check': ClipboardCheck,
+  tag: Tag,
+  check: Check,
 } as const
 
 function IconPlaceholder() {
