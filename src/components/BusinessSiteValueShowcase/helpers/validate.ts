@@ -2,6 +2,7 @@ import { safeHref } from '../../../utils/safeHref'
 import { validReviewRating } from '../../../utils/reviewRating'
 import { trustSignalIcon } from './trust-icon'
 import type {
+  BusinessSiteValueShowcaseAction,
   BusinessSiteValueShowcaseItem,
   BusinessSiteValueShowcaseProps,
 } from './types'
@@ -28,13 +29,22 @@ export function validItems(items: readonly BusinessSiteValueShowcaseItem[] | und
 
 export function validShowcase(props: BusinessSiteValueShowcaseProps) {
   const data = parseShowcase(props)
-  return { ...data, hasProof: data.rating !== null || data.reviewCount !== null || data.praise.length > 0 || data.action !== null }
+  return { ...data, hasProof: data.rating !== null || data.reviewCount !== null || data.praise.length > 0 || data.actions.length > 0 }
+}
+
+function validActions(actions: readonly BusinessSiteValueShowcaseAction[] | undefined, fallback: BusinessSiteValueShowcaseAction | undefined) {
+  const source = actions && actions.length > 0 ? actions : fallback ? [fallback] : []
+  return source.flatMap((action) => {
+    const label = clean(action?.label)
+    const href = label ? safeHref(action.href) : null
+    if (!href) return []
+    return [{ label, href, iconName: action.iconName, newTab: action.newTab === true && /^https?:\/\//i.test(href) }]
+  }).slice(0, 2)
 }
 
 function parseShowcase(props: BusinessSiteValueShowcaseProps) {
   const rating = validReviewRating(props.summary?.rating) ? props.summary!.rating! : null
   const reviewCount = count(props.summary?.reviewCount)
-  const actionHref = props.action && clean(props.action.label) ? safeHref(props.action.href) : null
   return {
     title: clean(props.title),
     lead: clean(props.lead),
@@ -57,9 +67,7 @@ function parseShowcase(props: BusinessSiteValueShowcaseProps) {
       const text = clean(entry?.text)
       return value !== null && text ? [{ count: value, text }] : []
     }).slice(0, 2),
-    action: actionHref
-      ? { label: clean(props.action!.label), href: actionHref, iconName: props.action!.iconName, newTab: props.action!.newTab === true && /^https?:\/\//i.test(actionHref) }
-      : null,
+    actions: validActions(props.actions, props.action),
     items: validItems(props.items),
     note: clean(props.note),
     mobileVisibleItems: Math.max(1, Math.floor(props.mobileVisibleItems ?? 3)),

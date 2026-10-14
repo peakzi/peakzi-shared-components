@@ -87,7 +87,10 @@ export interface BusinessSiteValueShowcaseProps {
   summary?: BusinessSiteValueShowcaseSummary
   /** At most two are shown. */
   praise?: readonly BusinessSiteValueShowcasePraise[]
+  /** @deprecated Use `actions`. Still read as a single-item fallback when `actions` is omitted. */
   action?: BusinessSiteValueShowcaseAction
+  /** First is styled as primary, the rest as secondary. At most two are shown. */
+  actions?: readonly BusinessSiteValueShowcaseAction[]
   items: readonly BusinessSiteValueShowcaseItem[]
   note?: string
   /** Tiles shown before the mobile expander. Default 3. */

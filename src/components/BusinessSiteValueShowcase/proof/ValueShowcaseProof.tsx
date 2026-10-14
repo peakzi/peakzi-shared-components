@@ -25,16 +25,19 @@ export function ValueShowcaseProof({ data }: { data: ValidShowcase }) {
           <span>{entry.text}</span>
         </li>)}
       </ul>}
-      {data.action && <a
-        className="pz-business-value-showcase__action"
-        href={data.action.href}
-        target={data.action.newTab ? '_blank' : undefined}
-        rel={data.action.newTab ? 'noopener noreferrer' : undefined}
-      >
-        {data.action.iconName && <span aria-hidden="true">{businessSiteIcon(data.action.iconName)}</span>}
-        {data.action.label}
-        <span aria-hidden="true"><ArrowRight size={16} strokeWidth={1.75} /></span>
-      </a>}
+      {data.actions.length > 0 && <div className="pz-business-value-showcase__actions">
+        {data.actions.map((action, index) => <a
+          key={action.href}
+          className={`pz-business-value-showcase__action pz-business-value-showcase__action--${index === 0 ? 'primary' : 'secondary'}`}
+          href={action.href}
+          target={action.newTab ? '_blank' : undefined}
+          rel={action.newTab ? 'noopener noreferrer' : undefined}
+        >
+          {action.iconName && <span aria-hidden="true">{businessSiteIcon(action.iconName)}</span>}
+          {action.label}
+          <span aria-hidden="true"><ArrowRight size={16} strokeWidth={1.75} /></span>
+        </a>)}
+      </div>}
     </div>
   )
 }

@@ -95,6 +95,17 @@ describe('BusinessSiteValueShowcase', () => {
     expect(html).not.toContain('__proof')
   })
 
+  it('renders up to two actions, first primary and rest secondary, ignoring the deprecated singular action', () => {
+    const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} action={undefined} actions={[
+      { label: 'Book online', href: 'https://example.com/book', iconName: 'calendar', newTab: true },
+      { label: 'Call now', href: 'tel:+14692420494', iconName: 'phone' },
+      { label: 'Extra', href: 'https://example.com/extra' },
+    ]} />)
+    expect(html).toContain('__action--primary')
+    expect(html).toContain('__action--secondary')
+    expect(html).not.toContain('Extra')
+  })
+
   it('renders every trust signal as sent and gives each chip an icon', () => {
     const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} trustSignals={[
       { label: 'Financing available', kind: 'financing' },
