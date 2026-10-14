@@ -21,6 +21,7 @@ const componentEntries = [
   'BusinessSiteOffers',
   'BusinessSiteProjectGallery',
   'BusinessSiteBlogs',
+  'BusinessSiteContentList',
   'BusinessSiteContentFilterNav',
   'Button',
   'Card',
