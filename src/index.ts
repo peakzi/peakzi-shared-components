@@ -143,6 +143,18 @@ export type { BusinessSiteProjectImage, BusinessSiteProjectGalleryAppearance, Bu
 
 export { BusinessSiteBlogs } from './components/BusinessSiteBlogs'
 export type { BusinessSiteBlog, BusinessSiteBlogImage, BusinessSiteBlogsAppearance, BusinessSiteBlogsProps } from './components/BusinessSiteBlogs'
+export { BusinessSiteValueShowcase } from './components/BusinessSiteValueShowcase'
+export type {
+  BusinessSiteValueShowcaseAction,
+  BusinessSiteValueShowcaseAppearance,
+  BusinessSiteValueShowcaseItem,
+  BusinessSiteValueShowcasePraise,
+  BusinessSiteValueShowcaseProps,
+  BusinessSiteValueShowcaseSummary,
+  BusinessSiteValueShowcaseTrustSignal,
+  BusinessSiteValueShowcaseKnownTrustSignalKind,
+  BusinessSiteValueShowcaseTrustSignalKind,
+} from './components/BusinessSiteValueShowcase'
 
 export { Breadcrumbs, Pagination } from './components/Breadcrumbs'
 export type { BreadcrumbsProps, BreadcrumbItem, PaginationProps } from './components/Breadcrumbs'
