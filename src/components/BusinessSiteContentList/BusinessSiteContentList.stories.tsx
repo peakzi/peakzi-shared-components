@@ -49,20 +49,20 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Responsive, server-rendered content card grid used for blog, FAQ, and career listing pages. Items carry an ISO `publishedOn` date and an already-rendered excerpt (plain text or markup from the consuming app\'s own markdown renderer) — this package never parses markdown itself. Each item can supply its own `image`; when absent, `fallbackImage` (e.g. the business logo) is used, or set `showImages={false}` to omit imagery entirely (e.g. FAQ listings). `layout` defaults to a multi-column grid; set it to \'stack\' for the compact variant — a single-column row list with a thumbnail on the left, tighter spacing, and a smaller type scale. Appearance is driven by a `gradientStartColor`/`gradientEndColor` palette (text, accents, and the view-all button all derive from it) — `textColor`/`accentColor` remain as a legacy fallback only when no palette is supplied.',
+        component: 'Responsive, server-rendered content card grid used for blog, FAQ, and career listing pages. Items carry an ISO `publishedOn` date and an already-rendered excerpt (plain text or markup from the consuming app\'s own markdown renderer) — this package never parses markdown itself. Each item can supply its own `image`; when absent, `fallbackImage` (e.g. the business logo) is used, or set `showImages={false}` to omit imagery entirely (e.g. FAQ listings). `appearance.density` defaults to \'comfortable\' (a multi-column grid); \'compact\' is a single-column row list with a thumbnail on the left, tighter spacing, and a smaller type scale — matching the `density` convention used by `BusinessSiteServices`/`BusinessSiteBlogs`. Appearance is driven by a `gradientStartColor`/`gradientEndColor` palette (text, accents, and the view-all button all derive from it) — `textColor`/`accentColor` remain as a legacy fallback only when no palette is supplied.',
       },
     },
   },
-  render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, motion, ...props }: StoryArgs) => (
+  render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
     <BusinessSiteContentList
       {...props}
-      appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, motion }}
+      appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion }}
     />
   ),
   argTypes: {
     items: { control: 'object' },
     viewAll: { control: 'object' },
-    layout: { control: 'inline-radio', options: ['grid', 'stack'] },
+    density: { control: 'inline-radio', options: ['comfortable', 'compact'] },
     isLoading: { control: 'boolean' },
     loadingCount: { control: 'number' },
     emptyMessage: { control: 'text' },
@@ -81,7 +81,7 @@ const meta = {
     title: 'Tips & insights',
     eyebrow: 'Resources',
     intro: 'Guides, how-tos, and industry updates from our team.',
-    layout: 'grid',
+    density: 'comfortable',
     viewAll: { label: 'View all resources', href: '/blogs' },
     showImages: true,
     fallbackImage,
@@ -101,8 +101,8 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 export const NoMotion: Story = { args: { motion: 'none' } }
 
-export const Stack: Story = {
-  args: { layout: 'stack' },
+export const Compact: Story = {
+  args: { density: 'compact' },
 }
 
 export const Loading: Story = {

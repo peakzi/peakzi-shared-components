@@ -41,6 +41,8 @@ export interface BusinessSiteContentListAppearance {
   /** Legacy override, used only when no gradient palette is supplied. */
   accentColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
+  /** Default 'comfortable' arranges items in a responsive multi-column grid. 'compact' is a single-column row list with a thumbnail on the left, tighter spacing, and a smaller type scale. */
+  density?: 'comfortable' | 'compact'
   motion?: BusinessSiteMotion
 }
 
@@ -49,8 +51,6 @@ export interface BusinessSiteContentListProps {
   title?: string
   eyebrow?: string
   intro?: string
-  /** Default 'grid' arranges items in a responsive multi-column grid. 'stack' is the compact variant: a single-column row list with a thumbnail on the left, tighter spacing, and a smaller type scale. */
-  layout?: 'grid' | 'stack'
   isLoading?: boolean
   /** Shown instead of the grid when there are no items. Omit to render nothing when empty. */
   emptyMessage?: string
