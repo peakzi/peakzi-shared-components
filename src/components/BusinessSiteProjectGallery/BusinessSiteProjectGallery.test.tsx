@@ -10,6 +10,47 @@ const items: BusinessSiteProjectImage[] = [
 ]
 
 describe('BusinessSiteProjectGallery', () => {
+  it('renders the mosaic layout, future dimensions, service tags and original links on the server', () => {
+    const html = renderToStaticMarkup(<BusinessSiteProjectGallery layout="mosaic" enablePreview imageFit="contain" items={[{
+      ...items[0]!, width: 600, height: 900, srcSet: 'https://example.com/small.jpg 320w, https://example.com/large.jpg 640w', tags: ['Plumbing', 'Plumbing'],
+    }]} />)
+    expect(html).toContain('data-layout="mosaic"')
+    expect(html).toContain('data-image-fit="contain"')
+    expect(html).toContain('width="600" height="900"')
+    expect(html).toContain('aspect-ratio:600 / 900')
+    expect(html).toContain('srcSet=')
+    expect(html).toContain('data-gallery-preview=""')
+    expect(html).toContain('aria-haspopup="dialog"')
+    expect(html).toContain('aria-label="Project services"')
+    expect(html.match(/<li>Plumbing<\/li>/g)).toHaveLength(1)
+    expect(html).not.toContain('<dialog')
+  })
+
+  it('keeps the original grid and native links as the backwards-compatible default', () => {
+    const html = renderToStaticMarkup(<BusinessSiteProjectGallery items={items} />)
+    expect(html).toContain('data-layout="grid"')
+    expect(html).not.toContain('data-gallery-preview')
+  })
+
+  it('uses an original source link for previews without inventing a project destination', () => {
+    const html = renderToStaticMarkup(<BusinessSiteProjectGallery enablePreview items={[{ src: '/photo.jpg', alt: 'Photo' }]} />)
+    expect(html).toContain('href="/photo.jpg"')
+    expect(html).toContain('view full-size photo')
+  })
+
+  it('omits invalid dimensions without dropping a valid photo', () => {
+    const html = renderToStaticMarkup(<BusinessSiteProjectGallery items={[{ ...items[0]!, width: -1, height: 600 }]} />)
+    expect(html).toContain('<img')
+    expect(html).not.toContain('width="-1"')
+    expect(html).not.toContain('height="600"')
+  })
+
+  it('uses an optional website gradient and rejects unsafe gradient colors', () => {
+    const html = renderToStaticMarkup(<BusinessSiteProjectGallery items={items} appearance={{ backgroundColor: '#12171c', gradientEndColor: '#1d4f8c' }} />)
+    expect(html).toContain('--pz-business-gallery-fill:linear-gradient(135deg, #12171c, #1d4f8c)')
+    expect(renderToStaticMarkup(<BusinessSiteProjectGallery items={items} appearance={{ gradientEndColor: 'url(bad)' }} />)).not.toContain('url(bad)')
+  })
+
   it('renders all photos, captions and locations in semantic server HTML', () => {
     const html = renderToStaticMarkup(<BusinessSiteProjectGallery items={items} />)
     expect(html.match(/<figure /g)).toHaveLength(2)

@@ -21,6 +21,7 @@ describe('BusinessSiteOffers', () => {
     expect(html).toContain('Mention the code when scheduling.')
     expect(html).toContain('<strong>SYSTEM500</strong>')
     expect(html).toContain('href="tel:5125550188"')
+    expect(html).toContain('data-action-id="offer"')
     expect(html).toContain('<time dateTime="2030-12-31">Dec 31, 2030</time>')
     expect(html).not.toContain('<h1')
     expect(html).not.toContain('Active')
@@ -121,6 +122,38 @@ describe('BusinessSiteOffers', () => {
     expect(html).not.toMatch(/<li[^>]*(?:aria-hidden|hidden)/)
     expect(html).toContain('Previous offers')
     expect(html).toContain('Next offers')
+  })
+
+  it('reuses the same cards in a server-rendered grid without carousel controls', () => {
+    const html = renderToStaticMarkup(<BusinessSiteOffers layout="grid" items={Array.from({ length: 6 }, (_, index) => ({
+      ...items[0]!, id: `grid-${index}`, title: `Grid offer ${index + 1}`,
+    }))} />)
+    expect(html).toContain('data-layout="grid"')
+    expect(html).toContain('data-density="comfortable"')
+    expect(html.match(/<article/g)).toHaveLength(6)
+    expect(html).toContain('Grid offer 6')
+    expect(html).toContain('One offer per visit.')
+    expect(html).toContain('href="tel:5125550188"')
+    expect(html).not.toContain('pz-business-offers__carousel')
+    expect(html).not.toContain('Previous offers')
+    expect(html).not.toContain('Next offers')
+  })
+
+  it('keeps compact rows when the consumer selects grid layout', () => {
+    const html = renderToStaticMarkup(<BusinessSiteOffers items={items} layout="grid" appearance={{ density: 'compact' }} />)
+    expect(html).toContain('data-layout="list"')
+    expect(html).toContain('data-density="compact"')
+    expect(html).toContain('System replacement')
+    expect(html).not.toContain('pz-business-offers__carousel')
+  })
+
+  it('keeps the homepage carousel default and rejects unknown layout values', () => {
+    for (const layout of [undefined, 'unknown' as 'grid']) {
+      const html = renderToStaticMarkup(<BusinessSiteOffers items={items} layout={layout} />)
+      expect(html).toContain('data-layout="carousel"')
+      expect(html).toContain('pz-business-offers__carousel')
+    }
+    expect(renderToStaticMarkup(<BusinessSiteOffers items={[]} layout="grid" />)).toBe('')
   })
 
   it('applies site-wide fonts, colors, radius and motion', () => {

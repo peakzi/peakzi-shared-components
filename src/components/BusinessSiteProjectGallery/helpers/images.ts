@@ -8,6 +8,10 @@ export function uniqueGalleryImages(items: readonly BusinessSiteProjectImage[]):
     const alt = item.alt.trim()
     if (!src || !alt || seen.has(src)) return []
     seen.add(src)
-    return [{ ...item, src, alt }]
+    const { width, height, ...image } = item
+    const dimensions = typeof width === 'number' && Number.isInteger(width) && width > 0
+      && typeof height === 'number' && Number.isInteger(height) && height > 0
+      ? { width, height } : {}
+    return [{ ...image, ...dimensions, src, alt }]
   })
 }
