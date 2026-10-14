@@ -8,6 +8,7 @@ import { BusinessSiteOffersCarousel } from './carousel/BusinessSiteOffersCarouse
 
 export function BusinessSiteOffers({
   items,
+  layout = 'carousel',
   title = 'Offers & savings',
   eyebrow = 'Coupons & specials',
   description,
@@ -21,6 +22,7 @@ export function BusinessSiteOffers({
   if (!offers.length) return null
   const href = viewAll?.label.trim() ? safeHref(viewAll.href) : null
   const newTab = viewAll?.newTab === true && !!href && /^https?:\/\//i.test(href)
+  const resolvedLayout = appearance.density === 'compact' ? 'list' : layout === 'grid' ? 'grid' : 'carousel'
 
   return (
     <section
@@ -28,6 +30,7 @@ export function BusinessSiteOffers({
       aria-labelledby={headingId}
       className={['pz-business-offers', className].filter(Boolean).join(' ')}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
+      data-layout={resolvedLayout}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={offersStyle(appearance)}
     >
@@ -44,7 +47,7 @@ export function BusinessSiteOffers({
             </a>
           )}
         </div>
-        {appearance.density === 'compact' ? (
+        {resolvedLayout !== 'carousel' ? (
           <ul className="pz-business-offers__list" role="list">
             {offers.map((item) => <li key={item.id}><Offer item={item} /></li>)}
           </ul>

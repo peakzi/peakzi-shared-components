@@ -1,0 +1,32 @@
+.pz-business-gallery__preview {
+  width: min(1120px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: calc(100svh - 32px);
+  margin: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, var(--pz-business-gallery-text) 25%, transparent);
+  border-radius: var(--pz-business-gallery-radius);
+  background: var(--pz-business-gallery-background);
+  color: var(--pz-business-gallery-text);
+  font-family: var(--pz-business-gallery-font);
+}
+.pz-business-gallery__preview::backdrop { background: #000c; }
+.pz-business-gallery__preview-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.pz-business-gallery__preview-header p { margin: 0; font-size: 14px; }
+.pz-business-gallery__preview button { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border: 1px solid currentColor; border-radius: var(--pz-business-gallery-radius); color: inherit; background: transparent; cursor: pointer; }
+.pz-business-gallery__preview-media { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 180px; touch-action: pan-y pinch-zoom; }
+.pz-business-gallery__preview-media img { display: block; min-width: 0; max-width: calc(100% - 112px); max-height: 60svh; width: auto; height: auto; object-fit: contain; }
+.pz-business-gallery__preview-media[data-single] img { max-width: 100%; }
+.pz-business-gallery__preview-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 8px 12px; background: var(--pz-business-gallery-background); border-radius: var(--pz-business-gallery-radius); font-size: 14px; }
+.pz-business-gallery__preview-media > p { flex: 1; padding: 40px 0; }
+.pz-business-gallery__preview-caption { margin-top: 16px; max-height: 20svh; overflow: auto; font-size: 14px; line-height: 1.6; }
+.pz-business-gallery__preview-caption p { margin: 0 0 10px; }
+.pz-business-gallery__preview button:focus-visible { outline: 2px solid var(--pz-business-gallery-accent); outline-offset: 4px; }
+@media (max-width: 600px) {
+  .pz-business-gallery__preview { padding: 12px; }
+  .pz-business-gallery__preview-media img { max-width: 100%; max-height: 55svh; }
+  .pz-business-gallery__preview-media button { position: absolute; top: 50%; transform: translateY(-50%); z-index: 1; background: var(--pz-business-gallery-background); }
+  .pz-business-gallery__preview-media button:first-child { left: 0; }
+  .pz-business-gallery__preview-media button:last-child { right: 0; }
+}

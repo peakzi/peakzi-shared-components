@@ -9,12 +9,18 @@ export interface BusinessSiteProjectImage {
   /** A real project destination or the original full-size photo. */
   href?: string
   newTab?: boolean
+  width?: number
+  height?: number
+  srcSet?: string
+  previewSrc?: string
+  tags?: readonly string[]
 }
 
 export interface BusinessSiteProjectGalleryAppearance {
   font?: string
   headingFont?: string
   backgroundColor?: string
+  gradientEndColor?: string
   textColor?: string
   accentColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
@@ -30,4 +36,7 @@ export interface BusinessSiteProjectGalleryProps {
   appearance?: BusinessSiteProjectGalleryAppearance
   sectionId?: string
   className?: string
+  layout?: 'grid' | 'mosaic'
+  imageFit?: 'cover' | 'contain'
+  enablePreview?: boolean
 }

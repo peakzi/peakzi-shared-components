@@ -26,7 +26,7 @@ export function Offer({ item }: { item: BusinessSiteOffer }) {
         {expiry && <p className="pz-business-offers__expiry">Expires <time dateTime={expiry.dateTime}>{expiry.label}</time></p>}
       </div>
       {href && (
-        <a className="pz-business-offers__action" href={href} target={newTab ? '_blank' : undefined} rel={newTab ? 'noopener noreferrer' : undefined}>
+        <a className="pz-business-offers__action" data-action-id="offer" href={href} target={newTab ? '_blank' : undefined} rel={newTab ? 'noopener noreferrer' : undefined}>
           {item.action?.label}<ArrowUpRight size={16} aria-hidden="true" />
         </a>
       )}

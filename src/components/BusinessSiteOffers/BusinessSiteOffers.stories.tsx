@@ -10,13 +10,14 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    docs: { description: { component: 'Server-renderable offers supplied by the consuming app. Comfortable density uses a swipeable ticket-card carousel (three desktop cards, two tablet cards, one mobile card with a next-card preview), with circular arrows on the left and right sides and no page dots. Compact density uses list rows. No autoplay or hidden offer copy. Availability and redemption destinations belong to the API/app, not this component.' } },
+    docs: { description: { component: 'Server-renderable offers supplied by the consuming app. Comfortable density uses a swipeable ticket-card carousel by default or a responsive grid for full offers pages. Both reuse the same ticket cards. Compact density uses list rows regardless of layout. No autoplay or hidden offer copy. Availability and redemption destinations belong to the API/app, not this component.' } },
   },
   render: ({ font, headingFont, backgroundColor, textColor, accentColor, cardBackgroundColor, cardGradientEndColor, cardTextColor, cardAccentColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
     <BusinessSiteOffers {...props} appearance={{ font, headingFont, backgroundColor, textColor, accentColor, cardBackgroundColor, cardGradientEndColor, cardTextColor, cardAccentColor, buttonRadius, density, motion }} />
   ),
   argTypes: {
     items: { control: 'object' },
+    layout: { control: 'inline-radio', options: ['carousel', 'grid'] },
     viewAll: { control: 'object' },
     font: { control: 'text' },
     headingFont: { control: 'text' },
@@ -66,6 +67,8 @@ export const Carousel: Story = { args: { items: [
 ] } }
 export const SingleOffer: Story = { args: { items: [meta.args.items[0]!] } }
 export const Compact: Story = { args: { density: 'compact' } }
+export const Grid: Story = { ...Carousel, args: { ...Carousel.args, layout: 'grid' } }
+export const CompactGrid: Story = { ...Grid, args: { ...Grid.args, density: 'compact' } }
 export const Dark: Story = { args: { backgroundColor: '#12171c', textColor: '#ffffff', accentColor: '#a5c9ee', cardBackgroundColor: '#12171c', cardGradientEndColor: '#12171c', cardTextColor: '#ffffff', cardAccentColor: '#a5c9ee' } }
 export const DarkCoupons: Story = { args: {
   backgroundColor: '#ffffff', textColor: '#12171c', accentColor: '#657991',
@@ -78,3 +81,4 @@ export const WithDetails: Story = { args: { items: [{
 }] } }
 export const Mobile: Story = { ...Carousel, globals: { viewport: { value: 'mobile1', isRotated: false } } }
 export const MobileCompact: Story = { ...Mobile, args: { density: 'compact' } }
+export const MobileGrid: Story = { ...Grid, globals: { viewport: { value: 'mobile1', isRotated: false } } }
