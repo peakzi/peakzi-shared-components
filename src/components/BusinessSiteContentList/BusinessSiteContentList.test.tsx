@@ -10,13 +10,14 @@ const items: BusinessSiteContentListItem[] = [
 ]
 
 describe('BusinessSiteContentList', () => {
-  it('defaults to the grid layout and switches to the compact stack layout via the layout prop', () => {
-    const { container: gridContainer } = render(<BusinessSiteContentList items={items} />)
-    expect(gridContainer.querySelector('section')).toHaveAttribute('data-layout', 'grid')
-    expect(gridContainer.querySelector('section')).not.toHaveAttribute('data-density')
+  it('defaults to comfortable density and switches to compact via appearance.density', () => {
+    const { container: comfortableContainer } = render(<BusinessSiteContentList items={items} />)
+    expect(comfortableContainer.querySelector('section')).toHaveAttribute('data-density', 'comfortable')
 
-    const { container: stackContainer } = render(<BusinessSiteContentList items={items} layout="stack" />)
-    expect(stackContainer.querySelector('section')).toHaveAttribute('data-layout', 'stack')
+    const { container: compactContainer } = render(
+      <BusinessSiteContentList items={items} appearance={{ density: 'compact' }} />
+    )
+    expect(compactContainer.querySelector('section')).toHaveAttribute('data-density', 'compact')
   })
 
   it.each([undefined, 'none', 'subtle'] as const)('uses the site motion setting %s without hiding items', (motion) => {
