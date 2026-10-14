@@ -178,8 +178,9 @@
   font-size: 13px;
 }
 
-// Matches the global `a:not(.pz-btn)` selector specificity to beat its hover underline.
+// Matches the global `a:not(.pz-btn)` selector specificity to beat its default link color and hover underline.
 a.pz-business-content-list__card {
+  color: var(--pz-business-content-list-text);
   text-decoration: none;
 }
 

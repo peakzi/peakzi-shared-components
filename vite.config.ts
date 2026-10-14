@@ -21,6 +21,7 @@ const componentEntries = [
   'BusinessSiteOffers',
   'BusinessSiteProjectGallery',
   'BusinessSiteBlogs',
+  'BusinessSiteContentFilterNav',
   'Button',
   'Card',
   'Checkbox',
@@ -67,6 +68,7 @@ const entries = {
   BusinessSiteOffersCarousel: resolve(__dirname, 'src/components/BusinessSiteOffers/carousel/BusinessSiteOffersCarousel.tsx'),
   BusinessSiteCardCarousel: resolve(__dirname, 'src/components/BusinessSiteCardCarousel/BusinessSiteCardCarousel.tsx'),
   BusinessSiteAreasMap: resolve(__dirname, 'src/components/BusinessSiteAreas/map/BusinessSiteAreasMap.tsx'),
+  BusinessSiteContentFilterNavSheet: resolve(__dirname, 'src/components/BusinessSiteContentFilterNav/sheet/ContentFilterNavSheet.tsx'),
   ...Object.fromEntries(
     componentEntries.map((name) => [name, resolve(__dirname, `src/components/${name}/index.ts`)]),
   ),

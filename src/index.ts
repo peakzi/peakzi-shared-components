@@ -178,6 +178,12 @@ export type {
   BusinessSiteContentListLink,
   BusinessSiteContentListProps,
 } from './components/BusinessSiteContentList'
+export { BusinessSiteContentFilterNav } from './components/BusinessSiteContentFilterNav'
+export type {
+  BusinessSiteContentFilterNavAppearance,
+  BusinessSiteContentFilterNavProps,
+  BusinessSiteContentFilterNavTrade,
+} from './components/BusinessSiteContentFilterNav'
 export { BusinessSiteOffers } from './components/BusinessSiteOffers'
 export type {
   BusinessSiteOffer,
