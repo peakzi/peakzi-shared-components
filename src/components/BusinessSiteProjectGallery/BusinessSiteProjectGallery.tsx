@@ -5,6 +5,7 @@ import { galleryStyle } from './helpers/appearance'
 import { uniqueGalleryImages } from './helpers/images'
 import type { BusinessSiteProjectGalleryProps } from './helpers/types'
 import { GalleryImage } from './image/GalleryImage'
+import { BusinessSiteProjectGalleryPreview } from './preview/BusinessSiteProjectGalleryPreview'
 
 export function BusinessSiteProjectGallery({
   items,
@@ -14,6 +15,9 @@ export function BusinessSiteProjectGallery({
   appearance = {},
   sectionId,
   className,
+  layout = 'grid',
+  imageFit = 'contain',
+  enablePreview = false,
 }: BusinessSiteProjectGalleryProps) {
   const headingId = `${useId()}-heading`
   const images = uniqueGalleryImages(items)
@@ -28,6 +32,8 @@ export function BusinessSiteProjectGallery({
       className={['pz-business-gallery', className].filter(Boolean).join(' ')}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
+      data-layout={layout === 'mosaic' ? 'mosaic' : 'grid'}
+      data-image-fit={imageFit === 'cover' ? 'cover' : 'contain'}
       style={galleryStyle(appearance)}
     >
       <div className="pz-business-gallery__inner">
@@ -43,9 +49,10 @@ export function BusinessSiteProjectGallery({
           )}
         </div>
         <ul className="pz-business-gallery__grid" role="list">
-          {images.map((item) => <li key={item.src}><GalleryImage item={item} /></li>)}
+          {images.map((item) => <li key={item.src}><GalleryImage item={item} enablePreview={enablePreview} /></li>)}
         </ul>
       </div>
+      {enablePreview && <BusinessSiteProjectGalleryPreview key={JSON.stringify(images.map((image) => image.src))} items={images} />}
     </section>
   )
 }

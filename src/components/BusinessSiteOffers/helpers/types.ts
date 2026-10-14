@@ -32,6 +32,7 @@ export interface BusinessSiteOffersAppearance {
 
 export interface BusinessSiteOffersProps {
   items: readonly BusinessSiteOffer[]
+  layout?: 'carousel' | 'grid'
   title?: string
   eyebrow?: string
   description?: string
