@@ -53,6 +53,10 @@ export interface BusinessSiteFaqProps {
   contact?: BusinessSiteFaqContact
   /** Opens the first answer initially; native controls remain usable without JavaScript. */
   defaultOpenFirst?: boolean
+  /** Focus and reveal a question after the visitor opens it; respects reduced motion and the sticky header. */
+  revealOnOpen?: boolean
+  /** Stack places the topic heading above the answers, suitable for directory pages. */
+  layout?: 'split' | 'stack'
   appearance?: BusinessSiteFaqAppearance
   sectionId?: string
   className?: string

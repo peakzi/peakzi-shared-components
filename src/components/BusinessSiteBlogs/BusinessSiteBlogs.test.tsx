@@ -10,6 +10,37 @@ const items: BusinessSiteBlog[] = [
 ]
 
 describe('BusinessSiteBlogs', () => {
+  it.each(['comfortable', 'compact'] as const)('renders equal image cards in grid %s without changing the featured homepage default', (density) => {
+    const html = renderToStaticMarkup(<BusinessSiteBlogs layout="grid" items={items}
+      fallbackImage={{ src: '/logo.png', alt: 'Company logo' }} appearance={{ density }} />)
+    expect(html).toContain('data-layout="grid"')
+    expect(html.match(/<article /g)).toHaveLength(2)
+    expect(html.match(/<img /g)).toHaveLength(2)
+    expect(html).toContain('2 articles')
+    expect(html).toContain('height="800"')
+    expect(html).not.toContain('pz-business-blogs__featured-layout')
+    expect(html).not.toContain('pz-business-blogs__read')
+    expect(html).not.toContain('pz-business-blogs__number')
+    expect(renderToStaticMarkup(<BusinessSiteBlogs items={items} />)).toContain('data-layout="featured"')
+  })
+
+  it('uses the API cover where supplied, with a logo frame for the other grid articles', () => {
+    const html = renderToStaticMarkup(<BusinessSiteBlogs layout="grid"
+      items={[{ ...items[0]!, coverImage: { src: 'https://example.com/cover.jpg', alt: 'Repair work' } }, items[1]!]}
+      fallbackImage={{ src: '/logo.png', alt: 'Company logo' }} />)
+    expect(html).toContain('data-image-kind="cover"')
+    expect(html).toContain('data-image-kind="logo"')
+    expect(html).toContain('alt="Repair work"')
+    expect(html).toContain('href="/blogs/heater"')
+  })
+
+  it('supports a Draft display label without claiming a publication date', () => {
+    const html = renderToStaticMarkup(<BusinessSiteBlogs layout="grid"
+      items={[{ ...items[0]!, statusLabel: ' Draft ', publishedOn: '2026-10-05' }]} />)
+    expect(html).toContain('>Draft</span>')
+    expect(html).not.toContain('<time')
+    expect(html).toContain('Image unavailable')
+  })
   it.each(['comfortable', 'compact'] as const)('places supplied reading time between category and date in %s mode', (density) => {
     render(<BusinessSiteBlogs items={[
       { ...items[0]!, readingTime: '9 min read' },

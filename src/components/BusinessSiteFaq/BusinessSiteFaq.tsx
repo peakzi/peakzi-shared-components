@@ -3,6 +3,7 @@ import { Minus, Plus } from 'lucide-react'
 import { businessSiteIcon } from '../../utils/businessSiteIcon'
 import { safeHref } from '../../utils/safeHref'
 import { faqStyle } from './helpers/appearance'
+import { FaqAccordion } from './accordion/FaqAccordion'
 import type { BusinessSiteFaqProps } from './helpers/types'
 
 export function BusinessSiteFaq({
@@ -12,6 +13,8 @@ export function BusinessSiteFaq({
   intro,
   contact,
   defaultOpenFirst = true,
+  revealOnOpen = false,
+  layout = 'split',
   appearance = {},
   sectionId,
   className,
@@ -29,6 +32,21 @@ export function BusinessSiteFaq({
     const href = safeHref(action.href)
     return href && action.label.trim() ? [{ ...action, href }] : []
   })
+  const questions = visibleItems.map((item, index) => (
+    <details className="pz-business-faq__item" key={item.id} name={`${instanceId}-questions`}
+      open={defaultOpenFirst && index === 0}>
+      <summary>
+        <span>{item.question}</span>
+        <span className="pz-business-faq__icon" aria-hidden="true">
+          <Plus className="pz-business-faq__expand" size={20} />
+          <Minus className="pz-business-faq__collapse" size={20} />
+        </span>
+      </summary>
+      <div className="pz-business-faq__answer">
+        {typeof item.answer === 'string' ? <p>{item.answer}</p> : item.answer}
+      </div>
+    </details>
+  ))
 
   return (
     <section
@@ -36,6 +54,7 @@ export function BusinessSiteFaq({
       aria-labelledby={headingId}
       className={['pz-business-faq', className].filter(Boolean).join(' ')}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
+      data-layout={layout === 'stack' ? 'stack' : 'split'}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={faqStyle(appearance)}
     >
@@ -72,27 +91,8 @@ export function BusinessSiteFaq({
             </div>
           )}
         </div>
-        <div className="pz-business-faq__list">
-          {visibleItems.map((item, index) => (
-            <details
-              className="pz-business-faq__item"
-              key={item.id}
-              name={`${instanceId}-questions`}
-              open={defaultOpenFirst && index === 0}
-            >
-              <summary>
-                <span>{item.question}</span>
-                <span className="pz-business-faq__icon" aria-hidden="true">
-                  <Plus className="pz-business-faq__expand" size={20} />
-                  <Minus className="pz-business-faq__collapse" size={20} />
-                </span>
-              </summary>
-              <div className="pz-business-faq__answer">
-                {typeof item.answer === 'string' ? <p>{item.answer}</p> : item.answer}
-              </div>
-            </details>
-          ))}
-        </div>
+        {revealOnOpen ? <FaqAccordion animate={appearance.motion === 'subtle'}>{questions}</FaqAccordion> :
+          <div className="pz-business-faq__list">{questions}</div>}
       </div>
     </section>
   )

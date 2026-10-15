@@ -148,6 +148,8 @@ export type {
 } from './components/BusinessSiteServices'
 
 export { BusinessSiteAreas } from './components/BusinessSiteAreas'
+export { BusinessSiteAreasDirectory } from './components/BusinessSiteAreasDirectory'
+export type { BusinessSiteAreasDirectoryProps } from './components/BusinessSiteAreasDirectory'
 export type {
   BusinessSiteArea,
   BusinessSiteAreasAppearance,

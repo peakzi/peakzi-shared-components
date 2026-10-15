@@ -10,6 +10,13 @@ const items: BusinessSiteFaqItem[] = [
 ]
 
 describe('BusinessSiteFaq', () => {
+  it('supports a stacked directory while retaining split as the homepage default', () => {
+    const html = renderToStaticMarkup(<BusinessSiteFaq items={items} layout="stack" defaultOpenFirst={false} />)
+    expect(html).toContain('data-layout="stack"')
+    expect(html).toContain('See the listed service areas.')
+    expect(html).not.toContain('open=""')
+    expect(renderToStaticMarkup(<BusinessSiteFaq items={items} />)).toContain('data-layout="split"')
+  })
   it('includes every question and answer in the server HTML, with the first answer open', () => {
     const html = renderToStaticMarkup(<BusinessSiteFaq items={items} />)
     expect(html).toContain('<h2')

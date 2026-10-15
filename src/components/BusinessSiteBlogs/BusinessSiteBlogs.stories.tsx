@@ -12,7 +12,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    docs: { description: { component: 'Server-rendered, crawlable guides on a light reading surface. Comfortable shows the first supplied article as a featured card, with the remaining guides in a numbered list beside it; mobile stacks the featured card above the list. A safe article cover takes priority over the company-logo fallback. Compact retains tight list rows without images. No carousel, autoplay or invented reading time. The application uses only live /home blogs, while these stories use demonstration content.' } },
+    docs: { description: { component: 'Server-rendered, crawlable blogs on a light reading surface. The default featured layout preserves the homepage feature and numbered list. The opt-in grid layout shows equal 2:1 image cards with stronger theme-derived shadows: three columns in wide containers, two on tablets, and one on mobile. Compact density retains thumbnail rows. A safe cover takes priority over the company-logo fallback; missing or failed images retain a neutral frame. The Next.js directory uses live blog content and company logos until the backend cover contract is ready. Cover photos in these stories are demonstration content only.' } },
   },
   render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
     <BusinessSiteBlogs {...props} appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion }} />
@@ -21,6 +21,7 @@ const meta = {
     items: { control: 'object' },
     viewAll: { control: 'object' },
     fallbackImage: { control: 'object' },
+    layout: { control: 'inline-radio', options: ['featured', 'grid'] },
     font: { control: 'text' },
     headingFont: { control: 'text' },
     backgroundColor: { control: 'color' },
@@ -57,6 +58,15 @@ export default meta
 type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 export const Compact: Story = { args: { density: 'compact' } }
+export const DirectoryGrid: Story = { args: { layout: 'grid', eyebrow: '', viewAll: { label: '', href: '' } } }
+export const DirectoryCompact: Story = { args: { layout: 'grid', density: 'compact', eyebrow: '', viewAll: { label: '', href: '' } } }
+export const DirectoryWithCovers: Story = { args: { layout: 'grid', items: meta.args.items.map((item, index) => ({
+  ...item, coverImage: { src: index % 2 === 0
+    ? 'https://res.cloudinary.com/dzinii45g/image/upload/aiWebsiteImagesProd/j9ncp2dph5uw4kfqsw0w.jpg'
+    : 'https://res.cloudinary.com/dzinii45g/image/upload/aiWebsiteImagesProd/izylz3mtaetvznao7lvw.jpg', alt: 'Demonstration blog cover' },
+})) } }
+export const DirectoryWithoutImages: Story = { args: { layout: 'grid', fallbackImage: undefined } }
+export const DirectoryMobile: Story = { args: { layout: 'grid' }, decorators: [(Story) => <div style={{ maxWidth: 390, margin: '0 auto' }}><Story /></div>] }
 export const AlternatePalette: Story = { args: { backgroundColor: '#fff8ee', gradientStartColor: '#17392f', gradientEndColor: '#416951' } }
 export const WithCover: Story = { args: { items: [{ ...meta.args.items[0]!, coverImage: { src: 'https://res.cloudinary.com/dzinii45g/image/upload/aiWebsiteImagesProd/j9ncp2dph5uw4kfqsw0w.jpg', alt: 'Demo blog cover' } }, ...meta.args.items.slice(1)] } }
 export const WithoutLogo: Story = { args: { fallbackImage: undefined } }

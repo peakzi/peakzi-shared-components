@@ -4,7 +4,9 @@ import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
 export interface BusinessSiteArea {
   id: string
   label: string
-  href: string
+  /** Omit until an individual city page is available. */
+  href?: string
+  favorite?: boolean
   /** Coordinates from the consuming site; the component never geocodes city names. */
   position?: { lat: number; lon: number }
 }
@@ -17,6 +19,10 @@ export interface BusinessSiteAreasAppearance {
   gradientAngle?: number
   textColor?: string
   accentColor?: string
+  /** Directory heading palette; the search and city list keep the main palette. */
+  headingBackgroundColor?: string
+  headingGradientEndColor?: string
+  headingTextColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
   density?: 'comfortable' | 'compact'
   motion?: BusinessSiteMotion
@@ -33,8 +39,17 @@ export interface BusinessSiteAreasProps {
   appearance?: BusinessSiteAreasAppearance
   sectionId?: string
   className?: string
+  /** Directory uses a side-by-side map and panel instead of the homepage overlay. */
+  variant?: 'section' | 'directory'
+  headingLevel?: 'h1' | 'h2'
+  controls?: ReactNode
 }
 
 export interface BusinessSiteAreasMapProps {
   areas: readonly BusinessSiteArea[]
+  markerStyle?: 'dot' | 'pin'
+  /** Preferred maximum starting zoom; reduced as needed to keep all pins visible. */
+  defaultZoom?: number
+  /** Group nearby markers when the service-area section uses its mobile layout. */
+  clusterOnMobile?: boolean
 }

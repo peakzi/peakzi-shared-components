@@ -36,6 +36,48 @@ describe('BusinessSiteAreas', () => {
     expect(html).toContain('data-surface="gradient"')
   })
 
+  it('themes the directory heading separately from the light city panel', () => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas
+      variant="directory" headingLevel="h1" areas={[{ id: 'allen', label: 'Allen, TX' }]}
+      appearance={{ backgroundColor: '#ffffff', textColor: '#12171c', headingBackgroundColor: '#001122',
+        headingGradientEndColor: '#234567', headingTextColor: '#ffffff', gradientAngle: 150 }}
+    />)
+    expect(html).toContain('--pz-business-areas-fill:#ffffff')
+    expect(html).toContain('--pz-business-areas-text:#12171c')
+    expect(html).toContain('--pz-business-areas-heading-background:#001122')
+    expect(html).toContain('--pz-business-areas-heading-fill:linear-gradient(150deg, #001122, #234567)')
+    expect(html).toContain('--pz-business-areas-heading-text:#ffffff')
+    expect(html).toContain('<h1>Areas we serve</h1>')
+    expect(html).toContain('Allen, TX')
+  })
+
+  it('falls back to the main palette for missing or unsafe directory heading colors', () => {
+    const areas = [{ id: 'allen', label: 'Allen, TX' }]
+    const fallback = { backgroundColor: '#eeeeee', textColor: '#112233' }
+    const defaults = renderToStaticMarkup(<BusinessSiteAreas variant="directory" areas={areas} appearance={fallback} />)
+    const unsafe = renderToStaticMarkup(<BusinessSiteAreas variant="directory" areas={areas}
+      appearance={{ ...fallback, headingBackgroundColor: 'url(//evil.example/x)',
+        headingGradientEndColor: 'red; color: red', headingTextColor: 'url(//evil.example/y)' }} />)
+    for (const html of [defaults, unsafe]) {
+      expect(html).toContain('--pz-business-areas-heading-fill:#eeeeee')
+      expect(html).toContain('--pz-business-areas-heading-text:#112233')
+      expect(html).not.toContain('evil.example')
+      expect(html).not.toContain('linear-gradient')
+    }
+  })
+
+  it('does not apply directory heading colors to the homepage section', () => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas
+      areas={[{ id: 'allen', label: 'Allen, TX', href: '/cities/allen-tx' }]}
+      appearance={{ backgroundColor: '#ffffff', textColor: '#12171c', headingBackgroundColor: '#001122',
+        headingGradientEndColor: '#234567', headingTextColor: '#ffffff' }}
+    />)
+    expect(html).not.toContain('--pz-business-areas-heading-fill:')
+    expect(html).not.toContain('--pz-business-areas-heading-background:')
+    expect(html).not.toContain('--pz-business-areas-heading-text:')
+    expect(html).toContain('--pz-business-areas-fill:#ffffff')
+  })
+
   it('stays a solid color without a gradient end, or with an unsafe one', () => {
     const areas = [{ id: 'allen', label: 'Allen, TX', href: '/cities/allen-tx' }]
     const solid = renderToStaticMarkup(<BusinessSiteAreas areas={areas} appearance={{ backgroundColor: '#003c3c' }} />)
@@ -87,6 +129,7 @@ describe('BusinessSiteAreas', () => {
     expect(html).toContain('href="/cities/allen-tx"')
     expect(html).toContain('Map island')
     expect(html.indexOf('Allen, TX')).toBeLessThan(html.indexOf('Map island'))
+    expect(html).not.toContain('class="pz-business-areas__cities"')
   })
 
   it('uses the list-only layout without a map and supports custom count/eyebrow labels', () => {
