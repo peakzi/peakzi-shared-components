@@ -23,20 +23,34 @@ export function HeaderMenuBehavior() {
         if (mobileMenu?.contains(document.activeElement)) mobileMenu.querySelector<HTMLElement>(':scope > summary')?.focus()
       }
     }
+    // Deferred a frame: closing a native <details> in the same synchronous tick
+    // as the inert/style/scroll/focus cleanup it triggers (via syncMobileMenu)
+    // has crashed real Chrome (STATUS_BREAKPOINT) during the browser's own
+    // post-event frame commit. One frame of delay is imperceptible, and the
+    // callback re-runs syncMobileMenu itself rather than relying on the
+    // native 'toggle' event, which some environments don't fire on a
+    // script-set `open`.
+    const closeMenu = (menu: HTMLDetailsElement) => {
+      requestAnimationFrame(() => {
+        menu.open = false
+        syncMobileMenu()
+      })
+    }
     const closeMenus = () => {
-      for (const menu of openMenus()) menu.open = false
-      syncMobileMenu()
+      for (const menu of openMenus()) closeMenu(menu)
     }
     const onPointerDown = (event: PointerEvent) => {
       if (!(event.target instanceof Node)) return
       if (event.target instanceof Element && event.target.closest('.pz-business-header__mobile-backdrop')) {
+        // Cancel native pointer focus handling before closing details hides its
+        // pressed backdrop; otherwise Chromium can crash while processing it.
+        event.preventDefault()
         closeMenus()
         return
       }
       for (const menu of openMenus()) {
-        if (!menu.contains(event.target)) menu.open = false
+        if (!menu.contains(event.target)) closeMenu(menu)
       }
-      syncMobileMenu()
     }
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Tab' && restoreMobileMenu && mobileMenu) {
