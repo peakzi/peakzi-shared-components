@@ -208,9 +208,6 @@ export type {
   BusinessSiteBlogsProps,
 } from './components/BusinessSiteBlogs'
 
-export { BusinessSiteContentList } from './components/BusinessSiteContentList'
-export type { BusinessSiteContentListAppearance, BusinessSiteContentListItem, BusinessSiteContentListLink, BusinessSiteContentListProps } from './components/BusinessSiteContentList'
-
 export { Breadcrumbs, Pagination } from './components/Breadcrumbs'
 export type { BreadcrumbsProps, BreadcrumbItem, PaginationProps } from './components/Breadcrumbs'
 
