@@ -2,6 +2,10 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { HeaderMenuBehavior } from './HeaderMenuBehavior'
 
+// Closing a menu is deferred a frame (see HeaderMenuBehavior.tsx) to avoid a
+// real-Chrome crash, so tests that assert on the close must flush one first.
+const flushRaf = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+
 function Example() {
   return <><header><HeaderMenuBehavior /><details open><summary>Menu</summary><button>Inside menu</button>
     <a href="/services" onClick={(event) => event.preventDefault()}>Services</a>
@@ -9,18 +13,20 @@ function Example() {
 }
 
 describe('HeaderMenuBehavior', () => {
-  it('closes on an outside pointer press, but not an inside press', () => {
+  it('closes on an outside pointer press, but not an inside press', async () => {
     const { container } = render(<Example />)
     const menu = container.querySelector('details')!
-    fireEvent.pointerDown(screen.getByText('Inside menu'))
+    expect(fireEvent.pointerDown(screen.getByText('Inside menu'))).toBe(true)
     expect(menu.open).toBe(true)
-    fireEvent.pointerDown(screen.getByText('Outside menu'))
+    expect(fireEvent.pointerDown(screen.getByText('Outside menu'))).toBe(true)
+    await flushRaf()
     expect(menu.open).toBe(false)
   })
-  it('closes on Escape and restores the menu summary focus', () => {
+  it('closes on Escape and restores the menu summary focus', async () => {
     const { container } = render(<Example />)
     screen.getByText('Inside menu').focus()
     fireEvent.keyDown(document, { key: 'Escape' })
+    await flushRaf()
     expect(container.querySelector('details')!.open).toBe(false)
     expect(document.activeElement).toBe(screen.getByText('Menu'))
   })
@@ -32,17 +38,19 @@ describe('HeaderMenuBehavior', () => {
     fireEvent.keyDown(document, { key: 'Escape' })
     expect(document.activeElement).toBe(screen.getByText('Outside menu'))
   })
-  it('closes on a navigation click', () => {
+  it('closes on a navigation click', async () => {
     const { container } = render(<Example />)
     fireEvent.click(screen.getByText('Services'))
+    await flushRaf()
     expect(container.querySelector('details')!.open).toBe(false)
   })
-  it('closes nested menus together', () => {
+  it('closes nested menus together', async () => {
     const { container } = render(<header><HeaderMenuBehavior /><details open><summary>Main</summary>
       <details open><summary>Services</summary><button>Nested</button></details>
     </details></header>)
     screen.getByText('Nested').focus()
     fireEvent.keyDown(document, { key: 'Escape' })
+    await flushRaf()
     expect(Array.from(container.querySelectorAll('details')).every((menu) => !menu.open)).toBe(true)
     expect(document.activeElement).toBe(screen.getByText('Main'))
   })
@@ -103,22 +111,26 @@ describe('mobile menu overlay behavior', () => {
     expect(menu.querySelector('summary')).toHaveAttribute('aria-label', 'Menu')
   })
 
-  it('closes and unlocks when the dimmed backdrop is pressed', () => {
+  it('cancels native backdrop pointer handling before closing and unlocking', async () => {
     const { container } = render(<MobileExample />)
     const menu = openMenu(container)
     screen.getByText('Services').focus()
-    fireEvent.pointerDown(screen.getByTestId('backdrop'))
+    const pointer = new MouseEvent('pointerdown', { bubbles: true, cancelable: true })
+    expect(fireEvent(screen.getByTestId('backdrop'), pointer)).toBe(false)
+    expect(pointer.defaultPrevented).toBe(true)
+    await flushRaf()
     expect(menu.open).toBe(false)
     expect(document.body.style.position).not.toBe('fixed')
     expect(document.activeElement).toBe(menu.querySelector('summary'))
   })
 
-  it.each(['Escape', 'link'])('unlocks when closing with %s', (method) => {
+  it.each(['Escape', 'link'])('unlocks when closing with %s', async (method) => {
     const { container } = render(<MobileExample />)
     const menu = openMenu(container)
     screen.getByText('Services').focus()
     if (method === 'Escape') fireEvent.keyDown(document, { key: 'Escape' })
     else fireEvent.click(screen.getByText('Services'))
+    await flushRaf()
     expect(menu.open).toBe(false)
     expect(document.body.style.position).not.toBe('fixed')
   })
@@ -142,12 +154,13 @@ describe('mobile menu overlay behavior', () => {
     expect(document.activeElement).toBe(summary)
   })
 
-  it('closes and releases scrolling when the viewport changes to desktop', () => {
+  it('closes and releases scrolling when the viewport changes to desktop', async () => {
     const { container } = render(<MobileExample />)
     const menu = openMenu(container)
     viewport.matches = false
     const onChange = viewport.addEventListener.mock.calls[0]![1] as () => void
     onChange()
+    await flushRaf()
     expect(menu.open).toBe(false)
     expect(document.body.style.position).not.toBe('fixed')
     menu.open = true
