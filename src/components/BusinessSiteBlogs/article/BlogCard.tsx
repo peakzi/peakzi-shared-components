@@ -2,19 +2,21 @@ import { ArrowUpRight } from 'lucide-react'
 import { safeHref } from '../../../utils/safeHref'
 import { BlogMetadata } from '../metadata/BlogMetadata'
 import { BlogCover } from '../cover/BlogCover'
+import { BlogCoverImage } from '../cover/BlogCoverImage'
 import type { BusinessSiteBlog, BusinessSiteBlogImage } from '../helpers/types'
 
-export function BlogCard({ item, featured = false, fallbackImage }: { item: BusinessSiteBlog; featured?: boolean; fallbackImage?: BusinessSiteBlogImage | undefined }) {
+export function BlogCard({ item, featured = false, directory = false, fallbackImage }: { item: BusinessSiteBlog; featured?: boolean; directory?: boolean; fallbackImage?: BusinessSiteBlogImage | undefined }) {
   const href = safeHref(item.href)
   const newTab = item.newTab === true && !!href && /^https?:\/\//i.test(href)
   const content = (
     <>
-      {featured && <BlogCover item={item} fallbackImage={fallbackImage} />}
+      {directory ? <BlogCoverImage cover={item.coverImage} fallbackImage={fallbackImage} title={item.title} /> :
+        featured && <BlogCover item={item} fallbackImage={fallbackImage} />}
       <div className="pz-business-blogs__content">
         <BlogMetadata item={item} />
         <h3>{item.title}</h3>
         {item.excerpt && <div className="pz-business-blogs__excerpt">{item.excerpt}</div>}
-        {href && <span className="pz-business-blogs__read">Read the guide<ArrowUpRight size={18} aria-hidden="true" /></span>}
+        {href && !directory && <span className="pz-business-blogs__read">Read the guide<ArrowUpRight size={18} aria-hidden="true" /></span>}
       </div>
     </>
   )

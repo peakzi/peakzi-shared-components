@@ -15,6 +15,8 @@ export interface BusinessSiteBlog {
   readingTime?: string
   /** ISO calendar date, YYYY-MM-DD. Omit when the backend has no publication date. */
   publishedOn?: string
+  /** Display-only label such as Draft when publication metadata is unavailable. */
+  statusLabel?: string
   /** Plain text or non-interactive markup; do not include links or a full article. */
   excerpt?: ReactNode
   /** Optional article cover; the company logo is used when no safe cover is supplied. */
@@ -40,6 +42,8 @@ export interface BusinessSiteBlogsAppearance {
 
 export interface BusinessSiteBlogsProps {
   items: readonly BusinessSiteBlog[]
+  /** Featured preserves the homepage layout; grid gives every article an equal image card. */
+  layout?: 'featured' | 'grid'
   title?: string
   eyebrow?: string
   viewAll?: { label: string; href: string; newTab?: boolean }

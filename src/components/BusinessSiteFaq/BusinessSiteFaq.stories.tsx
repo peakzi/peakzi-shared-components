@@ -20,6 +20,8 @@ const meta = {
     items: { control: 'object' },
     contact: { control: 'object' },
     defaultOpenFirst: { control: 'boolean' },
+    revealOnOpen: { control: 'boolean' },
+    layout: { control: 'inline-radio', options: ['split', 'stack'] },
     font: { control: 'text' },
     headingFont: { control: 'text' },
     backgroundColor: { control: 'color' },
@@ -64,6 +66,8 @@ export const Dark: Story = { args: { backgroundColor: '#12171c' } }
 export const AlternatePalette: Story = { args: { backgroundColor: '#fff8ee', gradientStartColor: '#17392f', gradientEndColor: '#416951' } }
 export const WithoutContact: Story = { args: { contact: { title: '' } } }
 export const AllClosed: Story = { args: { defaultOpenFirst: false } }
+export const Directory: Story = { args: { layout: 'stack', eyebrow: '', title: 'Water heater questions', intro: '4 questions', contact: { title: '' }, defaultOpenFirst: true, revealOnOpen: true } }
+export const DirectoryCompact: Story = { args: { ...Directory.args, density: 'compact' } }
 export const NoMotion: Story = { args: { motion: 'none' } }
 
 /** Scroll down: with `motion: 'subtle'` the title, contact card and question rows rise in as they enter the viewport. */

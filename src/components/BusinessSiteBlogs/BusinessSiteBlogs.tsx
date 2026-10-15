@@ -8,6 +8,7 @@ import type { BusinessSiteBlogsProps } from './helpers/types'
 
 export function BusinessSiteBlogs({
   items,
+  layout = 'featured',
   title = 'Helpful resources',
   eyebrow = 'Learn more',
   viewAll,
@@ -36,6 +37,7 @@ export function BusinessSiteBlogs({
       aria-labelledby={headingId}
       className={['pz-business-blogs', className].filter(Boolean).join(' ')}
       data-density={compact ? 'compact' : 'comfortable'}
+      data-layout={layout === 'grid' ? 'grid' : 'featured'}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={blogsStyle(appearance)}
     >
@@ -45,9 +47,15 @@ export function BusinessSiteBlogs({
             {eyebrow.trim() && <p className="pz-business-blogs__eyebrow">{eyebrow}</p>}
             <h2 id={headingId}>{title.trim() || 'Helpful resources'}</h2>
           </div>
-          <span className="pz-business-blogs__count">{blogs.length} {blogs.length === 1 ? 'guide' : 'guides'}</span>
+          <span className="pz-business-blogs__count">{blogs.length} {layout === 'grid'
+            ? (blogs.length === 1 ? 'article' : 'articles')
+            : (blogs.length === 1 ? 'guide' : 'guides')}</span>
         </div>
-        {compact ? (
+        {layout === 'grid' ? (
+          <ul className="pz-business-blogs__grid" role="list">
+            {blogs.map((item) => <li key={item.id}><BlogCard item={item} directory fallbackImage={fallbackImage} /></li>)}
+          </ul>
+        ) : compact ? (
           <ul className="pz-business-blogs__grid" role="list">
             {blogs.map((item) => <li key={item.id}><BlogCard item={item} /></li>)}
           </ul>

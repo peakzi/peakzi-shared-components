@@ -121,6 +121,16 @@ npm install highcharts highcharts-react-official
 npm install leaflet react-leaflet@^5
 ```
 
+The separate `BusinessSiteAreasMap` entry additionally needs
+`npm install leaflet.markercluster @react-leaflet/core@^3`. These remain optional
+peers, so non-map consumers do not install the clustering runtime. Its
+`clusterOnMobile` prop defaults to `false`; enable it for the service-area
+directory to group nearby cities when the section is 900px wide or narrower.
+Cluster bubbles use the section palette. Clicking or pressing Enter zooms into
+their cities; coincident locations can spread at maximum zoom. Selecting a city
+from the list reveals its marker. Desktop pins and the server-rendered city list
+are unchanged. `Service Areas Directory / Mobile` previews this in Storybook.
+
 The map components target **React Leaflet 5**, which requires **React 19** (`react-leaflet@5` peers on `react`/`react-dom` `^19` and `leaflet` `^1.9`). An app still on React 18 / React Leaflet 4 should upgrade React and its map dependencies before adopting `GeoMap`.
 
 **Import charts and maps from their subpaths — they are not exported from the root entry.** This keeps apps that never render a chart (e.g. ones without Highcharts or Leaflet installed) from requiring those packages or running the shared Highcharts setup just by importing `@peakzi/components`:

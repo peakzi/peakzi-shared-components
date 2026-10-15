@@ -16,11 +16,13 @@ const componentEntries = [
   'BusinessSiteHero',
   'BusinessSiteServices',
   'BusinessSiteAreas',
+  'BusinessSiteAreasDirectory',
   'BusinessSiteFaq',
   'BusinessSiteReviews',
   'BusinessSiteOffers',
   'BusinessSiteProjectGallery',
   'BusinessSiteBlogs',
+  'BusinessSiteContentList',
   'Button',
   'Card',
   'Checkbox',
@@ -66,6 +68,8 @@ const entries = {
   BusinessSiteHeaderMenuBehavior: resolve(__dirname, 'src/components/BusinessSiteHeader/menu-behavior/HeaderMenuBehavior.tsx'),
   BusinessSiteOffersCarousel: resolve(__dirname, 'src/components/BusinessSiteOffers/carousel/BusinessSiteOffersCarousel.tsx'),
   BusinessSiteCardCarousel: resolve(__dirname, 'src/components/BusinessSiteCardCarousel/BusinessSiteCardCarousel.tsx'),
+  BusinessSiteBlogCoverImage: resolve(__dirname, 'src/components/BusinessSiteBlogs/cover/BlogCoverImage.tsx'),
+  BusinessSiteFaqAccordion: resolve(__dirname, 'src/components/BusinessSiteFaq/accordion/FaqAccordion.tsx'),
   BusinessSiteAreasMap: resolve(__dirname, 'src/components/BusinessSiteAreas/map/BusinessSiteAreasMap.tsx'),
   BusinessSiteProjectGalleryPreview: resolve(__dirname, 'src/components/BusinessSiteProjectGallery/preview/BusinessSiteProjectGalleryPreview.tsx'),
   ...Object.fromEntries(
@@ -102,12 +106,15 @@ export default defineConfig({
         'highcharts-react-official',
         /^highcharts\//,
         'leaflet',
+        'leaflet.markercluster',
+        /^leaflet\.markercluster\//,
+        '@react-leaflet/core',
         'react-leaflet',
         /^react-leaflet\//,
       ],
       output: {
         // Keep the client boundary on extracted chunks too, not only their entry facades.
-        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteAreas\/map\/BusinessSiteAreasMap|BusinessSiteProjectGallery\/preview\/BusinessSiteProjectGalleryPreview)\.tsx$/.test(id.replace(/\\/g, '/')))
+        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteBlogs\/cover\/BlogCoverImage|BusinessSiteFaq\/accordion\/FaqAccordion|BusinessSiteAreas\/map\/BusinessSiteAreasMap|BusinessSiteAreasDirectory\/BusinessSiteAreasDirectory|BusinessSiteProjectGallery\/preview\/BusinessSiteProjectGalleryPreview)\.tsx$/.test(id.replace(/\\/g, '/')))
           ? '"use client";' : '',
         globals: {
           react: 'React',
