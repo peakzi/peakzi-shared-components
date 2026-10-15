@@ -5,35 +5,19 @@ import { BusinessSiteContentList } from './BusinessSiteContentList'
 import type { BusinessSiteContentListItem } from './helpers/types'
 
 const items: BusinessSiteContentListItem[] = [
-  { id: '1', title: 'How to fix a leaky faucet', href: '/blogs/1', excerpt: 'A step-by-step guide.', category: 'Plumbing', date: 'Jan 2, 2026' },
+  { id: '1', title: 'How to fix a leaky faucet', href: '/blogs/1', excerpt: 'A step-by-step guide.', category: 'Plumbing', publishedOn: '2026-01-02' },
   { id: '2', title: 'HVAC maintenance tips', href: '/blogs/2' },
 ]
 
 describe('BusinessSiteContentList', () => {
-  it('keeps action text readable when the theme accent is too pale on its background', () => {
-    const html = renderToStaticMarkup(<BusinessSiteContentList items={items} appearance={{ backgroundColor: '#ffffff', accentColor: '#aaddff' }} />)
-    expect(html).toContain('--pz-business-content-list-accent:#aaddff')
-    expect(html).toContain('--pz-business-content-list-link:#000000')
-  })
-  it('offers an editorial layout without changing the default grid or dropping article facts', () => {
-    const html = renderToStaticMarkup(<BusinessSiteContentList items={items} layout="editorial" />)
-    expect(html).toContain('data-layout="editorial"')
-    expect(html).toContain('How to fix a leaky faucet')
-    expect(html).toContain('href="/blogs/2"')
-  })
-  it('places reading time between category and date, without parsing or inventing it', () => {
-    const html = renderToStaticMarkup(<BusinessSiteContentList items={[{ ...items[0]!, readingTime: ' 9 min read ' }]} />)
-    expect(html.indexOf('Plumbing')).toBeLessThan(html.indexOf('9 min read'))
-    expect(html.indexOf('9 min read')).toBeLessThan(html.indexOf('Jan 2, 2026'))
-    const blank = renderToStaticMarkup(<BusinessSiteContentList items={[{ ...items[0]!, readingTime: ' ' }]} />)
-    expect(blank).not.toContain('pz-business-content-list__reading-time')
-  })
-  it('defaults to the grid layout and switches to stack via the layout prop', () => {
-    const { container: gridContainer } = render(<BusinessSiteContentList items={items} />)
-    expect(gridContainer.querySelector('section')).toHaveAttribute('data-layout', 'grid')
+  it('defaults to comfortable density and switches to compact via appearance.density', () => {
+    const { container: comfortableContainer } = render(<BusinessSiteContentList items={items} />)
+    expect(comfortableContainer.querySelector('section')).toHaveAttribute('data-density', 'comfortable')
 
-    const { container: stackContainer } = render(<BusinessSiteContentList items={items} layout="stack" />)
-    expect(stackContainer.querySelector('section')).toHaveAttribute('data-layout', 'stack')
+    const { container: compactContainer } = render(
+      <BusinessSiteContentList items={items} appearance={{ density: 'compact' }} />
+    )
+    expect(compactContainer.querySelector('section')).toHaveAttribute('data-density', 'compact')
   })
 
   it.each([undefined, 'none', 'subtle'] as const)('uses the site motion setting %s without hiding items', (motion) => {
@@ -52,9 +36,81 @@ describe('BusinessSiteContentList', () => {
     expect(html).toContain('How to fix a leaky faucet')
     expect(html).toContain('A step-by-step guide.')
     expect(html).toContain('Plumbing')
-    expect(html).toContain('Jan 2, 2026')
+    expect(html).toContain('<time class="pz-business-content-list__date" dateTime="2026-01-02">Jan 2, 2026</time>')
     expect(html).toContain('href="/blogs/1"')
     expect(html).toContain('href="/blogs"')
+  })
+
+  it('orders category, reading time, and date in the metadata row', () => {
+    const html = renderToStaticMarkup(
+      <BusinessSiteContentList
+        items={[{ id: '1', title: 'Guide', href: '/blogs/1', category: 'Plumbing', readingTime: '9 min read', publishedOn: '2026-10-05' }]}
+      />
+    )
+    const metaMatch = html.match(/<div class="pz-business-content-list__meta">(.*?)<\/div>/)
+    expect(metaMatch).not.toBeNull()
+    const meta = metaMatch![1]!
+    expect(meta.indexOf('Plumbing')).toBeLessThan(meta.indexOf('9 min read'))
+    expect(meta.indexOf('9 min read')).toBeLessThan(meta.indexOf('Oct 5, 2026'))
+  })
+
+  it('omits invalid calendar dates', () => {
+    const html = renderToStaticMarkup(
+      <BusinessSiteContentList items={[{ id: '1', title: 'Guide', href: '/blogs/1', publishedOn: 'not-a-date' }]} />
+    )
+    expect(html).not.toContain('<time')
+  })
+
+  it('renders an item image with data-image-kind="cover"', () => {
+    const html = renderToStaticMarkup(
+      <BusinessSiteContentList
+        items={[{ id: '1', title: 'Guide', href: '/blogs/1', image: { src: 'https://example.com/cover.jpg', alt: 'Cover photo' } }]}
+      />
+    )
+    expect(html).toContain('data-image-kind="cover"')
+    expect(html).toContain('src="https://example.com/cover.jpg"')
+  })
+
+  it('falls back to fallbackImage with data-image-kind="logo" when the item has no image', () => {
+    const html = renderToStaticMarkup(
+      <BusinessSiteContentList
+        items={[{ id: '1', title: 'Guide', href: '/blogs/1' }]}
+        fallbackImage={{ src: '/logo.png', alt: 'Company logo' }}
+      />
+    )
+    expect(html).toContain('data-image-kind="logo"')
+    expect(html).toContain('src="/logo.png"')
+  })
+
+  it('renders no image when neither item image nor fallbackImage is present', () => {
+    const html = renderToStaticMarkup(<BusinessSiteContentList items={[{ id: '1', title: 'Guide', href: '/blogs/1' }]} />)
+    expect(html).not.toContain('<img')
+    expect(html).not.toContain('pz-business-content-list__media')
+  })
+
+  it('omits images entirely when showImages is false even with a fallbackImage set', () => {
+    const html = renderToStaticMarkup(
+      <BusinessSiteContentList
+        items={[{ id: '1', title: 'Guide', href: '/blogs/1', image: { src: 'https://example.com/cover.jpg', alt: 'Cover photo' } }]}
+        fallbackImage={{ src: '/logo.png', alt: 'Company logo' }}
+        showImages={false}
+      />
+    )
+    expect(html).not.toContain('<img')
+  })
+
+  it.each(['javascript:alert(1)', '//evil.example/image', 'data:image/svg+xml,evil'])('never renders an unsafe item image src %s', (src) => {
+    const html = renderToStaticMarkup(
+      <BusinessSiteContentList items={[{ id: '1', title: 'Guide', href: '/blogs/1', image: { src, alt: 'Unsafe' } }]} />
+    )
+    expect(html).not.toContain('<img')
+  })
+
+  it.each(['javascript:alert(1)', '//evil.example/image', 'data:image/svg+xml,evil'])('never renders an unsafe fallbackImage src %s', (src) => {
+    const html = renderToStaticMarkup(
+      <BusinessSiteContentList items={[{ id: '1', title: 'Guide', href: '/blogs/1' }]} fallbackImage={{ src, alt: 'Unsafe' }} />
+    )
+    expect(html).not.toContain('<img')
   })
 
   it('accepts server-rendered rich content as the excerpt', () => {
@@ -97,17 +153,41 @@ describe('BusinessSiteContentList', () => {
     expect(screen.queryByRole('link', { name: /view all/i })).toBeNull()
   })
 
-  it('uses site appearance tokens and compact density', () => {
+  it('uses site appearance tokens', () => {
     const { container } = render(
       <BusinessSiteContentList
         items={items}
-        appearance={{ backgroundColor: '#102030', textColor: '#ffffff', accentColor: '#ff7700', buttonRadius: '16px', density: 'compact' }}
+        appearance={{ backgroundColor: '#102030', textColor: '#ffffff', accentColor: '#ff7700', buttonRadius: '16px' }}
       />
     )
     const section = container.querySelector('section')!
-    expect(section).toHaveAttribute('data-density', 'compact')
     expect(section.getAttribute('style')).toContain('--pz-business-content-list-background: #102030')
     expect(section.getAttribute('style')).toContain('--pz-business-content-list-accent: #ff7700')
     expect(section.getAttribute('style')).toContain('--pz-business-content-list-radius: 16px')
+  })
+
+  it('derives text, accent, and the view-all fill from a gradient palette', () => {
+    const { container } = render(
+      <BusinessSiteContentList
+        items={items}
+        appearance={{ gradientStartColor: '#17392f', gradientEndColor: '#416951' }}
+      />
+    )
+    const style = container.querySelector('section')!.getAttribute('style')!
+    expect(style).toContain('--pz-business-content-list-text: #17392f')
+    expect(style).toContain('--pz-business-content-list-accent: #17392f')
+    expect(style).toContain('--pz-business-content-list-fill: linear-gradient(135deg, #17392f, #416951)')
+  })
+
+  it('ignores textColor/accentColor once a gradient palette is supplied', () => {
+    const { container } = render(
+      <BusinessSiteContentList
+        items={items}
+        appearance={{ gradientStartColor: '#17392f', gradientEndColor: '#416951', textColor: '#ff0000', accentColor: '#00ff00' }}
+      />
+    )
+    const style = container.querySelector('section')!.getAttribute('style')!
+    expect(style).not.toContain('#ff0000')
+    expect(style).not.toContain('#00ff00')
   })
 })

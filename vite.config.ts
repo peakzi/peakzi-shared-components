@@ -23,6 +23,7 @@ const componentEntries = [
   'BusinessSiteProjectGallery',
   'BusinessSiteBlogs',
   'BusinessSiteContentList',
+  'BusinessSiteContentFilterNav',
   'Button',
   'Card',
   'Checkbox',
@@ -71,6 +72,7 @@ const entries = {
   BusinessSiteBlogCoverImage: resolve(__dirname, 'src/components/BusinessSiteBlogs/cover/BlogCoverImage.tsx'),
   BusinessSiteFaqAccordion: resolve(__dirname, 'src/components/BusinessSiteFaq/accordion/FaqAccordion.tsx'),
   BusinessSiteAreasMap: resolve(__dirname, 'src/components/BusinessSiteAreas/map/BusinessSiteAreasMap.tsx'),
+  BusinessSiteContentFilterNavSheet: resolve(__dirname, 'src/components/BusinessSiteContentFilterNav/sheet/ContentFilterNavSheet.tsx'),
   BusinessSiteProjectGalleryPreview: resolve(__dirname, 'src/components/BusinessSiteProjectGallery/preview/BusinessSiteProjectGalleryPreview.tsx'),
   ...Object.fromEntries(
     componentEntries.map((name) => [name, resolve(__dirname, `src/components/${name}/index.ts`)]),

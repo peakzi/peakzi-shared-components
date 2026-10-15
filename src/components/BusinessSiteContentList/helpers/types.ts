@@ -1,6 +1,11 @@
 import type { ReactNode } from 'react'
 import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
 
+export interface BusinessSiteContentListImage {
+  src: string
+  alt: string
+}
+
 export interface BusinessSiteContentListItem {
   id: string
   title: string
@@ -8,11 +13,14 @@ export interface BusinessSiteContentListItem {
   /** Plain text or server-rendered rich content (e.g. from the app's own markdown renderer). */
   excerpt?: ReactNode
   category?: string
-  /** Supplied reading-time label; the app extracts it from backend content. */
+  /** Backend-supplied display label, e.g. "9 min read". Omit when unavailable. */
   readingTime?: string
-  /** Pre-formatted display date — this package does not parse or format dates. */
-  date?: string
+  /** ISO calendar date, YYYY-MM-DD. Omit when the backend has no publication date. */
+  publishedOn?: string
+  /** Optional card image; the section's fallbackImage is used when absent and showImages is true. */
+  image?: BusinessSiteContentListImage
   actionLabel?: string
+  newTab?: boolean
 }
 
 export interface BusinessSiteContentListLink {
@@ -25,9 +33,15 @@ export interface BusinessSiteContentListAppearance {
   font?: string
   headingFont?: string
   backgroundColor?: string
+  /** Website gradient palette; text, accents, and the view-all button are derived from these colors. */
+  gradientStartColor?: string
+  gradientEndColor?: string
+  /** Legacy override, used only when no gradient palette is supplied. */
   textColor?: string
+  /** Legacy override, used only when no gradient palette is supplied. */
   accentColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
+  /** Default 'comfortable' arranges items in a responsive multi-column grid. 'compact' is a single-column row list with a thumbnail on the left, tighter spacing, and a smaller type scale. */
   density?: 'comfortable' | 'compact'
   motion?: BusinessSiteMotion
 }
@@ -37,14 +51,16 @@ export interface BusinessSiteContentListProps {
   title?: string
   eyebrow?: string
   intro?: string
-  /** Editorial emphasizes the first article, then uses a two-column reading grid. */
-  layout?: 'grid' | 'stack' | 'editorial'
   isLoading?: boolean
   /** Shown instead of the grid when there are no items. Omit to render nothing when empty. */
   emptyMessage?: string
   /** Number of skeleton placeholders to render while isLoading. */
   loadingCount?: number
   viewAll?: BusinessSiteContentListLink
+  /** Default true; set false to omit images/logo entirely, e.g. FAQ listings have no imagery. */
+  showImages?: boolean
+  /** Used as each card's image when the item has no image of its own, e.g. the business logo. */
+  fallbackImage?: BusinessSiteContentListImage
   appearance?: BusinessSiteContentListAppearance
   sectionId?: string
   className?: string
