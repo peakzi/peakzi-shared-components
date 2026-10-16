@@ -137,6 +137,10 @@ export type {
 } from './components/BusinessSiteHero'
 
 export { BusinessSiteServices } from './components/BusinessSiteServices'
+export { BusinessSiteServicesDirectory } from './components/BusinessSiteServicesDirectory'
+export type { BusinessSiteServicesDirectoryProps } from './components/BusinessSiteServicesDirectory'
+export { BusinessSiteServiceDetail } from './components/BusinessSiteServiceDetail'
+export type { BusinessSiteServiceDetailProps, BusinessSiteServiceDetailReason, BusinessSiteServiceDetailSectionLink } from './components/BusinessSiteServiceDetail'
 export type {
   BusinessSiteServiceGroup,
   BusinessSiteServiceImage,
