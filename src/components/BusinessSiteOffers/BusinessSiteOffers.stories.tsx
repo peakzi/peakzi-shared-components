@@ -66,6 +66,7 @@ export const Carousel: Story = { args: { items: [
   { id: 'repairs', title: 'Qualifying repairs', badge: '10% OFF', action: { label: 'View offer', href: 'https://example.com/offers', newTab: true } },
 ] } }
 export const SingleOffer: Story = { args: { items: [meta.args.items[0]!] } }
+export const TwoOffers: Story = { args: { items: meta.args.items.slice(0, 2) } }
 export const Compact: Story = { args: { density: 'compact' } }
 export const Grid: Story = { ...Carousel, args: { ...Carousel.args, layout: 'grid' } }
 export const CompactGrid: Story = { ...Grid, args: { ...Grid.args, density: 'compact' } }

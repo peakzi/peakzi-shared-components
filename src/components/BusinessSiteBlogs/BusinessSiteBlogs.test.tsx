@@ -19,9 +19,38 @@ describe('BusinessSiteBlogs', () => {
     expect(html).toContain('2 articles')
     expect(html).toContain('height="800"')
     expect(html).not.toContain('pz-business-blogs__featured-layout')
-    expect(html).not.toContain('pz-business-blogs__read')
+    expect(html.match(/pz-business-blogs__read"/g)).toHaveLength(2)
+    expect(html.match(/Read more/g)).toHaveLength(2)
+    expect(html).not.toContain('Read the guide')
     expect(html).not.toContain('pz-business-blogs__number')
     expect(renderToStaticMarkup(<BusinessSiteBlogs items={items} />)).toContain('data-layout="featured"')
+  })
+
+  it.each(['comfortable', 'compact'] as const)('keeps Read more inside the existing detail link in grid %s', (density) => {
+    render(<BusinessSiteBlogs layout="grid" items={items} appearance={{ density }} />)
+    const section = screen.getByRole('region', { name: 'Helpful resources' })
+    const links = within(section).getAllByRole('link')
+    expect(links).toHaveLength(items.length)
+    items.forEach((item) => {
+      const link = within(section).getByRole('link', { name: item.title })
+      expect(link).toHaveAttribute('href', item.href)
+      expect(within(link).getByText('Read more').closest('a')).toBe(link)
+      expect(link.querySelector('a, button')).toBeNull()
+    })
+  })
+
+  it('does not show Read more for an unsafe or missing grid-card destination', () => {
+    const html = renderToStaticMarkup(<BusinessSiteBlogs layout="grid" items={[
+      { ...items[0]!, href: 'javascript:alert(1)' }, { ...items[1]!, href: '' },
+    ]} />)
+    expect(html).not.toContain('Read more')
+    expect(html).not.toContain('<a ')
+  })
+
+  it('preserves the featured homepage action label', () => {
+    const html = renderToStaticMarkup(<BusinessSiteBlogs items={items} />)
+    expect(html).toContain('Read the guide')
+    expect(html).not.toContain('Read more')
   })
 
   it('uses the API cover where supplied, with a logo frame for the other grid articles', () => {

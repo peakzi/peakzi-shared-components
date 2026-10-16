@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { BusinessSiteOffersCarousel } from './BusinessSiteOffersCarousel'
 
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals() })
@@ -13,7 +13,7 @@ function setup(count = 7, animate = false) {
   let width = 600
   let scrollWidth = count * 200
   Object.defineProperties(track, {
-    clientWidth: { get: () => width }, scrollWidth: { get: () => scrollWidth }, scrollLeft: { get: () => left },
+    clientWidth: { configurable: true, get: () => width }, scrollWidth: { get: () => scrollWidth }, scrollLeft: { get: () => left },
   })
   Array.from(track.children).forEach((card, index) => {
     vi.spyOn(card, 'getBoundingClientRect').mockImplementation(() => ({
@@ -58,8 +58,8 @@ describe('BusinessSiteOffersCarousel', () => {
     expect(screen.getByRole('button', { name: 'Next offers' })).toBeDisabled()
     swipe(0)
     resize(1400, 1400)
-    expect(screen.getByRole('button', { name: 'Previous offers' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Next offers' })).toBeDisabled()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.getByRole('list', { name: 'Offer cards' })).not.toHaveAttribute('tabindex')
     resize(390, 1400)
     expect(screen.getByRole('button', { name: 'Next offers' })).toBeEnabled()
   })
@@ -125,8 +125,49 @@ describe('BusinessSiteOffersCarousel', () => {
     expect(screen.getByRole('button', { name: 'Next offers' })).toBeDisabled()
     swipe(0)
     resize(1400, 1400)
-    expect(screen.getByRole('button', { name: 'Next offers' })).toBeDisabled()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+  })
+
+  it('shows arrows for two offers only when they overflow, including after resizing', () => {
+    const { track, resize, scrollTo } = setup(2)
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(track).not.toHaveAttribute('tabindex')
+    fireEvent.keyDown(track, { key: 'ArrowRight' })
+    expect(scrollTo).not.toHaveBeenCalled()
+
+    resize(300, 400)
     expect(screen.getByRole('button', { name: 'Previous offers' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Next offers' })).toBeEnabled()
+    expect(track).toHaveAttribute('tabindex', '0')
+    fireEvent.click(screen.getByRole('button', { name: 'Next offers' }))
+    expect(screen.getByRole('button', { name: 'Previous offers' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Next offers' })).toBeDisabled()
+
+    resize(400, 400)
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(track).not.toHaveAttribute('tabindex')
+  })
+
+  it('ignores one-pixel rounding overflow', () => {
+    const { resize } = setup(2)
+    resize(400, 401)
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    resize(400, 402)
+    expect(screen.getByRole('button', { name: 'Next offers' })).toBeEnabled()
+  })
+
+  it('rechecks overflow when its container resizes without a window resize', () => {
+    let notify = () => {}
+    vi.stubGlobal('ResizeObserver', class {
+      constructor(callback: () => void) { notify = callback }
+      observe = vi.fn()
+      disconnect = vi.fn()
+    })
+    const { track } = setup(2)
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    Object.defineProperty(track, 'clientWidth', { get: () => 300 })
+    act(() => notify())
+    expect(screen.getByRole('button', { name: 'Next offers' })).toBeEnabled()
   })
 
   it('disconnects observers and removes listeners when unmounted', () => {

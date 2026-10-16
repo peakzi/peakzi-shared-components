@@ -15,6 +15,8 @@ const componentEntries = [
   'BusinessSiteFooter',
   'BusinessSiteHero',
   'BusinessSiteServices',
+  'BusinessSiteServicesDirectory',
+  'BusinessSiteServiceDetail',
   'BusinessSiteAreas',
   'BusinessSiteAreasDirectory',
   'BusinessSiteFaq',
@@ -116,7 +118,7 @@ export default defineConfig({
       ],
       output: {
         // Keep the client boundary on extracted chunks too, not only their entry facades.
-        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteBlogs\/cover\/BlogCoverImage|BusinessSiteFaq\/accordion\/FaqAccordion|BusinessSiteAreas\/map\/BusinessSiteAreasMap|BusinessSiteAreasDirectory\/BusinessSiteAreasDirectory|BusinessSiteContentFilterNav\/sheet\/ContentFilterNavSheet|BusinessSiteProjectGallery\/preview\/BusinessSiteProjectGalleryPreview)\.tsx$/.test(id.replace(/\\/g, '/')))
+        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteBlogs\/cover\/BlogCoverImage|BusinessSiteFaq\/accordion\/FaqAccordion|BusinessSiteAreas\/map\/BusinessSiteAreasMap|BusinessSite(?:Areas|Services)Directory\/BusinessSite(?:Areas|Services)Directory|BusinessSiteContentFilterNav\/sheet\/ContentFilterNavSheet|BusinessSiteProjectGallery\/preview\/BusinessSiteProjectGalleryPreview)\.tsx$/.test(id.replace(/\\/g, '/')))
           ? '"use client";' : '',
         globals: {
           react: 'React',
