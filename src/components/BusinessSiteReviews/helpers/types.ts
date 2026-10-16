@@ -17,6 +17,8 @@ export interface BusinessSiteReview {
 export interface BusinessSiteReviewsSummary {
   rating?: number | null
   reviewCount?: number | null
+  /** Topic counts across all reviews. An empty object hides mentions; omitted uses displayed review tags. */
+  mentionCounts?: Readonly<Record<string, number>>
   /** Use a source-specific label only when that source is known. */
   label?: string
 }
