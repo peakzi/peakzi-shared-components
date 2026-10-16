@@ -17,7 +17,7 @@ interface ReviewsSummaryProps {
 export function ReviewsSummary({ headingId, title, eyebrow, items, summary, viewAll }: ReviewsSummaryProps) {
   const count = summary?.reviewCount
   const validCount = typeof count === 'number' && Number.isSafeInteger(count) && count >= 0
-  const mentions = customerMentions(items)
+  const mentions = customerMentions(items, summary?.mentionCounts)
   const href = viewAll?.label.trim() ? safeHref(viewAll.href) : null
   const newTab = viewAll?.newTab === true && !!href && /^https?:\/\//i.test(href)
 
@@ -40,7 +40,9 @@ export function ReviewsSummary({ headingId, title, eyebrow, items, summary, view
             <span>{label}</span><span className="pz-business-reviews__mention-count">{mentionCount}</span>
           </li>)}
         </ul>
-        <p className="pz-business-reviews__mentions-note">Based on the reviews shown here.</p>
+        <p className="pz-business-reviews__mentions-note">
+          {summary?.mentionCounts !== undefined ? 'Based on all customer reviews.' : 'Based on the reviews shown here.'}
+        </p>
       </div>}
       {href && <a className="pz-business-reviews__view-all" href={href} target={newTab ? '_blank' : undefined} rel={newTab ? 'noopener noreferrer' : undefined}>
         {viewAll?.label}<ArrowUpRight size={16} aria-hidden="true" />

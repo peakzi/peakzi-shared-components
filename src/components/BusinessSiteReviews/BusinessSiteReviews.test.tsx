@@ -138,6 +138,34 @@ describe('BusinessSiteReviews', () => {
     expect(screen.getByRole('list', { name: 'Customer reviews' }).children).toHaveLength(2)
   })
 
+  it('uses all supplied aggregate metrics instead of counting the displayed review tags', () => {
+    render(<BusinessSiteReviews items={[{ ...items[0]!, tags: ['Service', 'Service', 'Displayed only'] }]} summary={{
+      mentionCounts: {
+        'Overall experience': 934,
+        Professionalism: 2345,
+        Service: 1872,
+        'Quality of Work': 1851,
+        'Brand Loyalty': 1325,
+        Punctuality: 935,
+      },
+    }} />)
+    const mentions = screen.getByRole('list', { name: 'Customer mentions' })
+    expect([...mentions.querySelectorAll('li')].map((item) => item.textContent)).toEqual([
+      'Professionalism2345', 'Service1872', 'Quality of Work1851',
+      'Brand Loyalty1325', 'Punctuality935', 'Overall experience934',
+    ])
+    expect(screen.getByText('Based on all customer reviews.')).toBeInTheDocument()
+    expect(screen.queryByText('Based on the reviews shown here.')).not.toBeInTheDocument()
+    expect(screen.getByRole('list', { name: 'Customer reviews' }).children).toHaveLength(1)
+  })
+
+  it.each([{}, { ' ': 20, Zero: 0, Negative: -1, Fraction: 1.5, Invalid: NaN }])(
+    'does not fall back to displayed tags when supplied aggregate metrics are empty or invalid', (mentionCounts) => {
+      render(<BusinessSiteReviews items={[{ ...items[0]!, tags: ['Service'] }]} summary={{ mentionCounts }} />)
+      expect(screen.queryByRole('list', { name: 'Customer mentions' })).not.toBeInTheDocument()
+    },
+  )
+
   it('omits customer mentions when no nonblank tags are supplied', () => {
     const html = renderToStaticMarkup(<BusinessSiteReviews items={[{ ...items[0]!, tags: [' ', ''] }]} />)
     expect(html).not.toContain('Customers mention')

@@ -1,6 +1,12 @@
 import type { BusinessSiteReview } from './types'
 
-export function customerMentions(items: readonly BusinessSiteReview[]) {
+export function customerMentions(items: readonly BusinessSiteReview[], mentionCounts?: Readonly<Record<string, number>>) {
+  if (mentionCounts !== undefined) {
+    return Object.entries(mentionCounts)
+      .filter(([label, count]) => label.trim() && Number.isSafeInteger(count) && count > 0)
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => b.count - a.count)
+  }
   const mentions = new Map<string, { label: string; count: number }>()
   for (const item of items) {
     const seen = new Set<string>()

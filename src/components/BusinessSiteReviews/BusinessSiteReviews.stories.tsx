@@ -11,7 +11,7 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
     controls: { exclude: ['appearance'] },
-    docs: { description: { component: 'Server-safe summary panel and review grid. Supplied phrases highlight literal matches without changing review copy. Customer mentions count each tag once per displayed review, not against the overall total. Website theme applies throughout; compact density uses a tighter list. Subtle motion shares the Blogs scroll reveal, featured-content reveal, card lift/shadow, compact-row slide and button shine. Full reviews fade in when expanded. Reduced-motion and unsupported-browser fallbacks keep content readable; cards remain quotations, not navigation links.' } },
+    docs: { description: { component: 'Server-safe summary panel and review grid. Supplied phrases highlight literal matches without changing review copy. Customer mentions use supplied summary.mentionCounts totals across all reviews, or count each tag once per displayed review when the prop is omitted. Website theme applies throughout; compact density uses a tighter list. Subtle motion shares the Blogs scroll reveal, featured-content reveal, card lift/shadow, compact-row slide and button shine. Full reviews fade in when expanded. Reduced-motion and unsupported-browser fallbacks keep content readable; cards remain quotations, not navigation links.' } },
   },
   render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
     <BusinessSiteReviews {...props} appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion }} />
@@ -56,6 +56,18 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+export const AggregateMentions: Story = {
+  args: {
+    summary: {
+      ...meta.args.summary,
+      mentionCounts: {
+        Professionalism: 2345, Service: 1872, 'Quality of Work': 1851,
+        'Brand Loyalty': 1325, Punctuality: 935, 'Overall experience': 934,
+      },
+    },
+  },
+  parameters: { docs: { description: { story: 'API totals cover all customer reviews. Omit summary.mentionCounts to retain counts from displayed review tags; pass an empty object to hide mentions.' } } },
+}
 export const Compact: Story = { args: { density: 'compact' } }
 export const NoMotion: Story = { args: { motion: 'none' } }
 export const ScrollReveal: Story = {
