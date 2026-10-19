@@ -1,114 +1,138 @@
 import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render as mount, screen } from '@testing-library/react'
 import { BusinessSiteValueShowcase } from './BusinessSiteValueShowcase'
 import type { BusinessSiteValueShowcaseProps } from './helpers/types'
 
 const base: BusinessSiteValueShowcaseProps = {
-  title: 'Baker Brothers Plumbing, Air & Electric has more homeowner reviews than any other Dallas-Fort Worth home service pro.',
-  methodHref: '/how-we-measure',
-  gradeChip: 'Elite in 5 Dallas-Fort Worth services',
-  trustSignals: [{ label: 'Financing available', kind: 'financing' }],
-  summary: { rating: 4.8, reviewCount: 24619, position: '#1 of 377 Dallas-Fort Worth home service pros for review volume' },
-  praise: [{ count: 634, text: 'positive reviews praise their quality of work' }, { count: 297, text: 'positive reviews praise their expertise' }],
-  action: { label: 'Book online', href: 'https://example.com/book', iconName: 'calendar' },
-  items: [
-    { id: 'gp', name: 'General plumbing', rank: 'Top 3', badge: 'Elite', proof: '216 homeowner reviews rate this work.' },
-    { id: 'wh', name: 'Water heater', rank: 'Top 3', badge: 'Elite', proof: '196 homeowner reviews rate this work.' },
-    { id: 'lr', name: 'Leak repair', rank: 'Top 3', badge: 'Elite', proof: '135 homeowner reviews rate this work.' },
-    { id: 'tr', name: 'Toilet repairs', rank: 'Top 3', badge: 'Elite', proof: '100 homeowner reviews rate this work.' },
+  title: 'Dallas-Fort Worth’s most-hired AC, plumbing & electrical pros',
+  lead: 'From HVAC maintenance to water heaters, you’re calling the crew voted Best in DFW People’s Choice, Gold, every year since 2022.',
+  seal: { text: 'One of DFW’s most-reviewed pros', iconName: 'award', stars: true },
+  highlights: [
+    { iconName: 'award', title: 'Best in DFW People’s Choice 2025, Gold', detail: 'Gold every year since 2022' },
+    { iconName: 'award', title: 'Consumer Choice Award 2025' },
   ],
-  note: 'Peakzi compared this business with its peers as of October 2026. The business has no say in the grades.',
+  items: [
+    { id: 'hvac', iconName: 'thermometer', label: 'Leader', name: 'HVAC maintenance and tune-ups', standing: 'Out of 200+ businesses', proof: 'Backed by 1,700+ DFW reviews' },
+    { id: 'elec', iconName: 'bolt', label: 'Leader', name: 'Electrical repair', standing: 'Out of 60+ businesses', proof: 'Trusted in 400+ DFW reviews' },
+  ],
+  note: 'Grades compare Milestone with Dallas-Fort Worth home service pros, based on homeowner reviews and the jobs they mention.',
 }
 
+const render = (props: Partial<BusinessSiteValueShowcaseProps> = {}) => renderToStaticMarkup(<BusinessSiteValueShowcase {...base} {...props} />)
+
 describe('BusinessSiteValueShowcase', () => {
-  it('renders one h2, an h3 per tile and the rating as text', () => {
-    const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} />)
+  it('renders one h2, an h3 per card and every part of the section', () => {
+    const html = render()
     expect(html.match(/<h2/g)).toHaveLength(1)
-    expect(html.match(/<h3>/g)).toHaveLength(4)
-    expect(html).toContain('aria-label="4.8 out of 5 stars"')
-    expect(html).toContain('out of 5')
-    expect(html).toContain('24,619 homeowner reviews')
+    expect(html.match(/<h3/g)).toHaveLength(2)
     expect(html).not.toContain('<h1')
-  })
-
-  it('renders nothing without a title or without any tiles and rating', () => {
-    expect(renderToStaticMarkup(<BusinessSiteValueShowcase {...base} title=" " />)).toBe('')
-    expect(renderToStaticMarkup(<BusinessSiteValueShowcase {...base} items={[]} summary={{}} />)).toBe('')
-  })
-
-  it('never defaults an invalid rating', () => {
-    const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} summary={{ rating: 7, reviewCount: 10 }} />)
-    expect(html).not.toContain('out of 5 stars')
-    expect(html).toContain('10 homeowner reviews')
-  })
-
-  it('keeps Verified #1 on a #1', () => {
-    const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} items={[{ id: 'a', name: 'HVAC maintenance', rank: '#1', badge: 'Verified #1', proof: '1,728 homeowner reviews.' }]} />)
-    expect(html).toContain('Verified #1')
-  })
-
-  it('shows any other badge label as given, including on a #1', () => {
-    const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} items={[
-      { id: 'a', name: 'HVAC maintenance', rank: '#1', badge: 'Most reviewed', proof: '1,728 homeowner reviews.' },
-      { id: 'b', name: 'AC repair', rank: 'Top 4', badge: 'Fastest growing', proof: '558 homeowner reviews.' },
-    ]} />)
-    expect(html).toContain('Most reviewed')
-    expect(html).toContain('Fastest growing')
-  })
-
-  it('renders a grade badge on a #1 as sent', () => {
-    const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} items={[{ id: 'a', name: 'HVAC maintenance', rank: '#1', badge: 'Elite', proof: '1,728 homeowner reviews.' }]} />)
-    expect(html).toContain('pz-business-value-showcase__badge')
-  })
-
-  it('renders zero, one or two praise entries', () => {
-    expect(renderToStaticMarkup(<BusinessSiteValueShowcase {...base} praise={[]} />)).not.toContain('__praise')
-    expect(renderToStaticMarkup(<BusinessSiteValueShowcase {...base} praise={[base.praise![0]!]} />)).toContain('data-count="1"')
-    expect(renderToStaticMarkup(<BusinessSiteValueShowcase {...base} praise={[...base.praise!, { count: 1, text: 'extra' }]} />)).not.toContain('extra')
-  })
-
-  it('rejects unsafe action links and adds rel for new tabs', () => {
-    expect(renderToStaticMarkup(<BusinessSiteValueShowcase {...base} action={{ label: 'Book', href: 'javascript:alert(1)' }} />)).not.toContain('__action')
-    expect(renderToStaticMarkup(<BusinessSiteValueShowcase {...base} action={{ ...base.action!, newTab: true }} />)).toContain('rel="noopener noreferrer"')
-  })
-
-  it('keeps every tile in the DOM and toggles the expander', () => {
-    render(<BusinessSiteValueShowcase {...base} />)
-    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(4)
-    const button = screen.getByRole('button', { name: 'Show 1 more service' })
-    expect(button.getAttribute('aria-expanded')).toBe('false')
-    fireEvent.click(button)
-    expect(button.getAttribute('aria-expanded')).toBe('true')
-    expect(screen.getByRole('list', { name: 'Graded services' }).getAttribute('data-expanded')).toBe('true')
-  })
-
-  it('marks the tile count for the column rules', () => {
-    for (const n of [1, 2, 3, 4]) {
-      expect(renderToStaticMarkup(<BusinessSiteValueShowcase {...base} items={base.items.slice(0, n)} />)).toContain(`aria-label="Graded services" data-count="${n}"`)
+    for (const text of ['One of DFW’s most-reviewed pros', 'Gold every year since 2022', 'Out of 200+ businesses', 'Backed by 1,700+ DFW reviews', 'Leader', 'Grades compare Milestone']) {
+      expect(html).toContain(text.replace(/&/g, '&amp;'))
     }
   })
 
-  it('collapses the band to one column when the proof card is empty', () => {
-    const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} summary={{}} praise={[]} action={undefined} />)
-    expect(html).toContain('data-proof="false"')
+  it('renders nothing without a title, or without any cards and highlights', () => {
+    expect(render({ title: ' ' })).toBe('')
+    expect(render({ items: [], highlights: [] })).toBe('')
+  })
+
+  it('renders highlights only and cards only', () => {
+    expect(render({ items: [] })).toContain('__highlights')
+    const cardsOnly = render({ highlights: [] })
+    expect(cardsOnly).toContain('__cards')
+    expect(cardsOnly).not.toContain('__highlights')
+  })
+
+  it('drops optional parts cleanly', () => {
+    const html = renderToStaticMarkup(<BusinessSiteValueShowcase title={base.title} items={base.items!} />)
+    expect(html).toContain('data-seal="false"')
+    for (const part of ['__lead', '__seal-text', '__note', 'aria-label="']) expect(html).not.toContain(part)
+  })
+
+  it('omits the label badge when an item has none', () => {
+    const html = render({ items: [{ id: 'a', name: 'AC repair', standing: 'In top 6%' }] })
+    expect(html).not.toContain('__label')
     expect(html).not.toContain('__proof')
   })
 
-  it('renders every trust signal as sent and gives each chip an icon', () => {
-    const html = renderToStaticMarkup(<BusinessSiteValueShowcase {...base} trustSignals={[
-      { label: 'Financing available', kind: 'financing' },
-      { label: 'Book online', kind: 'booking' },
-      { label: 'Members save 10%', kind: 'loyalty' },
-    ]} />)
-    const chips = html.split('aria-label="Grades and trust signals"')[1]!.split('</ul>')[0]!
-    expect(chips).toContain('Book online')
-    expect(chips.match(/<li>/g)).toHaveLength(4)
-    expect(chips.match(/<svg/g)).toHaveLength(4)
+  it('keeps the seal text readable and hides only decoration', () => {
+    const html = render()
+    expect(html).toMatch(/<p class="pz-business-value-showcase__seal"[^>]*>/)
+    expect(html).toContain('class="pz-business-value-showcase__seal-stars" aria-hidden="true"')
+    expect(render({ seal: { text: 'x', stars: false } })).not.toContain('__seal-stars')
+    expect(render({ seal: { text: 'x' } })).not.toContain('__seal-stars')
   })
 
-  it('omits the expander when every tile fits', () => {
-    render(<BusinessSiteValueShowcase {...base} items={base.items.slice(0, 3)} />)
-    expect(screen.queryByRole('button')).toBeNull()
+  it('adds no copy or icon the payload did not send', () => {
+    const html = renderToStaticMarkup(<BusinessSiteValueShowcase title="t" seal={{ text: 'Seal' }} highlights={[{ title: 'Award' }]} items={[{ id: 'a', name: 'AC repair', proof: 'p' }]} />)
+    for (const part of ['__seal-icon', '__seal-stars', '__highlight-icon', '__medallion', 'aria-label="', 'lucide']) expect(html).not.toContain(part)
+    expect(html).not.toContain('data-icon')
+    expect(html).not.toContain('data-motion')
+    expect(render({ highlightsLabel: 'Awards', itemsLabel: 'Services' })).toMatch(/aria-label="Awards"[\s\S]*aria-label="Services"/)
+  })
+
+  it('shifts headings for a nested section', () => {
+    const html = render({ headingLevel: 3 })
+    expect(html).not.toContain('<h2')
+    expect(html.match(/<h4/g)).toHaveLength(2)
+  })
+
+  it('maps design-system icon names to Lucide icons', () => {
+    const html = render()
+    expect(html).toContain('lucide-thermometer')
+    expect(html).toContain('lucide-zap')
+  })
+
+  it('renders any number of cards and reports the count', () => {
+    const items = Array.from({ length: 7 }, (_, index) => ({ id: String(index), name: `Service ${index}`, proof: 'p' }))
+    expect(render({ items })).toContain('data-count="7"')
+    expect(render({ items: items.slice(0, 1) })).toContain('data-count="1"')
+  })
+
+  describe('"View all" in narrow containers', () => {
+    const many = Array.from({ length: 6 }, (_, index) => ({ id: `s${index}`, name: `Service ${index}`, standing: 'In top 6%' }))
+
+    it('keeps every card in the page, marks the ones past the visible count, and shows a button', () => {
+      mount(<BusinessSiteValueShowcase title="t" items={many} />)
+      expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(6)
+      const list = screen.getByRole('list')
+      expect(list.querySelectorAll('li[data-collapsible="true"]')).toHaveLength(3)
+      expect(list.getAttribute('data-expanded')).toBe('false')
+      const button = screen.getByRole('button', { name: 'Show 3 more' })
+      expect(button.getAttribute('aria-expanded')).toBe('false')
+      expect(button.getAttribute('aria-controls')).toBe(list.id)
+    })
+
+    it('toggles between collapsed and expanded', () => {
+      mount(<BusinessSiteValueShowcase title="t" items={many} />)
+      fireEvent.click(screen.getByRole('button', { name: 'Show 3 more' }))
+      expect(screen.getByRole('list').getAttribute('data-expanded')).toBe('true')
+      const button = screen.getByRole('button', { name: 'Show fewer' })
+      expect(button.getAttribute('aria-expanded')).toBe('true')
+      fireEvent.click(button)
+      expect(screen.getByRole('list').getAttribute('data-expanded')).toBe('false')
+    })
+
+    it('has no button when every card fits, or when the visible count covers them all', () => {
+      mount(<BusinessSiteValueShowcase title="t" items={many.slice(0, 3)} />)
+      expect(screen.queryByRole('button')).toBeNull()
+    })
+
+    it('counts the hidden cards in the default text, not the total', () => {
+      mount(<BusinessSiteValueShowcase title="t" items={many} mobileVisibleItems={5} />)
+      expect(screen.getByRole('button', { name: 'Show 1 more' })).toBeTruthy()
+    })
+
+    it('takes the visible count and button labels from props', () => {
+      mount(<BusinessSiteValueShowcase title="t" items={many} mobileVisibleItems={2} showMoreLabel="See {count} more services" showLessLabel="Less" />)
+      expect(screen.getByRole('list').querySelectorAll('li[data-collapsible="true"]')).toHaveLength(4)
+      fireEvent.click(screen.getByRole('button', { name: 'See 4 more services' }))
+      expect(screen.getByRole('button', { name: 'Less' })).toBeTruthy()
+    })
+  })
+
+  it('sets divider and density from appearance', () => {
+    expect(render({ appearance: { divider: false, density: 'compact' } })).toMatch(/data-density="compact"[^>]*data-divider="false"/)
   })
 })

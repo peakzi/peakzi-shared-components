@@ -145,15 +145,11 @@ export { BusinessSiteBlogs } from './components/BusinessSiteBlogs'
 export type { BusinessSiteBlog, BusinessSiteBlogImage, BusinessSiteBlogsAppearance, BusinessSiteBlogsProps } from './components/BusinessSiteBlogs'
 export { BusinessSiteValueShowcase } from './components/BusinessSiteValueShowcase'
 export type {
-  BusinessSiteValueShowcaseAction,
   BusinessSiteValueShowcaseAppearance,
+  BusinessSiteValueShowcaseHighlight,
   BusinessSiteValueShowcaseItem,
-  BusinessSiteValueShowcasePraise,
   BusinessSiteValueShowcaseProps,
-  BusinessSiteValueShowcaseSummary,
-  BusinessSiteValueShowcaseTrustSignal,
-  BusinessSiteValueShowcaseKnownTrustSignalKind,
-  BusinessSiteValueShowcaseTrustSignalKind,
+  BusinessSiteValueShowcaseSeal,
 } from './components/BusinessSiteValueShowcase'
 
 export { Breadcrumbs, Pagination } from './components/Breadcrumbs'

@@ -5,280 +5,240 @@
   color: var(--pz-business-value-showcase-text, #12171c);
   font-family: var(--pz-business-value-showcase-font);
 }
+.pz-business-value-showcase[data-divider='true'] { border-bottom: 1px solid var(--pz-business-value-showcase-border); }
 
 .pz-business-value-showcase__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 56px 24px 64px;
   box-sizing: border-box;
 }
 
-// Base paragraph/list typography must not replace this website's theme.
-.pz-business-value-showcase :is(p, ul) {
-  margin: 0;
-  font-family: var(--pz-business-value-showcase-font);
-}
+// Base element typography must not replace this website's theme.
+.pz-business-value-showcase :is(p, ul, h2, h3, h4) { margin: 0; }
+.pz-business-value-showcase :is(p, ul) { font-family: var(--pz-business-value-showcase-font); }
+.pz-business-value-showcase ul { padding: 0; list-style: none; }
 
-.pz-business-value-showcase__frame {
-  overflow: hidden;
-  border: 1px solid var(--pz-business-value-showcase-border);
-  border-radius: var(--pz-business-value-showcase-radius);
-  background: var(--pz-business-value-showcase-background);
-}
-
-// Band: intro on the left, proof card on the right.
-.pz-business-value-showcase__band {
+// Header: heading block, plus the seal when there is one.
+.pz-business-value-showcase__header {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 20px 32px;
-  padding: 24px 28px;
-  background: var(--pz-business-value-showcase-band);
-  color: var(--pz-business-value-showcase-band-text);
+  gap: 20px 48px;
 }
+.pz-business-value-showcase__header[data-seal='false'] { grid-template-columns: minmax(0, 1fr); }
+.pz-business-value-showcase__intro { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pz-business-value-showcase__intro .pz-business-value-showcase__lead { margin-top: 8px; }
 
-.pz-business-value-showcase__band[data-proof='false'] { grid-template-columns: minmax(0, 1fr); }
-
-.pz-business-value-showcase__intro { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.pz-business-value-showcase__heading { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-
-.pz-business-value-showcase__eyebrow-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
-.pz-business-value-showcase .pz-business-value-showcase__eyebrow {
-  color: var(--pz-business-value-showcase-band-text);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  line-height: 1.5;
-  text-transform: uppercase;
-}
-.pz-business-value-showcase a.pz-business-value-showcase__method {
-  padding-left: 12px;
-  border-left: 1px solid currentColor;
-  color: var(--pz-business-value-showcase-band-text-2);
-  font-size: 12px;
-  text-decoration: none;
-}
-.pz-business-value-showcase__eyebrow + .pz-business-value-showcase__method:first-child { padding-left: 0; border-left: 0; }
-
-.pz-business-value-showcase h2 {
-  margin: 0;
-  color: var(--pz-business-value-showcase-band-text);
+// Title matches the page's other section headings (h2 at the same size as "Our Plumbing services in Roanoke").
+.pz-business-value-showcase .pz-business-value-showcase__title {
+  color: var(--pz-business-value-showcase-text);
   font-family: var(--pz-business-value-showcase-heading-font);
-  font-size: clamp(20px, 2vw, 26px);
+  font-size: 21px;
   font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
   overflow-wrap: anywhere;
   text-wrap: pretty;
 }
 .pz-business-value-showcase .pz-business-value-showcase__lead {
-  color: var(--pz-business-value-showcase-band-text-2);
-  font-size: 14px;
+  color: var(--pz-business-value-showcase-text-2);
+  font-size: clamp(16px, 1.4vw, 18px);
   line-height: 1.6;
   text-wrap: pretty;
 }
 
-.pz-business-value-showcase .pz-business-value-showcase__chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; list-style: none; }
-.pz-business-value-showcase__chips li {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  max-width: 100%;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: var(--pz-business-value-showcase-chip-background);
-  color: var(--pz-business-value-showcase-chip-text);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-.pz-business-value-showcase__chips svg { flex: none; width: 14px; height: 14px; }
-
-// Proof card: always a light surface so the rating reads on every band.
-.pz-business-value-showcase__proof {
+// Seal: fixed circle; long text scales down via --pz-business-value-showcase-seal-scale.
+.pz-business-value-showcase .pz-business-value-showcase__seal {
+  --pz-business-value-showcase-seal-size: 156px;
+  --pz-business-value-showcase-seal-font: 15px;
+  justify-self: end;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-  padding: 16px;
-  border: 1px solid var(--pz-business-value-showcase-border);
-  border-radius: var(--pz-business-value-showcase-radius);
-  background: var(--pz-business-value-showcase-background);
-  color: var(--pz-business-value-showcase-text);
-}
-.pz-business-value-showcase__summary { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-.pz-business-value-showcase__rating { display: inline-flex; align-items: baseline; gap: 10px; }
-.pz-business-value-showcase__rating-value { font-family: var(--pz-business-value-showcase-heading-font); font-size: 44px; font-weight: 600; line-height: 1; }
-.pz-business-value-showcase__rating-scale { color: var(--pz-business-value-showcase-text-2); font-size: 13px; font-weight: 500; }
-.pz-business-value-showcase__summary-text { display: flex; flex: 1 1 160px; flex-direction: column; gap: 2px; min-width: 0; }
-.pz-business-value-showcase .pz-business-value-showcase__count { color: var(--pz-business-value-showcase-text); font-family: var(--pz-business-value-showcase-heading-font); font-size: 15px; font-weight: 600; }
-.pz-business-value-showcase .pz-business-value-showcase__position { color: var(--pz-business-value-showcase-text-2); font-size: 12px; line-height: 1.45; }
-
-.pz-business-value-showcase .pz-business-value-showcase__praise { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 0; list-style: none; }
-.pz-business-value-showcase__praise[data-count='1'] { grid-template-columns: minmax(0, 1fr); }
-.pz-business-value-showcase__praise li {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 8px 10px;
-  border-radius: 4px;
-  background: var(--pz-business-value-showcase-tint);
-  color: var(--pz-business-value-showcase-text-2);
-  font-size: 12px;
-  line-height: 1.4;
-}
-.pz-business-value-showcase__praise-count { color: var(--pz-business-value-showcase-rank); font-family: var(--pz-business-value-showcase-heading-font); font-size: 18px; font-weight: 700; line-height: 1.2; }
-
-// Primary action: same treatment as the Hero primary action.
-.pz-business-value-showcase a.pz-business-value-showcase__action {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  min-width: 48px;
-  min-height: 48px;
-  padding: 10px 18px;
-  border: 1px solid var(--pz-business-value-showcase-accent);
-  border-radius: var(--pz-business-value-showcase-radius);
+  gap: 6px;
+  width: var(--pz-business-value-showcase-seal-size);
+  height: var(--pz-business-value-showcase-seal-size);
+  padding: 20px;
   box-sizing: border-box;
-  background: var(--pz-business-value-showcase-accent);
-  color: var(--pz-business-value-showcase-on-accent);
-  font-family: var(--pz-business-value-showcase-font);
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-  text-decoration: none;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--pz-business-value-showcase-fill);
+  color: var(--pz-business-value-showcase-on-fill);
+  text-align: center;
+  box-shadow:
+    0 0 0 6px var(--pz-business-value-showcase-background),
+    0 0 0 7px var(--pz-business-value-showcase-border),
+    inset 0 0 0 4px var(--pz-business-value-showcase-ring),
+    inset 0 0 0 7px var(--pz-business-value-showcase-ring-shade);
 }
-.pz-business-value-showcase a.pz-business-value-showcase__action:hover { text-decoration: underline; text-underline-offset: 4px; }
-.pz-business-value-showcase__action > span[aria-hidden='true'] { display: inline-flex; flex: none; }
+.pz-business-value-showcase__seal-icon { display: flex; }
+.pz-business-value-showcase__seal-icon svg { width: 24px; height: 24px; }
+.pz-business-value-showcase__seal-text {
+  display: -webkit-box;
+  max-width: 100%;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  font-family: var(--pz-business-value-showcase-heading-font);
+  font-size: calc(var(--pz-business-value-showcase-seal-font) * var(--pz-business-value-showcase-seal-scale, 1));
+  font-weight: 800;
+  line-height: 1.15;
+  hyphens: manual;
+  overflow-wrap: normal;
+  text-wrap: balance;
+}
+.pz-business-value-showcase__seal-stars { display: flex; gap: 3px; color: var(--pz-business-value-showcase-ring); }
+.pz-business-value-showcase__seal-stars svg { width: 11px; height: 11px; }
 
-// Tiles
-.pz-business-value-showcase__body {
+// Highlights: even grid of pills; any count wraps into rows.
+.pz-business-value-showcase .pz-business-value-showcase__highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: 8px;
+}
+.pz-business-value-showcase__highlights > li {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px 28px 22px;
-  border-top: 1px solid var(--pz-business-value-showcase-border);
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  border-radius: var(--pz-business-value-showcase-radius-sm);
+  background: var(--pz-business-value-showcase-tint);
+  color: var(--pz-business-value-showcase-accent);
 }
-// Columns follow the tile count: 1 → one tile capped at 560px, 2 and 4 → 2 columns,
-// any other count → 3 columns. The number of tiles is never capped here; the payload decides it.
-.pz-business-value-showcase .pz-business-value-showcase__tiles {
+.pz-business-value-showcase__highlight-icon { display: flex; flex: none; padding-top: 2px; }
+.pz-business-value-showcase__highlight-icon svg { width: 13px; height: 13px; }
+.pz-business-value-showcase__highlight-copy { display: flex; flex: 1 1 auto; flex-direction: column; gap: 2px; min-width: 0; }
+.pz-business-value-showcase__highlight-title { display: block; color: var(--pz-business-value-showcase-text); font-size: 12.5px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.pz-business-value-showcase__highlight-detail { display: block; color: var(--pz-business-value-showcase-text-2); font-size: 11.5px; line-height: 1.3; overflow-wrap: anywhere; }
+
+// Cards: auto-fill keeps one card at natural width and wraps any count.
+.pz-business-value-showcase .pz-business-value-showcase__cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  padding: 0;
-  list-style: none;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 16px;
 }
-.pz-business-value-showcase .pz-business-value-showcase__tiles[data-count='1'] { grid-template-columns: minmax(0, 560px); }
-.pz-business-value-showcase .pz-business-value-showcase__tiles:is([data-count='2'], [data-count='4']) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.pz-business-value-showcase__tiles > li { min-width: 0; margin: 0; padding: 0; }
-.pz-business-value-showcase__tile {
-  display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
-  align-items: start;
-  gap: 2px 12px;
+.pz-business-value-showcase__cards > li { min-width: 0; }
+// Text starts at the top of every card, so each label sits at the same spot whatever the name length.
+// The medallion is centred on the card.
+.pz-business-value-showcase__card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   height: 100%;
-  padding: 14px 16px;
+  padding: 12px 16px;
   box-sizing: border-box;
   border: 1px solid var(--pz-business-value-showcase-border);
   border-radius: var(--pz-business-value-showcase-radius);
   background: var(--pz-business-value-showcase-background);
 }
-.pz-business-value-showcase__rank {
-  padding-top: 2px;
-  color: var(--pz-business-value-showcase-rank);
-  font-family: var(--pz-business-value-showcase-heading-font);
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  white-space: nowrap;
-}
-.pz-business-value-showcase__tile-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.pz-business-value-showcase__tile-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.pz-business-value-showcase h3 {
-  flex: 1 1 auto;
-  min-width: 0;
-  margin: 0;
-  color: var(--pz-business-value-showcase-text);
-  font-family: var(--pz-business-value-showcase-heading-font);
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
-}
-.pz-business-value-showcase__badge {
-  display: inline-flex;
-  flex-shrink: 0;
+.pz-business-value-showcase__medallion {
+  display: flex;
+  flex: none;
+  align-self: center;
   align-items: center;
-  gap: 5px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: var(--pz-business-value-showcase-tint);
-  color: var(--pz-business-value-showcase-text);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-  white-space: nowrap;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--pz-business-value-showcase-fill);
+  color: var(--pz-business-value-showcase-on-fill);
+  box-shadow: inset 0 0 0 3px var(--pz-business-value-showcase-ring), inset 0 0 0 5px var(--pz-business-value-showcase-ring-shade);
 }
-.pz-business-value-showcase__tile-body p {
-  color: var(--pz-business-value-showcase-text-2);
-  font-size: 14px;
-  line-height: 1.5;
+.pz-business-value-showcase__medallion svg { width: 19px; height: 19px; }
+.pz-business-value-showcase__card-body { display: flex; flex: 1 1 auto; flex-direction: column; gap: 2px; min-width: 0; }
+// Fixed label column keeps badges aligned whatever the name length.
+.pz-business-value-showcase__card-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px; }
+.pz-business-value-showcase .pz-business-value-showcase__card-title {
+  min-width: 0;
+  color: var(--pz-business-value-showcase-text);
+  font-family: var(--pz-business-value-showcase-heading-font);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
   overflow-wrap: anywhere;
   text-wrap: pretty;
 }
+.pz-business-value-showcase__label {
+  justify-self: end;
+  margin-top: 1px;
+  padding: 3px 8px;
+  border-radius: var(--pz-business-value-showcase-radius-sm);
+  background: var(--pz-business-value-showcase-tint);
+  color: var(--pz-business-value-showcase-accent);
+  font-family: var(--pz-business-value-showcase-font);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.pz-business-value-showcase .pz-business-value-showcase__standing { color: var(--pz-business-value-showcase-accent); font-size: 14px; font-weight: 700; line-height: 1.4; }
+.pz-business-value-showcase .pz-business-value-showcase__proof { color: var(--pz-business-value-showcase-text-2); font-size: 13.5px; line-height: 1.4; }
 
+// "View all" button: shown only in narrow containers, and only when some cards are collapsed.
 .pz-business-value-showcase button.pz-business-value-showcase__more {
   display: none;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
   min-height: 48px;
-  padding: 0;
-  border: 0;
-  border-top: 1px solid var(--pz-business-value-showcase-border);
-  background: transparent;
-  color: var(--pz-business-value-showcase-rank);
+  padding: 10px 16px;
+  box-sizing: border-box;
+  border: 1px solid var(--pz-business-value-showcase-border);
+  border-radius: var(--pz-business-value-showcase-radius);
+  background: var(--pz-business-value-showcase-background);
+  color: var(--pz-business-value-showcase-accent);
   font: 600 14px/1.4 var(--pz-business-value-showcase-font);
   cursor: pointer;
 }
+.pz-business-value-showcase__more svg { flex: none; width: 16px; height: 16px; }
 .pz-business-value-showcase__more:hover { text-decoration: underline; text-underline-offset: 3px; }
-
-.pz-business-value-showcase__footer { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
-.pz-business-value-showcase .pz-business-value-showcase__note { flex: 1 1 420px; color: var(--pz-business-value-showcase-text-2); font-size: 12.5px; line-height: 1.55; text-wrap: pretty; }
-.pz-business-value-showcase a.pz-business-value-showcase__footer-link { color: var(--pz-business-value-showcase-rank); font-size: 12.5px; font-weight: 600; white-space: nowrap; text-decoration: underline; text-underline-offset: 3px; }
-
 .pz-business-value-showcase :is(a, button):focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
-// Compact density tightens spacing only; layout is unchanged.
-.pz-business-value-showcase[data-density='compact'] {
-  .pz-business-value-showcase__inner { padding: 28px 24px; }
-  .pz-business-value-showcase__band { padding: 16px 20px; }
-  .pz-business-value-showcase__proof { padding: 12px 14px; }
-  .pz-business-value-showcase__rating-value { font-size: 36px; }
-  .pz-business-value-showcase__body { padding: 14px 20px 16px; }
-  .pz-business-value-showcase__tile { padding: 10px 12px; }
-}
+// The note reads as the cards' caption; the button sits close under the cards.
+.pz-business-value-showcase .pz-business-value-showcase__note { color: var(--pz-business-value-showcase-muted); font-size: 12.5px; line-height: 1.55; text-wrap: pretty; }
+.pz-business-value-showcase :is(.pz-business-value-showcase__cards, .pz-business-value-showcase__more) + .pz-business-value-showcase__note { margin-top: -16px; }
+.pz-business-value-showcase__cards + .pz-business-value-showcase__more { margin-top: -16px; }
 
-@container (max-width: 1100px) {
-  .pz-business-value-showcase .pz-business-value-showcase__tiles:not([data-count='1']) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+// Compact density tightens spacing only.
+.pz-business-value-showcase[data-density='compact'] {
+  .pz-business-value-showcase__inner { gap: 24px; padding: 36px 24px 40px; }
+  .pz-business-value-showcase__seal { --pz-business-value-showcase-seal-size: 136px; padding: 16px; }
+  .pz-business-value-showcase__highlights > li { padding: 5px 8px; }
+  .pz-business-value-showcase__cards { gap: 12px; }
+  .pz-business-value-showcase__card { padding: 10px 12px; }
+  :is(.pz-business-value-showcase__cards, .pz-business-value-showcase__more) + .pz-business-value-showcase__note,
+  .pz-business-value-showcase__cards + .pz-business-value-showcase__more { margin-top: -12px; }
 }
 
 @container (max-width: 760px) {
-  .pz-business-value-showcase__band { grid-template-columns: minmax(0, 1fr); }
+  .pz-business-value-showcase__header,
+  .pz-business-value-showcase__header[data-seal='false'] { grid-template-columns: minmax(0, 1fr); }
+  .pz-business-value-showcase .pz-business-value-showcase__seal { justify-self: center; }
 }
 
 @container (max-width: 640px) {
-  .pz-business-value-showcase__inner { padding: 32px 20px; }
-  .pz-business-value-showcase__band,
-  .pz-business-value-showcase[data-density='compact'] .pz-business-value-showcase__band { padding: 20px; }
-  .pz-business-value-showcase__body,
-  .pz-business-value-showcase[data-density='compact'] .pz-business-value-showcase__body { padding: 16px 20px 20px; }
-  .pz-business-value-showcase .pz-business-value-showcase__tiles,
-  .pz-business-value-showcase .pz-business-value-showcase__tiles[data-count] { grid-template-columns: minmax(0, 1fr); }
-  .pz-business-value-showcase a.pz-business-value-showcase__action { width: 100%; }
-  .pz-business-value-showcase__tiles[data-expanded='false'] > li[data-collapsible='true'] { display: none; }
+  .pz-business-value-showcase__inner,
+  .pz-business-value-showcase[data-density='compact'] .pz-business-value-showcase__inner { padding: 40px 20px 48px; }
+  .pz-business-value-showcase .pz-business-value-showcase__seal,
+  .pz-business-value-showcase[data-density='compact'] .pz-business-value-showcase__seal {
+    --pz-business-value-showcase-seal-size: 128px;
+    --pz-business-value-showcase-seal-font: 13.5px;
+    padding: 16px;
+  }
+  .pz-business-value-showcase__seal-icon svg { width: 20px; height: 20px; }
+  .pz-business-value-showcase .pz-business-value-showcase__highlights,
+  .pz-business-value-showcase .pz-business-value-showcase__cards { grid-template-columns: minmax(0, 1fr); }
+  // Cards past the visible count are hidden here but stay in the page until "View all" is pressed.
+  .pz-business-value-showcase__cards[data-expanded='false'] > li[data-collapsible='true'] { display: none; }
   .pz-business-value-showcase button.pz-business-value-showcase__more { display: flex; }
 }
