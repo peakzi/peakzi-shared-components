@@ -1,6 +1,6 @@
 // One opt-in motion policy for all Business Site sections. CSS keeps these
 // effects server-safe; content never waits for hydration or a scroll observer.
-:is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-offers, .pz-business-gallery, .pz-business-blogs, .pz-business-value-showcase, .pz-business-footer) {
+:is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-offers, .pz-business-gallery, .pz-business-blogs, .pz-business-footer) {
   --pz-business-motion-fast: 0ms;
   --pz-business-motion-slide: 0ms;
 }
@@ -18,8 +18,6 @@
 .pz-business-offers__controls button,
 .pz-business-gallery a,
 .pz-business-blogs a,
-.pz-business-value-showcase a,
-.pz-business-value-showcase button,
 .pz-business-footer a {
   transition:
     transform var(--pz-business-motion-fast, 0ms) ease-out,
@@ -29,7 +27,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  :is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-offers, .pz-business-gallery, .pz-business-blogs, .pz-business-value-showcase, .pz-business-footer)[data-motion='subtle'] {
+  :is(.pz-business-header, .pz-business-hero, .pz-business-services, .pz-business-areas, .pz-business-faq, .pz-business-reviews, .pz-business-offers, .pz-business-gallery, .pz-business-blogs, .pz-business-footer)[data-motion='subtle'] {
     --pz-business-motion-fast: 180ms;
     --pz-business-motion-slide: 350ms;
   }
@@ -47,7 +45,6 @@
     .pz-business-header[data-motion='subtle'] .pz-business-header__action:hover,
     .pz-business-hero[data-motion='subtle'] .pz-business-hero__action:hover,
     .pz-business-offers[data-motion='subtle'] .pz-business-offers__action:hover,
-    .pz-business-value-showcase[data-motion='subtle'] .pz-business-value-showcase__action:hover,
     .pz-business-hero[data-motion='subtle'] .pz-business-hero__carousel-controls > button:hover,
     .pz-business-services[data-motion='subtle']:not([data-density='compact']) a.pz-business-services__card:hover,
     .pz-business-areas[data-motion='subtle']:not([data-density='compact']) a.pz-business-areas__tile:hover {
@@ -58,7 +55,6 @@
 
   // A press takes precedence over the hover lift, including on touchscreens.
   .pz-business-header[data-motion='subtle'] .pz-business-header__action:active,
-  .pz-business-value-showcase[data-motion='subtle'] .pz-business-value-showcase__action:active,
   .pz-business-hero[data-motion='subtle'] .pz-business-hero__action:active,
   .pz-business-hero[data-motion='subtle'] .pz-business-hero__carousel-controls > button:active {
     transform: scale(0.98);

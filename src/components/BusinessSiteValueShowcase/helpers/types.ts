@@ -1,64 +1,35 @@
-import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
-
+/** One graded service or metric. Every string renders exactly as sent; the component never rounds or rewrites. */
 export interface BusinessSiteValueShowcaseItem {
-  id: string
-  /** Service or metric name, e.g. "Water heater". Rendered as h3. */
+  /** Stable key. Optional: a positional key is used when missing. */
+  id?: string
+  /** Service or metric name. Rendered as the item heading (h3 by default). */
   name: string
-  /** Display rank exactly as graded, e.g. "Top 3" or "#1". */
-  rank: string
-  /**
-   * Free-text label from the payload, shown as given (e.g. "Elite", "Verified #1", or any new label).
-   * Omit for no badge. Rendered as sent on any rank.
-   */
-  badge?: string
-  /** One sentence of evidence. Never invented by the component. */
-  proof: string
-}
-
-/** Kinds with a dedicated icon. Not a closed list: any other string is accepted and gets the "check" icon. */
-export type BusinessSiteValueShowcaseKnownTrustSignalKind =
-  | 'financing'
-  | 'guarantee'
-  | 'warranty'
-  | 'license'
-  | 'certification'
-  | 'availability'
-  | 'estimate'
-  | 'offer'
-  | 'booking'
-  | 'other'
-
-/** Open string: known kinds keep editor autocomplete, new kinds are still valid. */
-export type BusinessSiteValueShowcaseTrustSignalKind = BusinessSiteValueShowcaseKnownTrustSignalKind | (string & {})
-
-export interface BusinessSiteValueShowcaseTrustSignal {
-  label: string
-  /** Decides the icon. Booking is better sent as `action`; a booking chip still renders. */
-  kind?: BusinessSiteValueShowcaseTrustSignalKind
-  /** Optional Lucide icon override. Prefer `kind`; use this only for a deliberate exception. */
-  iconName?: string
-}
-
-export interface BusinessSiteValueShowcaseSummary {
-  /** 0–5. Missing or invalid values hide the rating, never default to 5. */
-  rating?: number | null
-  reviewCount?: number | null
-  /** Optional standing line, e.g. "#1 of 377 Dallas-Fort Worth home service pros for review volume". */
-  position?: string
-  /** Noun after the count. Defaults to "homeowner reviews". */
+  /** Standing line, e.g. "Out of 200+ businesses" or "In top 6%". */
+  standing?: string
+  /** Supporting line, e.g. "Backed by 1,700+ DFW reviews". */
+  proof?: string
+  /** Short grade label shown as a badge, e.g. "Leader", "Great". Free text, any value. */
   label?: string
-}
-
-export interface BusinessSiteValueShowcasePraise {
-  count: number
-  text: string
-}
-
-export interface BusinessSiteValueShowcaseAction {
-  label: string
-  href: string
+  /** Lucide icon name for the medallion. No icon, no medallion. */
   iconName?: string
-  newTab?: boolean
+}
+
+/** One award, guarantee or reputation point shown as a pill. */
+export interface BusinessSiteValueShowcaseHighlight {
+  title: string
+  /** Optional second line, e.g. "Gold every year since 2022". */
+  detail?: string
+  /** Lucide icon name. Omit for a text-only pill. */
+  iconName?: string
+}
+
+/** Optional circular seal beside the heading. */
+export interface BusinessSiteValueShowcaseSeal {
+  text: string
+  /** Lucide icon name. Omit for a text-only seal. */
+  iconName?: string
+  /** Decorative five-star row, shown only when true. It is not a rating and is hidden from screen readers. */
+  stars?: boolean
 }
 
 export interface BusinessSiteValueShowcaseAppearance {
@@ -67,34 +38,34 @@ export interface BusinessSiteValueShowcaseAppearance {
   backgroundColor?: string
   gradientStartColor?: string
   gradientEndColor?: string
-  /** Primary action color, same role as the Hero accent. */
+  /** Standing and label colour. Stepped to a readable colour automatically. */
   accentColor?: string
+  /** Card radius. Same option set as the other Business Site sections. */
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
   density?: 'comfortable' | 'compact'
-  motion?: BusinessSiteMotion
-  /** Band surface. Same options as the Hero. */
-  background?: 'surface' | 'tint' | 'soft' | 'gradient' | 'ink'
+  /** 1px line under the section. Default true. */
+  divider?: boolean
 }
 
 export interface BusinessSiteValueShowcaseProps {
   title: string
   lead?: string
-  eyebrow?: string
-  methodHref?: string
-  methodLabel?: string
-  gradeChip?: string
-  trustSignals?: readonly BusinessSiteValueShowcaseTrustSignal[]
-  summary?: BusinessSiteValueShowcaseSummary
-  /** At most two are shown. */
-  praise?: readonly BusinessSiteValueShowcasePraise[]
-  /** @deprecated Use `actions`. Still read as a single-item fallback when `actions` is omitted. */
-  action?: BusinessSiteValueShowcaseAction
-  /** First is styled as primary, the rest as secondary. At most two are shown. */
-  actions?: readonly BusinessSiteValueShowcaseAction[]
-  items: readonly BusinessSiteValueShowcaseItem[]
+  seal?: BusinessSiteValueShowcaseSeal
+  highlights?: readonly BusinessSiteValueShowcaseHighlight[]
+  /** Accessible name for the highlights list. Omitted when not sent. */
+  highlightsLabel?: string
+  items?: readonly BusinessSiteValueShowcaseItem[]
+  /** Accessible name for the cards list. Omitted when not sent. */
+  itemsLabel?: string
   note?: string
-  /** Tiles shown before the mobile expander. Default 3. */
+  /** Cards shown before the "Show more" button in narrow containers (640px and below). Default 3. Every card stays in the page. */
   mobileVisibleItems?: number
+  /** Button text while cards are collapsed. `{count}` is the number of hidden cards, `{total}` the card count. Default "Show {count} more". */
+  showMoreLabel?: string
+  /** Button text while all cards are shown. Default "Show fewer". */
+  showLessLabel?: string
+  /** Section heading level. Items render one level below. Default 2. */
+  headingLevel?: 2 | 3
   appearance?: BusinessSiteValueShowcaseAppearance
   sectionId?: string
   className?: string

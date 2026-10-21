@@ -1,76 +1,59 @@
-import { safeHref } from '../../../utils/safeHref'
-import { validReviewRating } from '../../../utils/reviewRating'
-import { trustSignalIcon } from './trust-icon'
-import type {
-  BusinessSiteValueShowcaseAction,
-  BusinessSiteValueShowcaseItem,
-  BusinessSiteValueShowcaseProps,
-} from './types'
+import { showcaseIcon } from './icons'
+import type { BusinessSiteValueShowcaseProps } from './types'
 
 const clean = (value: unknown): string => (typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '')
-const count = (value: unknown): number | null =>
-  typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : null
 
-export const isTopRank = (rank: string) => /^#\s?1$|^no\.?\s?1$/i.test(rank.trim())
+/** Shrinks long seal text so it fits the circle. 1 for short text, never below 0.8. */
+export function sealScale(text: string): number {
+  const length = Math.max(1, [...text].length)
+  return Math.round(Math.max(0.8, Math.min(1, Math.sqrt(24 / length))) * 1000) / 1000
+}
 
-export function validItems(items: readonly BusinessSiteValueShowcaseItem[] | undefined) {
-  const ids = new Set<string>()
-  return (items ?? []).flatMap((item) => {
-    const name = clean(item?.name)
-    const rank = clean(item?.rank)
-    const proof = clean(item?.proof)
-    if (!name || !rank || !proof || ids.has(item.id)) return []
-    ids.add(item.id)
-    const badge = clean(item.badge)
-    // Badges are free text from the payload and render as sent, on any rank.
-    return [{ id: item.id, name, rank, proof, badge }]
-  })
+/** Fills `{total}` and `{count}` in a button label. */
+export function fillLabel(template: string, total: number, count: number): string {
+  return template.replace(/\{total\}/g, String(total)).replace(/\{count\}/g, String(count))
 }
 
 export function validShowcase(props: BusinessSiteValueShowcaseProps) {
-  const data = parseShowcase(props)
-  return { ...data, hasProof: data.rating !== null || data.reviewCount !== null || data.praise.length > 0 || data.actions.length > 0 }
-}
+  const ids = new Set<string>()
+  const items = (props.items ?? []).flatMap((item, index) => {
+    const name = clean(item?.name)
+    const standing = clean(item?.standing)
+    const proof = clean(item?.proof)
+    if (!name || (!standing && !proof)) return []
+    const id = clean(item.id) || `item-${index}`
+    if (ids.has(id)) return []
+    ids.add(id)
+    return [{ id, name, standing, proof, label: clean(item.label), iconName: showcaseIcon(item.iconName) }]
+  })
 
-function validActions(actions: readonly BusinessSiteValueShowcaseAction[] | undefined, fallback: BusinessSiteValueShowcaseAction | undefined) {
-  const source = actions && actions.length > 0 ? actions : fallback ? [fallback] : []
-  return source.flatMap((action) => {
-    const label = clean(action?.label)
-    const href = label ? safeHref(action.href) : null
-    if (!href) return []
-    return [{ label, href, iconName: action.iconName, newTab: action.newTab === true && /^https?:\/\//i.test(href) }]
-  }).slice(0, 2)
-}
+  const keys = new Set<string>()
+  const highlights = (props.highlights ?? []).flatMap((entry) => {
+    const title = clean(entry?.title)
+    if (!title) return []
+    const detail = clean(entry.detail)
+    const key = `${title}|${detail}`.toLowerCase()
+    if (keys.has(key)) return []
+    keys.add(key)
+    return [{ key, title, detail, iconName: showcaseIcon(entry.iconName) }]
+  })
 
-function parseShowcase(props: BusinessSiteValueShowcaseProps) {
-  const rating = validReviewRating(props.summary?.rating) ? props.summary!.rating! : null
-  const reviewCount = count(props.summary?.reviewCount)
+  const sealText = clean(props.seal?.text)
   return {
     title: clean(props.title),
     lead: clean(props.lead),
-    eyebrow: clean(props.eyebrow ?? 'Independently graded by peakzi'),
-    methodHref: props.methodHref ? safeHref(props.methodHref) : null,
-    methodLabel: clean(props.methodLabel ?? 'How we measure'),
-    gradeChip: clean(props.gradeChip),
-    // Every chip renders as sent and always gets an icon.
-    trustSignals: (props.trustSignals ?? []).flatMap((signal) => {
-      const label = clean(signal?.label)
-      if (!label) return []
-      return [{ label, iconName: clean(signal.iconName) || trustSignalIcon(signal.kind) }]
-    }),
-    rating,
-    reviewCount,
-    reviewLabel: clean(props.summary?.label) || 'homeowner reviews',
-    position: clean(props.summary?.position),
-    praise: (props.praise ?? []).flatMap((entry) => {
-      const value = count(entry?.count)
-      const text = clean(entry?.text)
-      return value !== null && text ? [{ count: value, text }] : []
-    }).slice(0, 2),
-    actions: validActions(props.actions, props.action),
-    items: validItems(props.items),
     note: clean(props.note),
-    mobileVisibleItems: Math.max(1, Math.floor(props.mobileVisibleItems ?? 3)),
+    seal: sealText
+      ? { text: sealText, iconName: showcaseIcon(props.seal!.iconName), stars: props.seal!.stars === true, scale: sealScale(sealText) }
+      : null,
+    highlights,
+    highlightsLabel: clean(props.highlightsLabel),
+    items,
+    itemsLabel: clean(props.itemsLabel),
+    mobileVisibleItems: Number.isFinite(props.mobileVisibleItems) ? Math.max(1, Math.floor(props.mobileVisibleItems!)) : 3,
+    showMoreLabel: clean(props.showMoreLabel) || 'Show {count} more',
+    showLessLabel: clean(props.showLessLabel) || 'Show fewer',
+    level: props.headingLevel === 3 ? 3 : 2,
   }
 }
 

@@ -1,12 +1,8 @@
 export { BusinessSiteValueShowcase } from './BusinessSiteValueShowcase'
 export type {
-  BusinessSiteValueShowcaseAction,
   BusinessSiteValueShowcaseAppearance,
+  BusinessSiteValueShowcaseHighlight,
   BusinessSiteValueShowcaseItem,
-  BusinessSiteValueShowcasePraise,
   BusinessSiteValueShowcaseProps,
-  BusinessSiteValueShowcaseSummary,
-  BusinessSiteValueShowcaseTrustSignal,
-  BusinessSiteValueShowcaseKnownTrustSignalKind,
-  BusinessSiteValueShowcaseTrustSignalKind,
+  BusinessSiteValueShowcaseSeal,
 } from './helpers/types'
