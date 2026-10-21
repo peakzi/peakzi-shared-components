@@ -115,6 +115,28 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 export const NoMotion: Story = { args: { motion: 'none' } }
 
+/** All route links and both actions stay on one row until the mobile menu takes over. */
+export const FullNavigation: Story = {
+  args: {
+    logo: { src: peakziLogo, alt: 'Peakzi', homeHref: '/', width: 100, height: 52 },
+    menu: [
+      { id: 'home', label: 'Home', href: '/' },
+      { id: 'offers', label: 'Offers', href: '/offers' },
+      { id: 'cities', label: 'Service areas', href: '/cities' },
+      { id: 'services', label: 'Services', href: '/services' },
+      { id: 'faqs', label: 'FAQs', href: '/faqs' },
+      { id: 'blogs', label: 'Blogs', href: '/blogs' },
+      { id: 'careers', label: 'Careers', href: '/careers' },
+      { id: 'gallery', label: 'Project Gallery', href: '/project-gallery' },
+    ],
+    actions: [
+      { id: 'book', label: 'Schedule Service', href: '/book', type: 'secondary', iconName: 'calendar' },
+      { id: 'call', label: '(805) 934-1949', href: 'tel:+18059341949', type: 'primary', iconName: 'phone' },
+    ],
+    itemsPosition: 'left',
+  },
+}
+
 /** Scroll the page: the header stays pinned to the top, and with subtle motion a shadow fades in. */
 export const Sticky: Story = {
   args: { sticky: true },
