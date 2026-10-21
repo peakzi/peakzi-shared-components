@@ -11,7 +11,7 @@ export function HeaderMenuBehavior() {
     const header = marker.current?.closest('header')
     if (!header) return
     const mobileMenu = header.querySelector<HTMLDetailsElement>('.pz-business-header__mobile-menu')
-    const mobileViewport = window.matchMedia?.('(max-width: 1100px)')
+    const mobileViewport = window.matchMedia?.('(max-width: 1280px)')
     let restoreMobileMenu: (() => void) | undefined
     const openMenus = () => Array.from(header.querySelectorAll<HTMLDetailsElement>('details[open]'))
     const syncMobileMenu = () => {
