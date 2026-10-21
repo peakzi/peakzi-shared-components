@@ -14,6 +14,47 @@ beforeEach(() => vi.spyOn(L.Map.prototype, 'fitBounds').mockReturnThis())
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals() })
 
 describe('BusinessSiteAreasMap', () => {
+  it('renders SVG pin icons only when requested, preserving the homepage dot default', () => {
+    const { container, rerender } = render(<BusinessSiteAreasMap areas={areas} markerStyle="pin" />)
+    expect(container.querySelectorAll('.pz-business-areas__marker--pin svg')).toHaveLength(2)
+    expect(screen.getByRole('button', { name: 'Plano, TX' })).toHaveAttribute('tabindex', '0')
+    rerender(<BusinessSiteAreasMap areas={areas} />)
+    expect(container.querySelector('.pz-business-areas__marker--pin')).not.toBeInTheDocument()
+    expect(container.querySelectorAll('.pz-business-areas__marker span')).toHaveLength(2)
+  })
+  it('uses the preferred zoom as a fit limit without forcing cropped pins and reveals selected cities', () => {
+    const zoom = vi.spyOn(L.Map.prototype, 'setZoom')
+    const pan = vi.spyOn(L.Map.prototype, 'panInside')
+    render(<BusinessSiteAreas areas={areas} map={<BusinessSiteAreasMap areas={areas} markerStyle="pin" defaultZoom={9} />} />)
+    expect(L.Map.prototype.fitBounds).toHaveBeenLastCalledWith([[33.103, -96.67], [33.019, -96.699]], {
+      paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], maxZoom: 9, animate: false,
+    })
+    expect(zoom).not.toHaveBeenCalled()
+    fireEvent.pointerOver(screen.getByRole('link', { name: 'Plano, TX' }))
+    expect(pan).toHaveBeenLastCalledWith([33.019, -96.699], { padding: [40, 40], animate: false })
+  })
+  it('refits on resize with a preferred zoom, retaining the safety padding', () => {
+    let onResize = () => {}
+    vi.stubGlobal('ResizeObserver', class {
+      constructor(callback: () => void) { onResize = callback }
+      observe = vi.fn()
+      disconnect = vi.fn()
+    })
+    render(<BusinessSiteAreasMap areas={areas} markerStyle="pin" defaultZoom={10} />)
+    const calls = vi.mocked(L.Map.prototype.fitBounds).mock.calls.length
+    act(() => onResize())
+    expect(L.Map.prototype.fitBounds).toHaveBeenCalledTimes(calls + 1)
+    expect(L.Map.prototype.fitBounds).toHaveBeenLastCalledWith([[33.103, -96.67], [33.019, -96.699]], {
+      paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], maxZoom: 10, animate: false,
+    })
+  })
+
+  it.each([NaN, Infinity])('ignores an invalid starting zoom %s', (defaultZoom) => {
+    const zoom = vi.spyOn(L.Map.prototype, 'setZoom')
+    render(<BusinessSiteAreasMap areas={areas} defaultZoom={defaultZoom} />)
+    expect(zoom.mock.calls.every(([value]) => Number.isFinite(value))).toBe(true)
+    expect(L.Map.prototype.fitBounds).toHaveBeenCalled()
+  })
   it('renders markers and required attribution without Leaflet branding', () => {
     const { container } = render(view())
     expect(container.querySelectorAll('.leaflet-marker-icon')).toHaveLength(2)
@@ -131,6 +172,34 @@ describe('BusinessSiteAreasMap', () => {
     act(() => onResize())
     expect(L.Map.prototype.fitBounds).toHaveBeenLastCalledWith([[33.103, -96.67], [33.019, -96.699]], {
       paddingTopLeft: [24, 24], paddingBottomRight: [624, 24], maxZoom: 11, animate: false,
+    })
+  })
+
+  it.each([
+    ['stacked', { top: 124, left: 16, right: 380.8, bottom: 359.400009, width: 364.8, height: 235.400009 },
+      { top: 359.399994, left: 40.8, right: 356, bottom: 623.399994, width: 315.2, height: 264 }],
+    ['side-by-side', { top: 24, left: 356, right: 700, bottom: 288, width: 344, height: 264 },
+      { top: 24, left: 40.8, right: 356.000012, bottom: 288, width: 315.200012, height: 264 }],
+  ])('ignores fractional-pixel edge contact in %s layouts', (_layout, panel, canvas) => {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+      return (this.classList.contains('pz-business-areas__panel') ? panel : canvas) as DOMRect
+    })
+    render(<BusinessSiteAreas areas={areas} map={<BusinessSiteAreasMap areas={areas} markerStyle="pin" defaultZoom={10} />} />)
+    expect(L.Map.prototype.fitBounds).toHaveBeenLastCalledWith([[33.103, -96.67], [33.019, -96.699]], {
+      paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], maxZoom: 10, animate: false,
+    })
+  })
+
+  it('never reserves homepage overlay space for the directory layout', () => {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+      return (this.classList.contains('pz-business-areas__panel')
+        ? { top: 24, left: 24, right: 1200, bottom: 300, width: 1176, height: 276 }
+        : { top: 0, left: 0, right: 1200, bottom: 500, width: 1200, height: 500 }) as DOMRect
+    })
+    render(<BusinessSiteAreas variant="directory" areas={areas}
+      map={<BusinessSiteAreasMap areas={areas} markerStyle="pin" defaultZoom={10} />} />)
+    expect(L.Map.prototype.fitBounds).toHaveBeenLastCalledWith([[33.103, -96.67], [33.019, -96.699]], {
+      paddingTopLeft: [40, 40], paddingBottomRight: [40, 40], maxZoom: 10, animate: false,
     })
   })
 })

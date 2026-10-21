@@ -7,6 +7,10 @@ describe('mapAreas', () => {
     const areas = [{ ...area, position: { lat: 0, lon: 0 } }, { ...area, position: { lat: -90, lon: 180 } }]
     expect(mapAreas(areas)).toEqual(areas)
   })
+  it('supports map pins before individual city routes are available', () => {
+    const item = { id: 'city', label: 'City, CA', position: { lat: 0, lon: 0 } }
+    expect(mapAreas([item])).toEqual([item])
+  })
   it.each([undefined, { lat: 91, lon: 0 }, { lat: 0, lon: -181 }, { lat: NaN, lon: 0 }, { lat: 0, lon: Infinity }])('omits invalid or missing map positions: %j', (position) => {
     expect(mapAreas([{ ...area, ...(position ? { position } : {}) }])).toEqual([])
   })

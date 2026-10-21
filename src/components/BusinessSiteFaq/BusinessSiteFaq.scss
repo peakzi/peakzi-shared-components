@@ -209,3 +209,35 @@
   .pz-business-faq__actions a { flex: 1 1 auto; }
   .pz-business-faq__item summary { gap: 12px; font-size: 17px; padding-block: 16px; }
 }
+
+.pz-business-faq[data-layout='stack'] .pz-business-faq__inner {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+.pz-business-faq[data-layout='stack'] h2 { font-size: clamp(23px, 2.2vw, 28px); text-wrap: pretty; }
+.pz-business-faq[data-layout='stack'] .pz-business-faq__intro { margin-top: 8px; font-size: 13px; }
+.pz-business-faq[data-layout='stack'] .pz-business-faq__list {
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--pz-business-faq-text) 16%, var(--pz-business-faq-background));
+  border-radius: var(--pz-business-faq-radius);
+  overflow: hidden;
+}
+.pz-business-faq[data-layout='stack'] .pz-business-faq__item {
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--pz-business-faq-text) 14%, var(--pz-business-faq-background));
+}
+.pz-business-faq[data-layout='stack'] .pz-business-faq__item:last-child { border-bottom: 0; }
+.pz-business-faq[data-layout='stack'] .pz-business-faq__item[open] {
+  background: color-mix(in srgb, var(--pz-business-faq-accent) 3%, var(--pz-business-faq-background));
+}
+.pz-business-faq[data-layout='stack'] summary { padding: 20px; font-size: 17px; }
+.pz-business-faq[data-layout='stack'] summary:focus-visible { outline-offset: -4px; }
+.pz-business-faq[data-layout='stack'] .pz-business-faq__answer { padding: 0 20px 20px; }
+.pz-business-faq[data-layout='stack'] .pz-business-faq__answer :is(h3, h4, h5, h6) { font-size: 18px; line-height: 1.5; margin-block: 20px 10px; }
+.pz-business-faq[data-layout='stack'][data-density='compact'] summary { padding: 14px 16px; font-size: 16px; }
+.pz-business-faq[data-layout='stack'][data-density='compact'] .pz-business-faq__answer { padding-inline: 16px; padding-bottom: 16px; }
+
+// Settle the answer height before scrolling to its question; retain the existing opacity fade.
+.pz-business-faq[data-motion='subtle'] .pz-business-faq__list[data-reveal-on-open='true'] .pz-business-faq__item::details-content {
+  transition-property: opacity, content-visibility;
+}

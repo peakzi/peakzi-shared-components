@@ -1,0 +1,362 @@
+.pz-business-content-filter-nav {
+  --pz-business-content-filter-nav-background: #ffffff;
+  --pz-business-content-filter-nav-text: #12171c;
+  --pz-business-content-filter-nav-accent: #12171c;
+  --pz-business-content-filter-nav-fill: #12171c;
+  --pz-business-content-filter-nav-on-accent: #ffffff;
+  --pz-business-content-filter-nav-font: 'IBM Plex Sans', Arial, sans-serif;
+  --pz-business-content-filter-nav-heading-font: 'Archivo', Arial, sans-serif;
+  --pz-business-content-filter-nav-radius: 8px;
+  display: block;
+  width: 100%;
+  font-family: var(--pz-business-content-filter-nav-font);
+}
+
+// ---------------------------------------------------------------------------
+// Desktop: trade tabs + service chips, shown >= 768px
+// ---------------------------------------------------------------------------
+
+.pz-business-content-filter-nav__desktop {
+  display: none;
+}
+
+.pz-business-content-filter-nav__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--pz-business-content-filter-nav-text) 14%, transparent);
+}
+
+.pz-business-content-filter-nav__tab {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  margin-bottom: -1px;
+  padding: 0 18px;
+  font-family: var(--pz-business-content-filter-nav-heading-font);
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+}
+
+// Matches the global `a:not(.pz-btn)` selector specificity to beat its default link color and hover underline.
+a.pz-business-content-filter-nav__tab {
+  color: color-mix(in srgb, var(--pz-business-content-filter-nav-text) 55%, var(--pz-business-content-filter-nav-background));
+  text-decoration: none;
+}
+
+a.pz-business-content-filter-nav__tab:hover {
+  color: var(--pz-business-content-filter-nav-text);
+  text-decoration: none;
+}
+
+.pz-business-content-filter-nav__tab[data-active] {
+  color: var(--pz-business-content-filter-nav-text);
+  border-bottom-color: var(--pz-business-content-filter-nav-accent);
+}
+
+.pz-business-content-filter-nav__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pz-business-content-filter-nav__chip {
+  display: flex;
+  flex: none;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  background: var(--pz-business-content-filter-nav-background);
+  border: 1px solid color-mix(in srgb, var(--pz-business-content-filter-nav-text) 20%, transparent);
+  border-radius: var(--pz-business-content-filter-nav-radius);
+}
+
+// Matches the global `a:not(.pz-btn)` selector specificity to beat its default link color and hover underline.
+a.pz-business-content-filter-nav__chip {
+  color: var(--pz-business-content-filter-nav-text);
+  text-decoration: none;
+}
+
+a.pz-business-content-filter-nav__chip:hover {
+  color: var(--pz-business-content-filter-nav-text);
+  text-decoration: none;
+  border-color: var(--pz-business-content-filter-nav-text);
+}
+
+.pz-business-content-filter-nav__chip[data-active] {
+  color: var(--pz-business-content-filter-nav-on-accent);
+  background: var(--pz-business-content-filter-nav-fill);
+  border-color: transparent;
+}
+
+.pz-business-content-filter-nav__tab:focus-visible,
+.pz-business-content-filter-nav__chip:focus-visible {
+  outline: 2px solid var(--pz-business-content-filter-nav-accent);
+  outline-offset: 2px;
+}
+
+// ---------------------------------------------------------------------------
+// Mobile: sticky trigger button + bottom-sheet dialog, shown < 768px
+// ---------------------------------------------------------------------------
+
+.pz-business-content-filter-nav__mobile {
+  display: block;
+}
+
+.pz-business-content-filter-nav__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 8px 8px 16px;
+  box-sizing: border-box;
+  color: var(--pz-business-content-filter-nav-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: var(--pz-business-content-filter-nav-background);
+  border: 1px solid var(--pz-business-content-filter-nav-text);
+  border-radius: var(--pz-business-content-filter-nav-radius);
+}
+
+.pz-business-content-filter-nav__trigger:focus-visible {
+  outline: 2px solid var(--pz-business-content-filter-nav-accent);
+  outline-offset: 2px;
+}
+
+.pz-business-content-filter-nav__trigger-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pz-business-content-filter-nav__trigger-eyebrow {
+  overflow: hidden;
+  color: color-mix(in srgb, var(--pz-business-content-filter-nav-text) 65%, var(--pz-business-content-filter-nav-background));
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pz-business-content-filter-nav__trigger-value {
+  overflow: hidden;
+  font-size: 16.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pz-business-content-filter-nav__trigger-cta {
+  display: flex;
+  flex: none;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  color: var(--pz-business-content-filter-nav-on-accent);
+  font-size: 15px;
+  font-weight: 600;
+  background: var(--pz-business-content-filter-nav-fill);
+  border-radius: var(--pz-business-content-filter-nav-radius);
+}
+
+.pz-business-content-filter-nav__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  margin: 0;
+  padding: 0;
+  background: rgba(20, 24, 31, 0.55);
+  border: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-out;
+}
+
+.pz-business-content-filter-nav__backdrop[data-open] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.pz-business-content-filter-nav[data-motion='none'] .pz-business-content-filter-nav__backdrop {
+  transition: none;
+}
+
+.pz-business-content-filter-nav__sheet {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  max-height: 86vh;
+  overflow: hidden;
+  background: var(--pz-business-content-filter-nav-background);
+  border-radius: 20px 20px 0 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(24px);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s;
+}
+
+.pz-business-content-filter-nav__sheet[data-open] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.pz-business-content-filter-nav[data-motion='none'] .pz-business-content-filter-nav__sheet {
+  transition: none;
+}
+
+.pz-business-content-filter-nav__sheet-handle {
+  width: 40px;
+  height: 4px;
+  margin: 10px auto 0;
+  background: color-mix(in srgb, var(--pz-business-content-filter-nav-text) 20%, transparent);
+  border-radius: 2px;
+}
+
+.pz-business-content-filter-nav__sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 20px;
+}
+
+.pz-business-content-filter-nav__sheet-title {
+  margin: 0;
+  color: var(--pz-business-content-filter-nav-text);
+  font-family: var(--pz-business-content-filter-nav-heading-font);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.pz-business-content-filter-nav__sheet-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  color: var(--pz-business-content-filter-nav-text);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+}
+
+.pz-business-content-filter-nav__sheet-close:hover {
+  background: color-mix(in srgb, var(--pz-business-content-filter-nav-text) 8%, transparent);
+}
+
+.pz-business-content-filter-nav__sheet-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  margin: 0 20px;
+  padding: 3px;
+  background: color-mix(in srgb, var(--pz-business-content-filter-nav-text) 5%, var(--pz-business-content-filter-nav-background));
+  border: 1px solid color-mix(in srgb, var(--pz-business-content-filter-nav-text) 14%, transparent);
+  border-radius: var(--pz-business-content-filter-nav-radius);
+}
+
+.pz-business-content-filter-nav__sheet-tab {
+  min-height: 44px;
+  color: var(--pz-business-content-filter-nav-text);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--pz-business-content-filter-nav-radius);
+}
+
+.pz-business-content-filter-nav__sheet-tab[data-active] {
+  color: var(--pz-business-content-filter-nav-on-accent);
+  background: var(--pz-business-content-filter-nav-accent);
+}
+
+.pz-business-content-filter-nav__sheet-list {
+  display: flex;
+  flex-direction: column;
+  margin: 12px 0 0;
+  padding: 0 8px 24px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.pz-business-content-filter-nav__sheet-list li {
+  margin: 0;
+  padding: 0;
+}
+
+.pz-business-content-filter-nav__sheet-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 12px;
+  font-size: 16.5px;
+  font-weight: 400;
+  border-radius: var(--pz-business-content-filter-nav-radius);
+  border-bottom: 1px solid color-mix(in srgb, var(--pz-business-content-filter-nav-text) 10%, transparent);
+}
+
+// Matches the global `a:not(.pz-btn)` selector specificity to beat its default link color and hover underline.
+a.pz-business-content-filter-nav__sheet-row {
+  color: var(--pz-business-content-filter-nav-text);
+  text-decoration: none;
+}
+
+a.pz-business-content-filter-nav__sheet-row:hover {
+  text-decoration: none;
+}
+
+.pz-business-content-filter-nav__sheet-row[data-active] {
+  background: color-mix(in srgb, var(--pz-business-content-filter-nav-accent) 12%, var(--pz-business-content-filter-nav-background));
+  font-weight: 700;
+}
+
+.pz-business-content-filter-nav__sheet-row-mark {
+  color: var(--pz-business-content-filter-nav-accent);
+  visibility: hidden;
+}
+
+.pz-business-content-filter-nav__sheet-row[data-active] .pz-business-content-filter-nav__sheet-row-mark {
+  visibility: visible;
+}
+
+.pz-business-content-filter-nav__sheet-tab:focus-visible,
+.pz-business-content-filter-nav__sheet-close:focus-visible,
+.pz-business-content-filter-nav__sheet-row:focus-visible {
+  outline: 2px solid var(--pz-business-content-filter-nav-accent);
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .pz-business-content-filter-nav__desktop {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px 48px 18px;
+    background: var(--pz-business-content-filter-nav-background);
+    border: 1px solid color-mix(in srgb, var(--pz-business-content-filter-nav-text) 14%, transparent);
+  }
+
+  .pz-business-content-filter-nav__mobile {
+    display: none;
+  }
+}

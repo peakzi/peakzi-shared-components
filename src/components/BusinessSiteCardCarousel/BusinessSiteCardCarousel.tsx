@@ -44,6 +44,8 @@ export function BusinessSiteCardCarousel({ children, count, animate, classPrefix
     }
   }, [count])
 
+  const canScroll = count > 1 && navigation.pages.length > 1
+
   const goTo = (page: number) => {
     const track = trackRef.current
     if (!track) return
@@ -61,10 +63,10 @@ export function BusinessSiteCardCarousel({ children, count, animate, classPrefix
         className={'pz-business-card-carousel__list ' + classPrefix + '__list'}
         role="list"
         data-single={count === 1 ? 'true' : 'false'}
-        tabIndex={count > 1 ? 0 : undefined}
+        tabIndex={canScroll ? 0 : undefined}
         aria-label={labels.cards}
         onKeyDown={(event) => {
-          if (event.target !== event.currentTarget) return
+          if (!canScroll || event.target !== event.currentTarget) return
           if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
             event.preventDefault()
             goTo(navigation.active + (event.key === 'ArrowLeft' ? -1 : 1))
@@ -76,7 +78,7 @@ export function BusinessSiteCardCarousel({ children, count, animate, classPrefix
       >
         {children}
       </ul>
-      {count > 1 && (
+      {canScroll && (
         <div className={'pz-business-card-carousel__controls ' + classPrefix + '__controls'}>
           <button type="button" aria-label={labels.previous} aria-controls={trackId} disabled={!navigation.previous} onClick={() => goTo(navigation.active - 1)}>
             <ChevronLeft size={20} aria-hidden="true" />

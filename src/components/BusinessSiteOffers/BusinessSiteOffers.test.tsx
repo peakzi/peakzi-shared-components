@@ -120,8 +120,9 @@ describe('BusinessSiteOffers', () => {
     expect(html).toContain('Offer 5')
     expect(html).toContain('Details 5')
     expect(html).not.toMatch(/<li[^>]*(?:aria-hidden|hidden)/)
-    expect(html).toContain('Previous offers')
-    expect(html).toContain('Next offers')
+    // Controls wait for measured overflow; every offer remains in the server HTML.
+    expect(html).not.toContain('Previous offers')
+    expect(html).not.toContain('Next offers')
   })
 
   it('reuses the same cards in a server-rendered grid without carousel controls', () => {
