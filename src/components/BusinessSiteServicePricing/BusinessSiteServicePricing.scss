@@ -1,0 +1,378 @@
+.pz-service-pricing {
+  width: 100%;
+  container-type: inline-size;
+  font-family: var(--pz-business-services-font);
+}
+.pz-service-pricing *, .pz-service-pricing *::before, .pz-service-pricing *::after { box-sizing: border-box; }
+.pz-service-pricing :is(h2, h3, h4, p, ul) { margin: 0; }
+.pz-service-pricing ul { padding: 0; list-style: none; }
+
+// ── Price-intelligence band (dark/gradient) ───────────────────────────────────
+
+.pz-service-pricing__intel {
+  background: var(--pz-business-services-fill);
+  color: var(--pz-business-services-on-gradient);
+  padding: 56px 48px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.pz-service-pricing__intel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 40px;
+}
+
+.pz-service-pricing__intel-lead {
+  flex: 1 1 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pz-service-pricing__eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pz-service-pricing__title {
+  font-family: var(--pz-business-services-heading-font);
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+  color: var(--pz-business-services-on-gradient);
+}
+
+.pz-service-pricing__lede {
+  max-width: 640px;
+  font-size: 18px;
+  line-height: 1.55;
+  text-wrap: pretty;
+  color: var(--pz-business-services-on-gradient);
+}
+
+.pz-service-pricing__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pz-service-pricing__stat {
+  flex: 1 1 180px;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 20px;
+  border: 1px solid color-mix(in srgb, var(--pz-business-services-on-gradient) 35%, transparent);
+  border-radius: var(--pz-business-services-radius);
+}
+
+.pz-service-pricing__stat-value {
+  font-family: var(--pz-business-services-heading-font);
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.pz-service-pricing__stat-label { font-size: 15px; line-height: 1.35; }
+.pz-service-pricing__stat-sub { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
+
+// ── Customer-perception bars ───────────────────────────────────────────────────
+
+.pz-service-pricing__perception {
+  padding-top: 28px;
+  border-top: 1px solid color-mix(in srgb, var(--pz-business-services-on-gradient) 35%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pz-service-pricing__perception-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.pz-service-pricing__perception-title { font-family: var(--pz-business-services-heading-font); font-size: 20px; font-weight: 600; color: var(--pz-business-services-on-gradient); }
+.pz-service-pricing__perception-caption { flex: none; white-space: nowrap; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
+
+.pz-service-pricing__perception-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 160px) minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+.pz-service-pricing__perception-who { font-size: 15px; font-weight: 600; }
+
+.pz-service-pricing__perception-bar {
+  display: flex;
+  height: 30px;
+  border-radius: var(--pz-business-services-radius);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--pz-business-services-on-gradient) 18%, transparent);
+}
+.pz-service-pricing__perception-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.pz-service-pricing__perception-segment--great { background: #166534; }
+.pz-service-pricing__perception-segment--ok { background: var(--pz-business-services-accent); }
+.pz-service-pricing__perception-segment--muted.pz-service-pricing__perception-segment--great { background: color-mix(in srgb, #166534 55%, #909295); }
+.pz-service-pricing__perception-segment--muted.pz-service-pricing__perception-segment--ok { background: color-mix(in srgb, var(--pz-business-services-accent) 55%, #909295); }
+
+.pz-service-pricing__perception-legend { display: flex; flex-wrap: wrap; gap: 18px; }
+.pz-service-pricing__legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.pz-service-pricing__legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+.pz-service-pricing__legend-dot--great { background: #166534; }
+.pz-service-pricing__legend-dot--ok { background: var(--pz-business-services-accent); }
+
+// ── Job-type cards (sunken surface) ────────────────────────────────────────────
+
+.pz-service-pricing__jobs {
+  background: color-mix(in srgb, var(--pz-business-services-text) 4%, var(--pz-business-services-background));
+  color: var(--pz-business-services-text);
+  padding: 40px 48px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pz-service-pricing__tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+.pz-service-pricing__tiers[data-count='1'] { grid-template-columns: minmax(0, 1fr); }
+.pz-service-pricing__tiers[data-count='2'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.pz-service-pricing__tier-card {
+  background: var(--pz-business-services-background);
+  border: 1px solid color-mix(in srgb, var(--pz-business-services-text) 16%, transparent);
+  border-radius: var(--pz-business-services-radius);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.pz-service-pricing__tier-header {
+  min-width: 0;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--pz-business-services-text) 16%, transparent);
+}
+.pz-service-pricing__tier-name {
+  font-family: var(--pz-business-services-heading-font);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+  color: var(--pz-business-services-text);
+}
+.pz-service-pricing__tier-range {
+  min-width: 0;
+  max-width: 100%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(20px, 8cqi, 28px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.pz-service-pricing__tier-no-price { font-family: var(--pz-business-services-heading-font); font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+
+.pz-service-pricing__typical { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pz-service-pricing__typical-bars { position: relative; height: 16px; }
+.pz-service-pricing__typical-track {
+  position: absolute; left: 0; right: 0; top: 5px; height: 6px; border-radius: 3px;
+  background: color-mix(in srgb, var(--pz-business-services-text) 10%, transparent);
+}
+.pz-service-pricing__typical-bar { position: absolute; }
+.pz-service-pricing__typical-bar--market { top: 5px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--pz-business-services-text) 35%, transparent); }
+.pz-service-pricing__typical-bar--business { top: 2px; height: 12px; border-radius: 6px; background: var(--pz-business-services-accent); }
+
+.pz-service-pricing__typical-chip {
+  align-self: flex-start;
+  max-width: 100%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  padding: 4px 10px;
+  border-radius: calc(var(--pz-business-services-radius) * 0.7);
+  background: color-mix(in srgb, var(--pz-business-services-text) 6%, var(--pz-business-services-background));
+  color: color-mix(in srgb, var(--pz-business-services-text) 75%, var(--pz-business-services-background));
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.pz-service-pricing__typical-chip--below { background: #e3ece6; color: #166534; }
+
+.pz-service-pricing__tier-body { flex: 1; min-width: 0; padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 18px; }
+
+.pz-service-pricing__included { display: flex; flex-direction: column; gap: 8px; }
+.pz-service-pricing__included-title { font-size: 15px; font-weight: 600; color: var(--pz-business-services-text); }
+.pz-service-pricing__included-list { display: flex; flex-direction: column; gap: 6px; }
+.pz-service-pricing__included-list li { display: flex; gap: 10px; font-size: 15.5px; line-height: 1.45; }
+.pz-service-pricing__included-list li > span:first-child { color: #166534; font-weight: 700; flex: none; }
+.pz-service-pricing__included-list li > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+
+.pz-service-pricing__factor-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: var(--pz-business-services-radius);
+}
+.pz-service-pricing__factor-group--down { background: color-mix(in srgb, #166534 12%, var(--pz-business-services-background)); }
+.pz-service-pricing__factor-group--up { background: color-mix(in srgb, #b45309 12%, var(--pz-business-services-background)); }
+
+.pz-service-pricing__factor-group-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+.pz-service-pricing__factor-group-icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.pz-service-pricing__factor-group--down .pz-service-pricing__factor-group-icon { background: #166534; }
+.pz-service-pricing__factor-group--up .pz-service-pricing__factor-group-icon { background: #b45309; }
+
+.pz-service-pricing__factor-group-title { margin: 0; flex: 1; min-width: 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.pz-service-pricing__factor-group--down .pz-service-pricing__factor-group-title { color: #166534; }
+.pz-service-pricing__factor-group--up .pz-service-pricing__factor-group-title { color: #92400e; }
+
+.pz-service-pricing__factor-group-count {
+  flex: none;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 999px;
+  background: var(--pz-business-services-background);
+}
+.pz-service-pricing__factor-group--down .pz-service-pricing__factor-group-count { color: #166534; }
+.pz-service-pricing__factor-group--up .pz-service-pricing__factor-group-count { color: #92400e; }
+
+// Base ul resets must not remove the inset. Fit factor columns to the available
+// content width, rather than the outer card width before its padding is removed.
+.pz-service-pricing .pz-service-pricing__factor-list {
+  padding: 0 6px 6px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 6px;
+}
+.pz-service-pricing__factor-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 44px;
+  min-width: 0;
+  padding: 8px 10px;
+  background: var(--pz-business-services-background);
+  border-radius: calc(var(--pz-business-services-radius) * 0.6);
+}
+.pz-service-pricing__factor-list li > span:first-child { font-size: 13.5px; line-height: 1.4; min-width: 0; overflow-wrap: anywhere; white-space: normal; color: var(--pz-business-services-text); }
+.pz-service-pricing__factor-amount { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; white-space: normal; min-width: 0; }
+.pz-service-pricing__factor-amount--down { color: #166534; }
+.pz-service-pricing__factor-amount--up { color: #92400e; }
+
+.pz-service-pricing__bare-note { font-size: 15px; line-height: 1.5; color: color-mix(in srgb, var(--pz-business-services-text) 75%, var(--pz-business-services-background)); }
+
+.pz-service-pricing__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.pz-service-pricing__source { font-size: 15px; line-height: 1.5; color: color-mix(in srgb, var(--pz-business-services-text) 75%, var(--pz-business-services-background)); }
+
+a.pz-service-pricing__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 12px 20px;
+  background: var(--pz-business-services-fill);
+  color: var(--pz-business-services-on-gradient);
+  border-radius: var(--pz-business-services-radius);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+a.pz-service-pricing__cta:hover { text-decoration: underline; text-underline-offset: 4px; }
+a.pz-service-pricing__cta:focus-visible { outline: 2px solid var(--pz-business-services-text); outline-offset: 3px; }
+
+// ── Skeletons ──────────────────────────────────────────────────────────────────
+
+.pz-service-pricing__skeleton {
+  border-radius: var(--pz-business-services-radius);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+.pz-service-pricing__skeleton--stat { flex: 1 1 180px; min-width: 180px; height: 92px; }
+.pz-service-pricing__skeleton--card { height: 220px; }
+@media (prefers-reduced-motion: no-preference) {
+  .pz-service-pricing[data-motion='subtle'] .pz-service-pricing__skeleton { animation: pz-service-pricing-pulse 1.6s ease-in-out infinite; }
+}
+@keyframes pz-service-pricing-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+// ── Compact density: job-type cards stack one per row ──────────────────────────
+
+.pz-service-pricing[data-density='compact'] .pz-service-pricing__tiers { grid-template-columns: minmax(0, 1fr); }
+
+// ── Responsive ─────────────────────────────────────────────────────────────────
+
+@container (min-width: 900px) {
+  .pz-service-pricing[data-density='compact'] .pz-service-pricing__tier-card { flex-direction: row; }
+  .pz-service-pricing[data-density='compact'] .pz-service-pricing__tier-header {
+    flex: 0 0 320px;
+    border-bottom: none;
+    border-right: 1px solid color-mix(in srgb, var(--pz-business-services-text) 16%, transparent);
+  }
+}
+
+@container (max-width: 1024px) {
+  .pz-service-pricing__tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 640px) {
+  .pz-service-pricing__tiers[data-count] { grid-template-columns: minmax(0, 1fr); }
+  .pz-service-pricing__intel { padding-inline: 24px; }
+  .pz-service-pricing__jobs { padding-inline: 24px; }
+  .pz-service-pricing__perception-row { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}

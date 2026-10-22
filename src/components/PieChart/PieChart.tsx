@@ -1,6 +1,6 @@
 import type { Options, SeriesOptionsType } from 'highcharts'
 import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
+import { chartExportImageTheme, chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
@@ -70,6 +70,7 @@ export function PieChart({ isLoading = false, data, title, valueSuffix = '%', co
       buttons: { contextButton: { menuItems: exportMenuItems } },
       enabled: true,
       fallbackToExportServer: false,
+      chartOptions: chartExportImageTheme(),
     },
     navigation: chartExportMenuTheme(theme),
   })

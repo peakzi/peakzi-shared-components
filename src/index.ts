@@ -140,7 +140,19 @@ export { BusinessSiteServices } from './components/BusinessSiteServices'
 export { BusinessSiteServicesDirectory } from './components/BusinessSiteServicesDirectory'
 export type { BusinessSiteServicesDirectoryProps } from './components/BusinessSiteServicesDirectory'
 export { BusinessSiteServiceDetail } from './components/BusinessSiteServiceDetail'
-export type { BusinessSiteServiceDetailProps, BusinessSiteServiceDetailReason, BusinessSiteServiceDetailSectionLink } from './components/BusinessSiteServiceDetail'
+export type {
+  BusinessSiteServiceDetailProps,
+  BusinessSiteServiceDetailReason,
+  BusinessSiteServiceDetailSectionLink,
+} from './components/BusinessSiteServiceDetail'
+export { BusinessSiteServicePricing } from './components/BusinessSiteServicePricing'
+export type {
+  BusinessSiteServicePricingFactor,
+  BusinessSiteServicePricingFairValue,
+  BusinessSiteServicePricingProps,
+  BusinessSiteServicePricingSentiment,
+  BusinessSiteServicePricingTier,
+} from './components/BusinessSiteServicePricing'
 export type {
   BusinessSiteServiceGroup,
   BusinessSiteServiceImage,
@@ -205,6 +217,14 @@ export type {
 } from './components/BusinessSiteProjectGallery'
 
 export { BusinessSiteBlogs } from './components/BusinessSiteBlogs'
+export { BusinessSiteValueShowcase } from './components/BusinessSiteValueShowcase'
+export type {
+  BusinessSiteValueShowcaseAppearance,
+  BusinessSiteValueShowcaseHighlight,
+  BusinessSiteValueShowcaseItem,
+  BusinessSiteValueShowcaseProps,
+  BusinessSiteValueShowcaseSeal,
+} from './components/BusinessSiteValueShowcase'
 export type {
   BusinessSiteBlog,
   BusinessSiteBlogImage,

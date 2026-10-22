@@ -90,6 +90,39 @@ export function chartExportMenuTheme(theme: ChartTheme) {
   }
 }
 
+// Fixed light-theme values — never read from the current theme — for
+// `exporting.chartOptions`. A PNG/PDF/SVG export is read outside the app, so
+// it must look the same regardless of the page's current (possibly dark)
+// theme. Mirror the light theme's own tokens (src/styles/_foundations.scss):
+// --surface-1, --fg-1, --fg-2, --border.
+const EXPORT_BACKGROUND = '#ffffff'
+const EXPORT_TEXT_PRIMARY = '#1f1e5a'
+const EXPORT_TEXT_SECONDARY = '#52526a'
+const EXPORT_GRID_LINE = '#d9d9e3'
+
+/** Forces a plain white export regardless of the live theme. Spread into every chart's `exporting.chartOptions`. */
+export function chartExportImageTheme() {
+  const axis = {
+    gridLineColor: EXPORT_GRID_LINE,
+    lineColor: EXPORT_GRID_LINE,
+    labels: { style: { color: EXPORT_TEXT_SECONDARY } },
+    title: { style: { color: EXPORT_TEXT_SECONDARY } },
+  }
+  const dataLabels = { style: { color: EXPORT_TEXT_PRIMARY } }
+  return {
+    chart: { backgroundColor: EXPORT_BACKGROUND },
+    title: { style: { color: EXPORT_TEXT_PRIMARY } },
+    xAxis: axis,
+    yAxis: axis,
+    legend: { itemStyle: { color: EXPORT_TEXT_PRIMARY } },
+    plotOptions: {
+      series: { dataLabels },
+      pie: { dataLabels },
+      pyramid: { dataLabels },
+    },
+  }
+}
+
 /** `T` with every property, at any depth, also accepting `undefined`. */
 export type WithUndefined<T> = T extends (...args: never[]) => unknown
   ? T

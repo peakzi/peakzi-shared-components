@@ -1,6 +1,6 @@
 {
   "name": "@peakzi/components",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "description": "Peakzi shared component library — brand-consistent UI for all Peakzi websites",
   "main": "./dist/index.cjs",
   "scripts": {
@@ -110,6 +110,41 @@
       "types": "./dist/src/components/BusinessSiteAreas/map/BusinessSiteAreasMap.d.ts",
       "import": "./dist/BusinessSiteAreasMap.js",
       "require": "./dist/BusinessSiteAreasMap.cjs"
+    },
+    "./BusinessSiteBlogCoverImage": {
+      "types": "./dist/src/components/BusinessSiteBlogs/cover/BlogCoverImage.d.ts",
+      "import": "./dist/BusinessSiteBlogCoverImage.js",
+      "require": "./dist/BusinessSiteBlogCoverImage.cjs"
+    },
+    "./BusinessSiteCardCarousel": {
+      "types": "./dist/src/components/BusinessSiteCardCarousel/BusinessSiteCardCarousel.d.ts",
+      "import": "./dist/BusinessSiteCardCarousel.js",
+      "require": "./dist/BusinessSiteCardCarousel.cjs"
+    },
+    "./BusinessSiteContentFilterNavSheet": {
+      "types": "./dist/src/components/BusinessSiteContentFilterNav/sheet/ContentFilterNavSheet.d.ts",
+      "import": "./dist/BusinessSiteContentFilterNavSheet.js",
+      "require": "./dist/BusinessSiteContentFilterNavSheet.cjs"
+    },
+    "./BusinessSiteFaqAccordion": {
+      "types": "./dist/src/components/BusinessSiteFaq/accordion/FaqAccordion.d.ts",
+      "import": "./dist/BusinessSiteFaqAccordion.js",
+      "require": "./dist/BusinessSiteFaqAccordion.cjs"
+    },
+    "./BusinessSiteHeaderMenuBehavior": {
+      "types": "./dist/src/components/BusinessSiteHeader/menu-behavior/HeaderMenuBehavior.d.ts",
+      "import": "./dist/BusinessSiteHeaderMenuBehavior.js",
+      "require": "./dist/BusinessSiteHeaderMenuBehavior.cjs"
+    },
+    "./BusinessSiteHeroCarousel": {
+      "types": "./dist/src/components/BusinessSiteHero/carousel/BusinessSiteHeroCarousel.d.ts",
+      "import": "./dist/BusinessSiteHeroCarousel.js",
+      "require": "./dist/BusinessSiteHeroCarousel.cjs"
+    },
+    "./BusinessSiteOffersCarousel": {
+      "types": "./dist/src/components/BusinessSiteOffers/carousel/BusinessSiteOffersCarousel.d.ts",
+      "import": "./dist/BusinessSiteOffersCarousel.js",
+      "require": "./dist/BusinessSiteOffersCarousel.cjs"
     },
     "./BusinessSiteProjectGalleryPreview": {
       "types": "./dist/src/components/BusinessSiteProjectGallery/preview/BusinessSiteProjectGalleryPreview.d.ts",
