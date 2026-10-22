@@ -33,6 +33,8 @@ export interface BusinessSiteOffersAppearance {
 export interface BusinessSiteOffersProps {
   items: readonly BusinessSiteOffer[]
   layout?: 'carousel' | 'grid'
+  /** Short cards with server-rendered full details; native disclosure is the fallback when viewAll is absent. */
+  preview?: boolean
   title?: string
   eyebrow?: string
   description?: string

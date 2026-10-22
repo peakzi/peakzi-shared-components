@@ -2,13 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { BusinessSiteAreas } from './BusinessSiteAreas'
 import type { BusinessSiteAreasAppearance, BusinessSiteAreasProps } from './BusinessSiteAreas'
 import { BusinessSiteAreasMap } from './map/BusinessSiteAreasMap'
-import { mapAreas } from './helpers/map-areas'
+import { mapAreas as validMapAreas } from './helpers/map-areas'
 
 type Appearance = Required<Pick<BusinessSiteAreasAppearance,
   'font' | 'headingFont' | 'backgroundColor' | 'textColor' | 'accentColor' | 'buttonRadius' | 'density' | 'motion'
 >>
 
-interface StoryArgs extends Omit<BusinessSiteAreasProps, 'appearance' | 'map'>, Appearance, Pick<BusinessSiteAreasAppearance, 'gradientEndColor' | 'gradientAngle'> { showMap: boolean }
+interface StoryArgs extends Omit<BusinessSiteAreasProps, 'appearance' | 'map'>, Appearance, Pick<BusinessSiteAreasAppearance, 'gradientEndColor' | 'gradientAngle'> {
+  showMap: boolean
+  mapAreas?: BusinessSiteAreasProps['areas']
+}
 
 // Example coordinates from the live /home response. No demo coordinates enter the consuming app.
 const citySamples = [
@@ -36,9 +39,9 @@ const meta = {
     layout: 'fullscreen',
     docs: { description: { component: 'Server-rendered city links with an optional map island. Comfortable overlays the panel on the right, leaving map pins visible on the left; compact places the map to the left of the city panel. Mobile stacks the city list above the map. Coordinates come from the consuming site, with no geocoding requests. City focus/hover highlights its marker; clicking a city keeps normal link navigation.' } },
   },
-  render: ({ showMap, font, headingFont, backgroundColor, gradientEndColor, gradientAngle, textColor, accentColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
+  render: ({ showMap, mapAreas = undefined, font, headingFont, backgroundColor, gradientEndColor, gradientAngle, textColor, accentColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
     <BusinessSiteAreas {...props}
-      map={showMap && mapAreas(props.areas).length ? <BusinessSiteAreasMap areas={props.areas} /> : undefined}
+      map={showMap && validMapAreas(mapAreas ?? props.areas).length ? <BusinessSiteAreasMap areas={mapAreas ?? props.areas} /> : undefined}
       appearance={{ font, headingFont, backgroundColor, gradientEndColor, gradientAngle, textColor, accentColor, buttonRadius, density, motion }} />
   ),
   argTypes: {
@@ -76,6 +79,15 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+export const HomepagePreview: Story = {
+  args: {
+    areas: scrollAreas.slice(0, 10),
+    mapAreas: scrollAreas,
+    totalCount: scrollAreas.length,
+    viewAll: { label: 'View all service areas', href: '/cities' },
+  },
+  parameters: { docs: { description: { story: 'Ten featured city links, with all coverage pins on the map and the full city count. The footer links to the complete service-area directory.' } } },
+}
 export const LongHeading: Story = {
   args: { title: 'Our Santa Maria-Santa Barbara cities for Plumbing' },
 }

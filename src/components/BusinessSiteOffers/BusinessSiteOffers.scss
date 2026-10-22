@@ -46,6 +46,39 @@
 .pz-business-offers__offer .pz-business-offers__terms { font-style: italic; }
 .pz-business-offers__offer .pz-business-offers__expiry { font-size: 13px; }
 
+.pz-business-offers[data-content='preview'][data-density='comfortable'] .pz-business-offers__offer { min-height: 300px; box-sizing: border-box; }
+.pz-business-offers__footer { margin-top: auto; }
+.pz-business-offers__footer .pz-business-offers__expiry { margin-top: 0; }
+.pz-business-offers__footer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; min-height: 44px; margin-top: 12px; }
+.pz-business-offers :is(a, summary).pz-business-offers__details-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--pz-business-offers-card-text); font: 600 14px/1.4 var(--pz-business-offers-font); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.pz-business-offers :is(a, summary).pz-business-offers__details-link:focus-visible { outline: 2px solid var(--pz-business-offers-card-text); outline-offset: 4px; }
+.pz-business-offers__disclosure { min-width: 0; width: 100%; }
+.pz-business-offers__disclosure summary { list-style: none; }
+.pz-business-offers__disclosure summary::-webkit-details-marker { display: none; }
+.pz-business-offers__disclosure-body { padding-block: 8px; }
+.pz-business-offers__sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.pz-business-offers__details {
+  box-sizing: border-box;
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  padding: 24px;
+  border: 1px solid color-mix(in srgb, var(--pz-business-offers-text) 20%, transparent);
+  border-radius: var(--pz-business-offers-radius);
+  background: var(--pz-business-offers-background);
+  color: var(--pz-business-offers-text);
+  font-family: var(--pz-business-offers-font);
+  overflow: auto;
+  overscroll-behavior: contain;
+
+  &::backdrop { background: rgb(0 0 0 / 60%); }
+}
+.pz-business-offers__details-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid color-mix(in srgb, var(--pz-business-offers-text) 15%, transparent); }
+.pz-business-offers__details-header h3 { margin: 0; padding: 0; font-size: 22px; }
+.pz-business-offers__details-header button { display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border: 1px solid currentColor; border-radius: var(--pz-business-offers-radius); background: transparent; color: inherit; cursor: pointer; }
+.pz-business-offers__details-header button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.pz-business-offers__details-body { padding-top: 16px; }
+.pz-business-offers__details-body .pz-business-offers__action { margin-top: 16px; }
+
 .pz-business-offers a.pz-business-offers__action {
   display: inline-flex;
   align-items: center;
@@ -79,6 +112,8 @@
 .pz-business-offers[data-density='compact'] .pz-business-offers__list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
 .pz-business-offers[data-density='compact'] .pz-business-offers__offer { flex-direction: row; align-items: center; justify-content: space-between; gap: 20px; padding: 14px 16px; border-style: solid; box-shadow: none; }
 .pz-business-offers[data-density='compact'] .pz-business-offers__content { flex: 1; }
+.pz-business-offers[data-content='preview'][data-density='compact'] .pz-business-offers__footer { flex: none; margin-top: 0; max-width: 35%; }
+.pz-business-offers[data-content='preview'][data-density='compact'] .pz-business-offers__footer-actions:empty { display: none; }
 .pz-business-offers[data-density='compact'] h3 { padding-right: 0; font-size: 17px; }
 .pz-business-offers[data-density='compact'] .pz-business-offers__badge { margin-bottom: 8px; }
 .pz-business-offers[data-density='compact'] .pz-business-offers__action { flex: none; align-self: center; }
@@ -95,4 +130,5 @@
   .pz-business-offers__inner { padding: 32px 20px; }
   .pz-business-offers[data-density='compact'] .pz-business-offers__offer { flex-direction: column; align-items: stretch; gap: 12px; }
   .pz-business-offers[data-density='compact'] .pz-business-offers__action { align-self: stretch; }
+  .pz-business-offers[data-content='preview'][data-density='compact'] .pz-business-offers__footer { max-width: 100%; }
 }

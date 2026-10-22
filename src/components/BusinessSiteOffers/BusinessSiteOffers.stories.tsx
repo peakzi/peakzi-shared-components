@@ -18,6 +18,7 @@ const meta = {
   argTypes: {
     items: { control: 'object' },
     layout: { control: 'inline-radio', options: ['carousel', 'grid'] },
+    preview: { control: 'boolean' },
     viewAll: { control: 'object' },
     font: { control: 'text' },
     headingFont: { control: 'text' },
@@ -60,12 +61,31 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+export const HomepagePreview: Story = {
+  args: {
+    preview: true, viewAll: { label: 'View all offers', href: '/offers' },
+    backgroundColor: '#ffffff', textColor: '#12171c', cardBackgroundColor: '#07111b', cardGradientEndColor: '#2b96b0',
+    cardTextColor: '#ffffff', cardAccentColor: '#b0e1e8',
+    items: [
+      { id: 'discount', badge: '10% OFF', title: 'All services', description: '10% Off All Services & Repairs', terms: 'Included with membership', redemptionInstructions: 'Join Now for Just $14.99/Month or $159/Year!', expiresOn: '2030-11-04' },
+      { id: 'fees', badge: 'FREE', title: 'All services', description: 'No service fees — ever!', terms: 'Included with membership', expiresOn: '2030-11-04' },
+      { id: 'membership', badge: '$14.99', title: 'All services', description: 'Join Now for Just $14.99/Month',
+        features: ['Priority service during plumbing emergencies', 'Free annual inspection with camera inspection', '10% off all services and repairs', 'Two-year service guarantee', 'Manufacturer warranties on installed equipment', 'No service fees'],
+        redemptionInstructions: 'Join Now for Just $14.99/Month or $159/Year!', expiresOn: '2030-11-04' },
+    ],
+  },
+}
 export const Carousel: Story = { args: { items: [
   ...meta.args.items,
   { id: 'inspection', title: 'Plumbing inspection', badge: '$25 OFF', action: { label: 'Call to claim', href: 'tel:5125550188' } },
   { id: 'repairs', title: 'Qualifying repairs', badge: '10% OFF', action: { label: 'View offer', href: 'https://example.com/offers', newTab: true } },
 ] } }
 export const SingleOffer: Story = { args: { items: [meta.args.items[0]!] } }
+export const OffersPagePreview: Story = {
+  ...HomepagePreview,
+  args: { ...HomepagePreview.args, layout: 'grid', viewAll: undefined },
+  parameters: { docs: { description: { story: 'Short grid cards with full server-rendered details. Without JavaScript, native disclosures expand inline; with JavaScript, the same controls open a dialog.' } } },
+}
 export const TwoOffers: Story = { args: { items: meta.args.items.slice(0, 2) } }
 export const Compact: Story = { args: { density: 'compact' } }
 export const Grid: Story = { ...Carousel, args: { ...Carousel.args, layout: 'grid' } }

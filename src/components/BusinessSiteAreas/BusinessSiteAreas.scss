@@ -76,7 +76,7 @@
 
 .pz-business-areas__grid li { min-width: 0; margin: 0; }
 
-.pz-business-areas :is(a, button).pz-business-areas__tile {
+.pz-business-areas :is(a, button, span).pz-business-areas__tile {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -94,8 +94,10 @@
   background: transparent;
   border: 0;
   text-align: left;
-  cursor: pointer;
+  cursor: default;
 }
+
+.pz-business-areas :is(a, button).pz-business-areas__tile { cursor: pointer; }
 
 .pz-business-areas__bullet {
   width: 7px;
@@ -105,7 +107,25 @@
   background: currentColor;
 }
 
-.pz-business-areas :is(a, button).pz-business-areas__tile:is(:hover, :focus-visible, [data-map-active='true']) {
+.pz-business-areas a.pz-business-areas__view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 8px;
+  color: var(--pz-business-areas-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+
+  &:hover { text-decoration-thickness: 2px; }
+  &:focus-visible { outline: 2px solid var(--pz-business-areas-accent); outline-offset: 3px; }
+}
+
+.pz-business-areas :is(a, button).pz-business-areas__tile:is(:hover, :focus-visible, [data-map-active='true']),
+.pz-business-areas span.pz-business-areas__tile[data-map-active='true'] {
   background: var(--pz-business-areas-text);
   color: var(--pz-business-areas-background);
 }
@@ -179,7 +199,7 @@
   .pz-business-areas__heading :is(h1, h2) { font-size: clamp(24px, 2.5cqw, 30px); }
   p.pz-business-areas__eyebrow { margin-bottom: 6px; }
   .pz-business-areas__grid { gap: 0 8px; }
-  :is(a, button).pz-business-areas__tile { min-height: 34px; padding: 5px 8px; font-size: 14px; }
+  :is(a, button, span).pz-business-areas__tile { min-height: 34px; padding: 5px 8px; font-size: 14px; }
 }
 
 .pz-business-areas[data-layout='map'][data-density='compact'] {
@@ -205,7 +225,7 @@
     .pz-business-areas__heading { gap: 12px; }
     .pz-business-areas__heading :is(h1, h2) { font-size: 26px; }
     .pz-business-areas__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 8px; }
-    :is(a, button).pz-business-areas__tile { padding-inline: 6px; font-size: 14px; }
+    :is(a, button, span).pz-business-areas__tile { padding-inline: 6px; font-size: 14px; }
     .pz-business-areas__map { height: 220px; }
   }
 }
