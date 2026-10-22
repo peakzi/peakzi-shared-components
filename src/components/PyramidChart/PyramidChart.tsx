@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import type { ReactNode } from 'react'
 import type { Options, PlotSeriesOptions, SeriesOptionsType } from 'highcharts'
 import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
+import { chartExportImageTheme, chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
@@ -183,6 +183,7 @@ export function PyramidChart({ isLoading = false, data, emptyState = null, color
       buttons: { contextButton: { menuItems: exportMenuItems } },
       enabled: true,
       fallbackToExportServer: false,
+      chartOptions: chartExportImageTheme(),
     },
     navigation: chartExportMenuTheme(theme),
   })

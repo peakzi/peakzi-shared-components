@@ -1,6 +1,6 @@
 import type { Options, SeriesOptionsType, TooltipFormatterCallbackFunction } from 'highcharts'
 import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
-import { chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
+import { chartExportImageTheme, chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
@@ -79,6 +79,7 @@ export function ColumnChart({
       },
       enabled: true,
       fallbackToExportServer: false,
+      chartOptions: chartExportImageTheme(),
     },
     navigation: chartExportMenuTheme(theme),
     responsive: {

@@ -145,6 +145,14 @@ export type {
   BusinessSiteServiceDetailReason,
   BusinessSiteServiceDetailSectionLink,
 } from './components/BusinessSiteServiceDetail'
+export { BusinessSiteServicePricing } from './components/BusinessSiteServicePricing'
+export type {
+  BusinessSiteServicePricingFactor,
+  BusinessSiteServicePricingFairValue,
+  BusinessSiteServicePricingProps,
+  BusinessSiteServicePricingSentiment,
+  BusinessSiteServicePricingTier,
+} from './components/BusinessSiteServicePricing'
 export type {
   BusinessSiteServiceGroup,
   BusinessSiteServiceImage,

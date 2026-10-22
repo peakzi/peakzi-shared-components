@@ -37,7 +37,7 @@
 .pz-business-value-showcase .pz-business-value-showcase__title {
   color: var(--pz-business-value-showcase-text);
   font-family: var(--pz-business-value-showcase-heading-font);
-  font-size: 21px;
+  font-size: clamp(26px, 3vw, 34px);
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.015em;

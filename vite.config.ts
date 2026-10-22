@@ -17,6 +17,7 @@ const componentEntries = [
   'BusinessSiteServices',
   'BusinessSiteServicesDirectory',
   'BusinessSiteServiceDetail',
+  'BusinessSiteServicePricing',
   'BusinessSiteAreas',
   'BusinessSiteAreasDirectory',
   'BusinessSiteFaq',
@@ -26,6 +27,7 @@ const componentEntries = [
   'BusinessSiteBlogs',
   'BusinessSiteContentList',
   'BusinessSiteContentFilterNav',
+  'BusinessSiteValueShowcase',
   'Button',
   'Card',
   'Checkbox',
@@ -61,6 +63,7 @@ const componentEntries = [
   'Tabs',
   'TimeSeriesChart',
   'Tooltip',
+  'TopBar',
   'TreeMapChart',
 ] as const
 
