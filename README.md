@@ -7,7 +7,7 @@ Brand-consistent UI component library for all Peakzi websites. Built with React 
 - **30 component groups** — inputs, surfaces, navigation, feedback, overlays, data display, app shell, and brand
 - **Design tokens** — CSS custom properties for colour, typography, spacing, radius, shadow, and motion
 - **Dark mode** — toggle via `data-theme="dark"` on `<html>`, no JavaScript required for the styles
-- **Accessible** — ARIA roles, keyboard navigation, focus rings, and zero a11y violations enforced in CI
+- **Accessible** — ARIA roles, keyboard navigation and focus rings; Storybook's a11y panel flags contrast and ARIA issues per story (not yet enforced in CI)
 
 ---
 

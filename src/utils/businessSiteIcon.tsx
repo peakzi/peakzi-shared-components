@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { ArrowUpRight, CalendarDays, Calculator, Phone, Star } from 'lucide-react'
+import { ArrowUpRight, Award, BadgeCheck, CalendarDays, Calculator, Check, ClipboardCheck, Clock, DollarSign, Droplet, Flame, House, Phone, Shield, ShieldCheck, Snowflake, Star, Tag, Thermometer, Wrench, Zap } from 'lucide-react'
 import type { IconName } from 'lucide-react/dynamic'
 
 const STATIC_ICONS = {
@@ -8,6 +8,23 @@ const STATIC_ICONS = {
   calculator: Calculator,
   'arrow-up-right': ArrowUpRight,
   star: Star,
+  // Value Showcase icons render above the fold; keep them out of the lazy path.
+  award: Award,
+  'dollar-sign': DollarSign,
+  'shield-check': ShieldCheck,
+  'badge-check': BadgeCheck,
+  clock: Clock,
+  'clipboard-check': ClipboardCheck,
+  tag: Tag,
+  check: Check,
+  shield: Shield,
+  thermometer: Thermometer,
+  snowflake: Snowflake,
+  wrench: Wrench,
+  zap: Zap,
+  droplet: Droplet,
+  house: House,
+  flame: Flame,
 } as const
 
 function IconPlaceholder() {
