@@ -34,6 +34,10 @@ export interface BusinessSiteAreasProps {
   eyebrow?: string
   /** Label next to the count. Defaults to "cities" ("city" for one). */
   countLabel?: string
+  /** Full coverage count when the consuming page displays only a city preview. */
+  totalCount?: number
+  /** Optional crawlable link beneath the city list. */
+  viewAll?: { label: string; href: string }
   /** Interactive map island. The city list remains server-renderable without it. */
   map?: ReactNode
   appearance?: BusinessSiteAreasAppearance

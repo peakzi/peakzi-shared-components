@@ -12,6 +12,8 @@ export function BusinessSiteAreas({
   title = 'Areas we serve',
   eyebrow = 'Service area',
   countLabel,
+  totalCount,
+  viewAll,
   map,
   appearance = {},
   sectionId,
@@ -23,7 +25,7 @@ export function BusinessSiteAreas({
   const visibleAreas = areas.flatMap((area) => {
     const label = area.label?.trim()
     const href = safeHref(area.href)
-    return label && (href || (variant === 'directory' && area.href === undefined))
+    return label && (href || area.href === undefined)
       ? [{ id: area.id, label, href, favorite: area.favorite === true }] : []
   })
   if (visibleAreas.length === 0 && variant !== 'directory') return null
@@ -37,7 +39,10 @@ export function BusinessSiteAreas({
   const text = safeColor(appearance.textColor, '#12171c')
   const headingBackground = safeColor(appearance.headingBackgroundColor, background)
   const headingEnd = safeColor(appearance.headingGradientEndColor, '')
-  const count = visibleAreas.length
+  const count = typeof totalCount === 'number' && Number.isFinite(totalCount)
+    ? Math.max(visibleAreas.length, Math.floor(totalCount)) : visibleAreas.length
+  const viewAllHref = safeHref(viewAll?.href)
+  const viewAllLabel = viewAll?.label.trim()
   const style = {
     '--pz-business-areas-background': background,
     '--pz-business-areas-fill': gradientEnd
@@ -66,15 +71,21 @@ export function BusinessSiteAreas({
               <span aria-hidden="true" className="pz-business-areas__bullet" />
               {area.favorite ? <strong>{area.label}</strong> : <span>{area.label}</span>}
             </a>
-          ) : (
+          ) : variant === 'directory' ? (
             <button type="button" className="pz-business-areas__tile" data-area-id={area.id}>
               <span aria-hidden="true" className="pz-business-areas__bullet" />
               {area.favorite ? <strong>{area.label}</strong> : <span>{area.label}</span>}
             </button>
+          ) : (
+            <span className="pz-business-areas__tile" data-area-id={area.id}>
+              <span aria-hidden="true" className="pz-business-areas__bullet" />
+              {area.favorite ? <strong>{area.label}</strong> : <span>{area.label}</span>}
+            </span>
           )}
         </li>
       ))}
     </ul>
+    {viewAllHref && viewAllLabel && <a className="pz-business-areas__view-all" href={viewAllHref}>{viewAllLabel}<span aria-hidden="true"> →</span></a>}
     {visibleAreas.length === 0 && <p className="pz-business-areas__empty">No cities found.</p>}
   </>
 

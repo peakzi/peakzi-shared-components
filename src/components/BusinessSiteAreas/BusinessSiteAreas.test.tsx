@@ -3,6 +3,67 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { BusinessSiteAreas } from './BusinessSiteAreas'
 
 describe('BusinessSiteAreas', () => {
+  it.each(['comfortable', 'compact'] as const)('renders cities without URLs as plain labels in %s sections', (density) => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas areas={[
+      { id: 'allen', label: 'Allen, TX', favorite: true }, { id: 'plano', label: 'Plano, TX' },
+    ]} appearance={{ density }} map={<div>Map island</div>} totalCount={20}
+      viewAll={{ label: 'View all service areas', href: '/cities' }} />)
+    expect(html).toContain('<span class="pz-business-areas__tile" data-area-id="allen">')
+    expect(html).toContain('<strong>Allen, TX</strong>')
+    expect(html).toContain('<span>Plano, TX</span>')
+    expect(html).toContain('<strong>20</strong>')
+    expect(html).not.toContain('<button')
+    expect(html).not.toContain('href="/cities/')
+    expect(html).toContain('href="/cities"')
+    expect(html).toContain('Map island')
+  })
+
+  it('retains map-selection buttons for directory cities without URLs', () => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas variant="directory" areas={[{ id: 'allen', label: 'Allen, TX' }]} />)
+    expect(html).toContain('<button type="button" class="pz-business-areas__tile" data-area-id="allen">')
+    expect(html).not.toContain('<a ')
+  })
+
+  const previewAreas = [{ id: 'allen', label: 'Allen, TX', href: '/cities/allen-tx' }]
+
+  it('shows the full coverage count and a crawlable footer after the preview list', () => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas areas={previewAreas} totalCount={34}
+      viewAll={{ label: 'View all service areas', href: '/cities?domain=www.client.example' }} />)
+    expect(html).toContain('<strong>34</strong>')
+    expect(html).toContain('<span>cities</span>')
+    expect(html).toContain('href="/cities?domain=www.client.example"')
+    expect(html).toContain('View all service areas')
+    expect(html.indexOf('View all service areas')).toBeGreaterThan(html.indexOf('</ul>'))
+    expect(html).toContain('href="/cities/allen-tx"')
+  })
+
+  it.each([undefined, NaN, Infinity, -1, 0])('falls back to the listed count for an invalid total: %s', (totalCount) => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas areas={previewAreas} totalCount={totalCount} />)
+    expect(html).toContain('<strong>1</strong>')
+    expect(html).toContain('<span>city</span>')
+    expect(html).not.toContain('pz-business-areas__view-all')
+  })
+
+  it('does not undercount listed cities and uses an integer total', () => {
+    expect(renderToStaticMarkup(<BusinessSiteAreas areas={previewAreas} totalCount={12.7} />)).toContain('<strong>12</strong>')
+    expect(renderToStaticMarkup(<BusinessSiteAreas areas={previewAreas} totalCount={0.7} />)).toContain('<strong>1</strong>')
+  })
+
+  it.each([
+    { label: 'View all service areas', href: 'javascript:alert(1)' },
+    { label: ' ', href: '/cities' },
+    { label: 'View all service areas', href: '' },
+  ])('omits unsafe or empty footer links: %j', (viewAll) => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas areas={previewAreas} viewAll={viewAll} />)
+    expect(html).not.toContain('pz-business-areas__view-all')
+    expect(html).not.toContain('javascript:')
+  })
+
+  it('keeps empty homepage sections omitted even with a total and footer', () => {
+    expect(renderToStaticMarkup(<BusinessSiteAreas areas={[]} totalCount={34}
+      viewAll={{ label: 'View all service areas', href: '/cities' }} />)).toBe('')
+  })
+
   it.each([undefined, 'none', 'subtle'] as const)('uses the site motion setting %s without hiding cities', (motion) => {
     const html = renderToStaticMarkup(<BusinessSiteAreas
       areas={[{ id: 'allen', label: 'Allen, TX', href: '/cities/allen-tx' }]}

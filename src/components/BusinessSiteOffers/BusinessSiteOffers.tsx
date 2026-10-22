@@ -9,6 +9,7 @@ import { BusinessSiteOffersCarousel } from './carousel/BusinessSiteOffersCarouse
 export function BusinessSiteOffers({
   items,
   layout = 'carousel',
+  preview = false,
   title = 'Offers & savings',
   eyebrow = 'Coupons & specials',
   description,
@@ -31,6 +32,7 @@ export function BusinessSiteOffers({
       className={['pz-business-offers', className].filter(Boolean).join(' ')}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
       data-layout={resolvedLayout}
+      data-content={preview ? 'preview' : 'full'}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={offersStyle(appearance)}
     >
@@ -49,11 +51,11 @@ export function BusinessSiteOffers({
         </div>
         {resolvedLayout !== 'carousel' ? (
           <ul className="pz-business-offers__list" role="list">
-            {offers.map((item) => <li key={item.id}><Offer item={item} /></li>)}
+            {offers.map((item) => <li key={item.id}><Offer item={item} preview={preview} detailsHref={href ?? undefined} /></li>)}
           </ul>
         ) : (
           <BusinessSiteOffersCarousel count={offers.length} animate={appearance.motion === 'subtle'}>
-            {offers.map((item) => <li key={item.id}><Offer item={item} /></li>)}
+            {offers.map((item) => <li key={item.id}><Offer item={item} preview={preview} detailsHref={href ?? undefined} /></li>)}
           </BusinessSiteOffersCarousel>
         )}
       </div>
