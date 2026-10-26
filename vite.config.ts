@@ -14,6 +14,7 @@ const componentEntries = [
   'BusinessSiteHeader',
   'BusinessSiteFooter',
   'BusinessSiteHero',
+  'BusinessSiteCta',
   'BusinessSiteServices',
   'BusinessSiteServicesDirectory',
   'BusinessSiteServiceDetail',

@@ -7,12 +7,19 @@ const FONT_PRESETS: Record<string, string> = {
   serif: 'Georgia, "Times New Roman", serif',
 }
 
+const GENERIC_FONT_FAMILIES = new Set([
+  'serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui',
+  'ui-serif', 'ui-sans-serif', 'ui-monospace', 'ui-rounded', 'math', 'emoji', 'fangsong',
+])
+
 export function safeFont(value: unknown): string {
   if (typeof value !== 'string') return FONT_PRESETS['plex-sans']!
   const name = value.trim()
   if (Object.prototype.hasOwnProperty.call(FONT_PRESETS, name)) return FONT_PRESETS[name]!
   if (!/^[\p{L}\p{N}][\p{L}\p{N} _.-]{0,79}$/u.test(name)) return FONT_PRESETS['plex-sans']!
-  if (name === 'system-ui' || name === 'sans-serif' || name === 'monospace') return name
+  // Quoting a generic family turns it into a literal font name and loses its fallback behavior.
+  const generic = name.toLowerCase()
+  if (GENERIC_FONT_FAMILIES.has(generic)) return generic
   return `"${name}", Arial, sans-serif`
 }
 

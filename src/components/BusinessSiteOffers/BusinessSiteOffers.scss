@@ -1,3 +1,5 @@
+@use '../../styles/breakpoints' as breakpoints;
+
 .pz-business-offers {
   width: 100%;
   background: var(--pz-business-offers-background, #ffffff);
@@ -13,6 +15,23 @@
 .pz-business-offers h2 { margin: 0; color: var(--pz-business-offers-text); font: 600 clamp(28px, 3.5vw, 40px)/1.2 var(--pz-business-offers-heading-font); letter-spacing: -0.03em; text-wrap: balance; }
 .pz-business-offers .pz-business-offers__intro { max-width: 65ch; margin: 12px 0 0; color: inherit; font: 400 15px/1.6 var(--pz-business-offers-font); }
 .pz-business-offers__list > li { display: flex; min-width: 0; margin: 0; padding: 0; }
+// Keep a lone coupon in one normal column, not the generic full-width carousel slot.
+.pz-business-offers .pz-business-offers__carousel .pz-business-offers__list[data-single='true'] {
+  grid-auto-columns: calc((100% - var(--space-8)) / 3);
+}
+
+@media (max-width: breakpoints.$breakpoint-card-carousel-tablet) {
+  .pz-business-offers .pz-business-offers__carousel .pz-business-offers__list[data-single='true'] {
+    grid-auto-columns: calc((100% - var(--space-4)) / 2);
+  }
+}
+
+@media (max-width: breakpoints.$breakpoint-card-carousel-mobile) {
+  .pz-business-offers .pz-business-offers__carousel .pz-business-offers__list[data-single='true'] {
+    grid-auto-columns: 100%;
+  }
+}
+
 .pz-business-offers[data-layout='grid'] .pz-business-offers__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; margin: 24px 0 0; padding: 0; list-style: none; align-items: stretch; }
 .pz-business-offers[data-layout='grid'] .pz-business-offers__action { margin-top: auto; }
 

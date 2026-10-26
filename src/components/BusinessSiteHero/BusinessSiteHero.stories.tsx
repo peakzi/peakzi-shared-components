@@ -13,6 +13,7 @@ type Appearance = Required<Pick<BusinessSiteHeroAppearance,
 
 interface StoryArgs extends Omit<BusinessSiteHeroProps, 'appearance' | 'aside'>, Appearance {
   gradientEndColor?: string
+  ratingIconColor?: string
   showFormSlot: boolean
 }
 
@@ -51,12 +52,12 @@ const meta = {
     },
   },
   render: ({
-    font, headingFont, backgroundColor, gradientEndColor, textColor, accentColor, buttonRadius, density, motion,
+    font, headingFont, backgroundColor, gradientEndColor, textColor, accentColor, ratingIconColor, buttonRadius, density, motion,
     showFormSlot, ...hero
   }: StoryArgs) => (
     <BusinessSiteHero
       {...hero}
-      appearance={{ font, headingFont, backgroundColor, gradientEndColor, textColor, accentColor, buttonRadius, density, motion }}
+      appearance={{ font, headingFont, backgroundColor, gradientEndColor, textColor, accentColor, ratingIconColor, buttonRadius, density, motion }}
       aside={showFormSlot ? formSlot : undefined}
     />
   ),
@@ -84,6 +85,7 @@ const meta = {
     gradientEndColor: { control: 'color', description: 'Gradient endpoint; defaults to the accent color when unset.' },
     textColor: { control: 'color' },
     accentColor: { control: 'color' },
+    ratingIconColor: { control: 'color', description: 'Rating icon only. Use the website on-dark accent for dark heroes; CTA colours are unchanged.' },
     images: { control: 'object' },
     rating: { control: 'object' },
     actions: { control: 'object' },
@@ -161,6 +163,14 @@ export const BackgroundCarousel: Story = {
     textColor: '#ffffff',
     backgroundColor: '#12171c',
     accentColor: '#f6c54b',
+  },
+}
+
+export const ContrastingRating: Story = {
+  args: {
+    layout: 'flat', images: [], background: 'gradient',
+    backgroundColor: '#020817', gradientEndColor: '#2a4d76', textColor: '#ffffff',
+    accentColor: '#01173c', ratingIconColor: '#efbf57',
   },
 }
 

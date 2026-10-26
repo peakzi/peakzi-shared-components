@@ -10,6 +10,8 @@ import { safeHref } from '../../utils/safeHref'
 export interface BusinessSiteAreasDirectoryProps {
   areas: readonly BusinessSiteArea[]
   title?: string
+  /** Plain-text introduction beneath the heading; omitted without reserving space. */
+  intro?: string
   appearance?: BusinessSiteAreasAppearance
   /** Supply a browser-only map from the consuming framework. No map dependency is bundled here. */
   renderMap?: (areas: readonly BusinessSiteArea[]) => ReactNode
@@ -17,7 +19,7 @@ export interface BusinessSiteAreasDirectoryProps {
 
 const normalize = (value: string) => value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
 
-export function BusinessSiteAreasDirectory({ areas, title, appearance, renderMap }: BusinessSiteAreasDirectoryProps) {
+export function BusinessSiteAreasDirectory({ areas, title, intro, appearance, renderMap }: BusinessSiteAreasDirectoryProps) {
   const [query, setQuery] = useState('')
   const searchId = useId()
   const ordered = useMemo(() => areas.filter((area) => area.label.trim() &&
@@ -29,7 +31,9 @@ export function BusinessSiteAreasDirectory({ areas, title, appearance, renderMap
   return <BusinessSiteAreas areas={filtered} {...(title !== undefined ? { title } : {})}
     {...(appearance !== undefined ? { appearance } : {})}
     variant="directory" headingLevel="h1" map={renderMap?.(filtered)}
-    controls={<div className="pz-business-areas__search">
+    controls={<>
+      {intro?.trim() && <p className="pz-business-areas__intro">{intro.trim()}</p>}
+      <div className="pz-business-areas__search">
       <label htmlFor={searchId}>Search cities</label>
       <div className="pz-business-areas__search-field">
         <Search size={18} aria-hidden="true" className="pz-business-areas__search-icon" />
@@ -40,7 +44,7 @@ export function BusinessSiteAreasDirectory({ areas, title, appearance, renderMap
       <p role="status" aria-live="polite">{query.trim()
         ? `${filtered.length} of ${ordered.length} cities found`
         : renderMap ? 'Select a city to highlight it on the map.' : 'Search the cities served.'}</p>
-    </div>} />
+    </div></>} />
 }
 
 BusinessSiteAreasDirectory.displayName = 'BusinessSiteAreasDirectory'

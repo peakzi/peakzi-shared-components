@@ -125,6 +125,16 @@ describe('BusinessSiteOffers', () => {
     expect(html).not.toContain('Next offers')
   })
 
+  it('marks one visible coupon for responsive single-card sizing without carousel arrows', () => {
+    const html = renderToStaticMarkup(<BusinessSiteOffers items={[...items, { id: 'blank', title: ' ' }]} />)
+    expect(html.match(/<article\b/g)).toHaveLength(1)
+    expect(html).toMatch(/class="pz-business-card-carousel pz-business-offers__carousel" data-single="true"/)
+    expect(html).toMatch(/class="pz-business-card-carousel__list pz-business-offers__list"[^>]*data-single="true"/)
+    expect(html).toContain('Installation included')
+    expect(html).not.toContain('Previous offers')
+    expect(html).not.toContain('Next offers')
+  })
+
   it('reuses the same cards in a server-rendered grid without carousel controls', () => {
     const html = renderToStaticMarkup(<BusinessSiteOffers layout="grid" items={Array.from({ length: 6 }, (_, index) => ({
       ...items[0]!, id: `grid-${index}`, title: `Grid offer ${index + 1}`,
