@@ -20,6 +20,7 @@ export function heroStyle(
     '--pz-business-hero-gradient-end': safeColor(appearance.gradientEndColor, accent),
     '--pz-business-hero-text': safeColor(appearance.textColor, dark ? '#ffffff' : '#12171c'),
     '--pz-business-hero-accent': accent,
+    '--pz-business-hero-rating-icon': safeColor(appearance.ratingIconColor, accent),
     '--pz-business-hero-on-accent': readableText('#ffffff', accent),
     '--pz-business-hero-font': safeFont(appearance.font ?? 'plex-sans'),
     '--pz-business-hero-heading-font': safeFont(appearance.headingFont ?? 'archivo'),

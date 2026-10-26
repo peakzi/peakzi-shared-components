@@ -137,6 +137,8 @@ export type {
 } from './components/BusinessSiteHero'
 
 export { BusinessSiteServices } from './components/BusinessSiteServices'
+export { BusinessSiteCta } from './components/BusinessSiteCta'
+export type { BusinessSiteCtaAction, BusinessSiteCtaAppearance, BusinessSiteCtaProps, BusinessSiteCtaVariant } from './components/BusinessSiteCta'
 export { BusinessSiteServicesDirectory } from './components/BusinessSiteServicesDirectory'
 export type { BusinessSiteServicesDirectoryProps } from './components/BusinessSiteServicesDirectory'
 export { BusinessSiteServiceDetail } from './components/BusinessSiteServiceDetail'

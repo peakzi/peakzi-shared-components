@@ -82,9 +82,25 @@ describe('BusinessSiteHero', () => {
     expect(blank).not.toContain('pz-business-hero__rating"')
   })
 
+  it.each(['star', 'Star', ' STAR '])('fills only the rating star for icon name %s', (iconName) => {
+    const { container } = render(<BusinessSiteHero {...props}
+      rating={{ label: '5.0 rating · 92 reviews', iconName }}
+      actions={[{ id: 'favorite', label: 'Favorite', href: '/favorite', type: 'primary', iconName: 'star' }]}
+      appearance={{ textColor: '#ffffff', accentColor: '#01173c', ratingIconColor: '#efbf57' }}
+    />)
+    expect(container.querySelector('.pz-business-hero__rating-icon .lucide-star')).toHaveAttribute('fill', 'currentColor')
+    expect(screen.getByRole('link', { name: 'Favorite' }).querySelector('.lucide-star')).toHaveAttribute('fill', 'none')
+    const style = container.querySelector('section')!.getAttribute('style')
+    expect(style).toContain('--pz-business-hero-rating-icon: #efbf57')
+    expect(style).toContain('--pz-business-hero-accent: #01173c')
+    expect(style).toContain('--pz-business-hero-text: #ffffff')
+    expect(screen.getByText('5.0 rating · 92 reviews')).toBeInTheDocument()
+  })
+
   it('accepts other Lucide icon names and ignores unknown names', async () => {
     const { container, rerender } = render(<BusinessSiteHero {...props} rating={{ label: 'Expert service', iconName: 'Wrench' }} />)
     await waitFor(() => expect(container.querySelector('.lucide-wrench')).toBeInTheDocument())
+    expect(container.querySelector('.pz-business-hero__rating-icon .lucide-wrench')).toHaveAttribute('fill', 'none')
     rerender(<BusinessSiteHero {...props} rating={{ label: 'Expert service', iconName: 'not-a-lucide-icon' }} />)
     expect(container.querySelector('.lucide-wrench')).not.toBeInTheDocument()
     expect(screen.getByText('Expert service')).toBeInTheDocument()

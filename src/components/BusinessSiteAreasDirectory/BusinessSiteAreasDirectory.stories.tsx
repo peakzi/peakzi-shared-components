@@ -24,6 +24,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 export const Comfortable: Story = {}
+export const WithIntroduction: Story = { args: { intro: 'Find your city below or search the service areas covered by our local team.' } }
 export const LongTitle: Story = { args: { title: 'Our Indianapolis-Carmel-Greenwood cities for Plumbing, Electrical and HVAC' } }
 export const Compact: Story = { args: { appearance: { ...meta.args.appearance, density: 'compact' } } }
 export const Mobile: Story = { decorators: [(Story) => <div style={{ maxWidth: 390, margin: 'auto' }}><Story /></div>] }

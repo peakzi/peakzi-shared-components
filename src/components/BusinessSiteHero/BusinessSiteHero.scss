@@ -162,7 +162,7 @@
 .pz-business-hero__rating-icon {
   display: inline-flex;
   flex: none;
-  color: var(--pz-business-hero-accent);
+  color: var(--pz-business-hero-rating-icon, var(--pz-business-hero-accent));
 }
 
 .pz-business-hero__actions {

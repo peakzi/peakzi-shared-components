@@ -12,6 +12,21 @@ const areas: BusinessSiteArea[] = [
 ]
 
 describe('BusinessSiteAreasDirectory', () => {
+  it('renders an optional plain-text introduction after the heading and before search', () => {
+    const html = renderToStaticMarkup(<BusinessSiteAreasDirectory areas={areas} title="API areas"
+      intro="  <script>Find your city</script>  " />)
+    expect(html).toContain('&lt;script&gt;Find your city&lt;/script&gt;')
+    expect(html).not.toContain('<script>Find your city</script>')
+    expect(html.indexOf('<h1>API areas</h1>')).toBeLessThan(html.indexOf('pz-business-areas__intro'))
+    expect(html.indexOf('pz-business-areas__intro')).toBeLessThan(html.indexOf('type="search"'))
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
+  })
+
+  it('reserves no introduction space when copy is missing or blank', () => {
+    expect(renderToStaticMarkup(<BusinessSiteAreasDirectory areas={areas} />)).not.toContain('pz-business-areas__intro')
+    expect(renderToStaticMarkup(<BusinessSiteAreasDirectory areas={areas} intro="  " />)).not.toContain('pz-business-areas__intro')
+  })
+
   it('renders one heading and search before one map, followed by the city list in reading order', () => {
     const map = () => <div role="region" aria-label="Service area map">Map</div>
     const html = renderToStaticMarkup(<BusinessSiteAreasDirectory areas={areas} renderMap={map} />)

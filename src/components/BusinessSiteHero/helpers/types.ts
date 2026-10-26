@@ -32,6 +32,8 @@ export interface BusinessSiteHeroAppearance {
   gradientEndColor?: string
   textColor?: string
   accentColor?: string
+  /** Rating icon colour, independent of the CTA accent. Defaults to accentColor. */
+  ratingIconColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
   density?: 'comfortable' | 'compact'
   motion?: BusinessSiteMotion

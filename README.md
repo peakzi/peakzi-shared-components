@@ -448,6 +448,57 @@ The `dist/` folder is gitignored and rebuilt on every publish.
 
 ## Consuming repo checklist
 
+### Contextual website CTAs
+
+`BusinessSiteCta` is available from `@peakzi/components/BusinessSiteCta` or the
+root entry. Import `@peakzi/components/styles` once for its BEM styles. The
+component owns three layouts, responsive stacking, accessible heading/link
+markup, readable accent text, density and motion hooks; it performs no API calls.
+The host application owns API parsing, business phone/booking destinations,
+placement, visibility decisions and click tracking.
+
+```tsx
+import { BusinessSiteCta } from '@peakzi/components/BusinessSiteCta'
+
+<BusinessSiteCta
+  title={cta.title}
+  description={cta.description}
+  actions={actions}
+  appearance={appearance}
+  variant="direct-line"
+  placement="home-services"
+/>
+```
+
+Actions provide `id`, `label`, `href`, optional `type` (`primary` or `secondary`),
+`iconName` and `newTab`. A primary `tel:` action can also provide `displayValue`
+(the formatted number) and optional `displayLabel` (for example, "Call us").
+Direct line places this clickable number and any scheduling link beside its
+smaller call circle. Without a value or telephone action, no empty number column
+is rendered. Other layouts ignore these display fields. Both phone links retain
+the same action ID for host click tracking; do not imply SMS without support.
+Invalid destinations, empty labels and duplicate IDs are
+omitted. Empty headings or no valid actions render nothing. Only one action is
+primary. `variant` accepts `direct-line` (light row with a circular primary action
+and underlined text links for secondary actions, without a second boxed button),
+`invitation` (borderless centered closing prompt), or `service-desk` (the default:
+light copy beside a compact gradient panel with a filled accent primary button
+and outlined secondary buttons). Hosts can mix these at stable placements;
+layouts never randomize or change the supplied copy/destinations.
+
+`appearance` accepts `font`, `headingFont`, `surfaceColor`, `surfaceTextColor`, `backgroundColor`,
+`gradientEndColor`, `textColor`, `accentColor`, `buttonRadius`, `density` and
+`motion`. The surface pair comes from the page background/text; the background,
+gradient end and text pair come from the website's dark palette; the accent is
+the site's existing on-dark accent. Do not introduce per-layout brand colors.
+Site motion controllers can observe `data-motion-section` and
+`data-motion-reveal`; without enhancement all content remains visible.
+
+Storybook includes each layout, mixed-layout desktop/mobile examples, comfortable/compact, long copy, call-only,
+schedule-only, missing-description and theme-token examples.
+
+### App setup
+
 - [ ] `npm install @peakzi/components` (or `file:../peakzi-shared-components`)
 - [ ] Google Fonts `<link>` tags added to `index.html`
 - [ ] `import '@peakzi/components/styles'` at the root of the app

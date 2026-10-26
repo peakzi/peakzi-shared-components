@@ -1,4 +1,5 @@
 import { safeHref } from '../../utils/safeHref'
+import { Star } from 'lucide-react'
 import { businessSiteIcon } from '../../utils/businessSiteIcon'
 import { BusinessSiteHeroCarousel } from './carousel/BusinessSiteHeroCarousel'
 import { heroStyle } from './helpers/appearance'
@@ -93,7 +94,11 @@ export function BusinessSiteHero({
   const autoplay = motion === 'none' || intervalMs === 0 ? 0 : Number.isFinite(intervalMs) ? Math.max(2000, intervalMs) : 5000
   const validActions = actions.filter((action) => safeHref(action?.href) && action.label?.trim())
   const ratingLabel = rating?.label?.trim()
-  const ratingIcon = ratingLabel ? businessSiteIcon(rating?.iconName) : null
+  const ratingIcon = ratingLabel
+    ? typeof rating?.iconName === 'string' && rating.iconName.trim().toLowerCase() === 'star'
+      ? <Star aria-hidden="true" size={17} strokeWidth={1.75} fill="currentColor" />
+      : businessSiteIcon(rating?.iconName)
+    : null
 
   const media = showMedia && photos.length > 0 && (
     <div className="pz-business-hero__media">

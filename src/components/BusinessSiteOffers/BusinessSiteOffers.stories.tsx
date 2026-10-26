@@ -81,6 +81,7 @@ export const Carousel: Story = { args: { items: [
   { id: 'repairs', title: 'Qualifying repairs', badge: '10% OFF', action: { label: 'View offer', href: 'https://example.com/offers', newTab: true } },
 ] } }
 export const SingleOffer: Story = { args: { items: [meta.args.items[0]!] } }
+export const SingleOfferMobile: Story = { ...SingleOffer, globals: { viewport: { value: 'mobile1', isRotated: false } } }
 export const OffersPagePreview: Story = {
   ...HomepagePreview,
   args: { ...HomepagePreview.args, layout: 'grid', viewAll: undefined },
