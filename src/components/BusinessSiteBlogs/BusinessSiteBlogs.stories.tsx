@@ -12,7 +12,7 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    docs: { description: { component: 'Server-rendered, crawlable blogs on a light reading surface. The default featured layout preserves the homepage feature and numbered list. The opt-in grid layout shows equal 2:1 image cards with stronger theme-derived shadows: three columns in wide containers, two on tablets, and one on mobile. Compact density retains thumbnail rows. A safe cover takes priority over the company-logo fallback; missing or failed images retain a neutral frame. The Next.js directory uses live blog content and company logos until the backend cover contract is ready. Cover photos in these stories are demonstration content only.' } },
+    docs: { description: { component: 'Server-rendered, crawlable blogs on a light reading surface. The default featured layout preserves the homepage feature and numbered list. The opt-in grid layout uses fixed 16:9 photo frames so portrait images cannot stretch the card row, with two-line titles and excerpts and bottom-aligned Read more links. Theme-derived shadows, three columns in wide containers, two on tablets, and one on mobile are preserved. Compact density retains thumbnail rows. A safe cover takes priority over the company-logo fallback; logos remain contained and missing or failed images retain the same neutral frame. Cover photos in these stories are demonstration content only.' } },
   },
   render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
     <BusinessSiteBlogs {...props} appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion }} />
