@@ -17,7 +17,7 @@ describe('BusinessSiteBlogs', () => {
     expect(html.match(/<article /g)).toHaveLength(2)
     expect(html.match(/<img /g)).toHaveLength(2)
     expect(html).toContain('2 articles')
-    expect(html).toContain('height="800"')
+    expect(html).toContain('height="900"')
     expect(html).not.toContain('pz-business-blogs__featured-layout')
     expect(html.match(/pz-business-blogs__read"/g)).toHaveLength(2)
     expect(html.match(/Read more/g)).toHaveLength(2)

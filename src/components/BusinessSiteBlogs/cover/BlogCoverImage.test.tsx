@@ -7,7 +7,7 @@ describe('directory blog image recovery', () => {
   it('includes the image and reserved dimensions in server HTML', () => {
     const html = renderToStaticMarkup(<BlogCoverImage title="Article" cover={{ src: '/cover.jpg', alt: 'Work pictured' }} />)
     expect(html).toContain('src="/cover.jpg"')
-    expect(html).toContain('width="1600" height="800"')
+    expect(html).toContain('width="1600" height="900"')
     expect(html).toContain('loading="lazy"')
   })
   it('falls back from a failed cover to the logo, then a neutral frame without retrying failed URLs', () => {

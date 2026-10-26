@@ -21,7 +21,7 @@ export function BlogCoverImage({ cover, fallbackImage, title }: BlogCoverImagePr
   ]
   const image = candidates.find((candidate) => !failed.includes(candidate.src))
   return <div className="pz-business-blogs__cover" data-image-kind={image?.kind ?? 'placeholder'}>
-    {image ? <img src={image.src} alt={image.alt} width={1600} height={800} loading="lazy" decoding="async"
+    {image ? <img src={image.src} alt={image.alt} width={1600} height={900} loading="lazy" decoding="async"
       onError={() => setFailed((previous) => previous.includes(image.src) ? previous : [...previous, image.src])} /> :
       <span className="pz-business-blogs__image-placeholder" role="img" aria-label="No cover image available">Image unavailable</span>}
   </div>
