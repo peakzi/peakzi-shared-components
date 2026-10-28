@@ -10,6 +10,36 @@ const items: BusinessSiteFaqItem[] = [
 ]
 
 describe('BusinessSiteFaq', () => {
+  it('uses the theme contact button color without changing the question palette or gradient', () => {
+    const html = renderToStaticMarkup(<BusinessSiteFaq items={items} appearance={{
+      gradientStartColor: '#102030', gradientEndColor: '#405060', contactButtonColor: '#efbf57',
+    }} contact={{ title: 'Questions?', actions: [{ id: 'call', label: 'Call now', href: 'tel:5125550188' }] }} />)
+    expect(html).toContain('--pz-business-faq-contact-button:#efbf57')
+    expect(html).toContain('--pz-business-faq-on-contact-button:#000000')
+    expect(html).toContain('--pz-business-faq-accent:#102030')
+    expect(html).toContain('--pz-business-faq-fill:linear-gradient(135deg, #102030, #405060)')
+    expect(html).toContain('data-action-id="call" data-action-type="primary"')
+  })
+  it('keeps one primary action and preserves a secondary booking link', () => {
+    const html = renderToStaticMarkup(<BusinessSiteFaq items={items} contact={{ title: 'Questions?', actions: [
+      { id: 'book', label: 'Schedule service', href: 'https://example.com/book', type: 'secondary', newTab: true },
+      { id: 'call', label: 'Call now', href: 'tel:5125550188', type: 'primary' },
+      { id: 'other', label: 'Other action', href: '/contact', type: 'primary' },
+    ] }} />)
+    expect(html.match(/data-action-type="primary"/g)).toHaveLength(1)
+    expect(html).toContain('data-action-id="call" data-action-type="primary"')
+    expect(html).toContain('data-action-id="book" data-action-type="secondary"')
+    expect(html).toContain('target="_blank" rel="noopener noreferrer"')
+  })
+  it('promotes a valid booking-only action after filtering unsafe destinations', () => {
+    const html = renderToStaticMarkup(<BusinessSiteFaq items={items} contact={{ title: 'Questions?', actions: [
+      { id: 'unsafe', label: 'Unsafe', href: 'javascript:bad()', type: 'primary' },
+      { id: 'book', label: 'Schedule service', href: 'https://example.com/book', type: 'secondary' },
+    ] }} />)
+    expect(html).toContain('data-action-id="book" data-action-type="primary"')
+    expect(html).not.toContain('Unsafe')
+    expect(html).not.toContain('tel:')
+  })
   it('supports a stacked directory while retaining split as the homepage default', () => {
     const html = renderToStaticMarkup(<BusinessSiteFaq items={items} layout="stack" defaultOpenFirst={false} />)
     expect(html).toContain('data-layout="stack"')

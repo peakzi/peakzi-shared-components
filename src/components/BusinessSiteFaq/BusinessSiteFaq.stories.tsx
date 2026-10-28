@@ -13,8 +13,8 @@ const meta = {
     layout: 'fullscreen',
     docs: { description: { component: 'Server-safe FAQ section with native single-open disclosure controls. All answers are included in the initial HTML; the consuming app supplies tenant content and optional formatted answers.' } },
   },
-  render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
-    <BusinessSiteFaq {...props} appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion }} />
+  render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, contactButtonColor, contactSecondaryTextColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
+    <BusinessSiteFaq {...props} appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, contactButtonColor, contactSecondaryTextColor, buttonRadius, density, motion }} />
   ),
   argTypes: {
     items: { control: 'object' },
@@ -27,6 +27,8 @@ const meta = {
     backgroundColor: { control: 'color' },
     gradientStartColor: { control: 'color' },
     gradientEndColor: { control: 'color' },
+    contactButtonColor: { control: 'color' },
+    contactSecondaryTextColor: { control: 'color' },
     buttonRadius: { control: 'inline-radio', options: ['2px', '8px', '16px', '32px'] },
     density: { control: 'inline-radio', options: ['comfortable', 'compact'] },
     motion: { control: 'inline-radio', options: ['none', 'subtle'] },
@@ -51,6 +53,8 @@ const meta = {
     backgroundColor: '#ffffff',
     gradientStartColor: '#12171c',
     gradientEndColor: '#716a64',
+    contactButtonColor: '#efbf57',
+    contactSecondaryTextColor: '#12171c',
     buttonRadius: '8px',
     density: 'comfortable',
     motion: 'subtle',
@@ -61,6 +65,14 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+export const HeaderMatchedActions: Story = { args: {
+  backgroundColor: '#ffffff', gradientStartColor: '#213b5a', gradientEndColor: '#2c95b5',
+  contactButtonColor: '#ee383d', contactSecondaryTextColor: '#2c95b5', buttonRadius: '2px',
+  contact: { title: 'Still have questions?', description: 'Speak with our team.', actions: [
+    { id: 'book', label: 'Book online', href: 'https://example.com/book', type: 'secondary', iconName: 'calendar', newTab: true },
+    { id: 'call', label: 'Call now', href: 'tel:5125550188', type: 'primary', iconName: 'phone' },
+  ] },
+} }
 export const Compact: Story = { args: { density: 'compact' } }
 export const Dark: Story = { args: { backgroundColor: '#12171c' } }
 export const AlternatePalette: Story = { args: { backgroundColor: '#fff8ee', gradientStartColor: '#17392f', gradientEndColor: '#416951' } }

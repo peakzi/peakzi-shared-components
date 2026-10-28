@@ -10,6 +10,23 @@ const actions = [
 ]
 
 describe('BusinessSiteServiceDetail', () => {
+  it.each([['#ee383d', '#000000'], ['#01173c', '#ffffff'], ['#efbf57', '#000000']])('uses primary button color %s independently of the section gradient', (buttonColor, foreground) => {
+    const html = renderToStaticMarkup(<BusinessSiteServiceDetail headline="Service" actions={actions}
+      appearance={{ backgroundColor: '#ffffff', gradientStartColor: '#213b5a', gradientEndColor: '#2c95b5', buttonColor }} />)
+    expect(html).toContain(`--pz-service-detail-button:${buttonColor}`)
+    expect(html).toContain(`--pz-service-detail-on-button:${foreground}`)
+    expect(html).toContain('--pz-business-services-fill:linear-gradient(135deg, #213b5a, #2c95b5)')
+    expect(html).toContain('--pz-business-services-text:#213b5a')
+    expect(html).toContain('pz-service-detail__action--primary')
+    expect(html).toContain('href="tel:5125550188"')
+  })
+  it.each([undefined, 'url(unsafe)', 'red; color:unsafe'])('preserves the existing gradient fallback without a safe button color: %s', (buttonColor) => {
+    const html = renderToStaticMarkup(<BusinessSiteServiceDetail headline="Service" actions={actions}
+      appearance={{ gradientStartColor: '#213b5a', gradientEndColor: '#2c95b5', ...(buttonColor === undefined ? {} : { buttonColor }) }} />)
+    expect(html).not.toContain('--pz-service-detail-button:')
+    expect(html).not.toContain('unsafe')
+    expect(html).toContain('--pz-business-services-fill:linear-gradient(135deg, #213b5a, #2c95b5)')
+  })
   it('server-renders one H1, exact API content, actions, proof and composed sections', () => {
     const html = renderToStaticMarkup(<BusinessSiteServiceDetail headline="Water heater service in our community"
       description="The full API description. No copy is shortened." trade="Plumbing" businessName="Client Business"

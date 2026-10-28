@@ -12,6 +12,8 @@ export interface BusinessSiteFaqAction {
   id: string
   label: string
   href: string
+  /** First primary action wins; otherwise the first valid action is primary. */
+  type?: 'primary' | 'secondary'
   iconName?: string
   iconPosition?: 'before' | 'after'
   newTab?: boolean
@@ -30,6 +32,10 @@ export interface BusinessSiteFaqAppearance {
   /** Shared website gradient used by the contact card and disclosure controls. */
   gradientStartColor?: string
   gradientEndColor?: string
+  /** Primary contact action color, normally the same accent as the website header. */
+  contactButtonColor?: string
+  /** Secondary contact action foreground on backgroundColor; defaults to the section text. */
+  contactSecondaryTextColor?: string
   /** Legacy override, used only when no gradient palette is supplied. */
   textColor?: string
   /** Legacy override, used only when no gradient palette is supplied. */

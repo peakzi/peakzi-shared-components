@@ -13,8 +13,9 @@ export interface BusinessSiteCtaAction {
   type?: 'primary' | 'secondary'
   iconName?: string
   newTab?: boolean
-  /** Optional formatted number beside a primary tel: action in the Direct line layout. */
+  /** @deprecated Contact metadata is no longer rendered as a duplicate action. Use label for visible copy. */
   displayValue?: string
+  /** @deprecated Use label for the single visible action. */
   displayLabel?: string
 }
 
@@ -28,6 +29,8 @@ export interface BusinessSiteCtaAppearance {
   gradientEndColor?: string
   textColor?: string
   accentColor?: string
+  /** Primary button on the page surface; uses the dark background when omitted. */
+  buttonColor?: string
   buttonRadius?: '2px' | '8px' | '16px' | '32px'
   density?: 'comfortable' | 'compact'
   motion?: BusinessSiteMotion
@@ -67,6 +70,7 @@ function ctaStyle(appearance: BusinessSiteCtaAppearance, variant: BusinessSiteCt
   const background = themeColor(appearance.backgroundColor)
   const surface = themeColor(appearance.surfaceColor)
   const accent = themeColor(appearance.accentColor)
+  const button = themeColor(appearance.buttonColor) ?? background
   return {
     '--pz-business-cta-surface': surface,
     '--pz-business-cta-surface-text': themeColor(appearance.surfaceTextColor),
@@ -74,6 +78,8 @@ function ctaStyle(appearance: BusinessSiteCtaAppearance, variant: BusinessSiteCt
     '--pz-business-cta-gradient-end': themeColor(appearance.gradientEndColor),
     '--pz-business-cta-text': themeColor(appearance.textColor),
     '--pz-business-cta-accent': accent,
+    '--pz-business-cta-button': button,
+    '--pz-business-cta-on-button': button ? readableText('#ffffff', opaqueColor(button, surface ?? '#ffffff')) : undefined,
     '--pz-business-cta-on-accent': accent ? readableText('#ffffff', opaqueColor(accent, (variant === 'invitation' ? surface : background) ?? '#ffffff')) : undefined,
     '--pz-business-cta-font': safeFont(appearance.font ?? 'plex-sans'),
     '--pz-business-cta-heading-font': safeFont(appearance.headingFont ?? 'archivo'),
@@ -95,20 +101,14 @@ export function BusinessSiteCta({ title, description, actions, appearance = {}, 
   if (!title.trim() || !links.length) return null
   const primaryIndex = Math.max(0, links.findIndex((action) => action.type === 'primary'))
   const layout = variant === 'direct-line' || variant === 'invitation' ? variant : 'service-desk'
-  const primaryAction = links[primaryIndex]!
-  const contactValue = layout === 'direct-line' && /^tel:/i.test(primaryAction.href) && typeof primaryAction.displayValue === 'string'
-    ? primaryAction.displayValue.trim() : ''
-  const contactLabel = typeof primaryAction.displayLabel === 'string' ? primaryAction.displayLabel.trim() : ''
   const renderAction = (action: BusinessSiteCtaAction, index: number) => {
     const primary = index === primaryIndex
-    const textLink = layout === 'direct-line' && !primary
     const newTab = action.newTab === true && /^https?:\/\//i.test(action.href)
-    return <Button key={action.id} href={action.href} variant={primary ? 'primary' : textLink ? 'link' : 'secondary'}
-      className={['pz-business-cta__action', primary && 'pz-business-cta__action--primary', textLink && 'pz-business-cta__action--text-link'].filter(Boolean).join(' ')}
+    return <Button key={action.id} href={action.href} variant={primary ? 'primary' : 'secondary'}
+      className={['pz-business-cta__action', primary && 'pz-business-cta__action--primary'].filter(Boolean).join(' ')}
       {...(newTab ? { target: '_blank' as const } : {})} data-action-id={action.id}>
-      {!textLink && action.iconName && <span className="pz-business-cta__icon" aria-hidden="true">{businessSiteIcon(action.iconName)}</span>}
+      {action.iconName && <span className="pz-business-cta__icon" aria-hidden="true">{businessSiteIcon(action.iconName)}</span>}
       <span className="pz-business-cta__label">{action.label}</span>
-      {(textLink || (primary && layout === 'invitation')) && <span className="pz-business-cta__arrow" aria-hidden="true">{businessSiteIcon('arrow-up-right')}</span>}
     </Button>
   }
   return <section id={sectionId} className={['pz-business-cta', className].filter(Boolean).join(' ')} aria-labelledby={headingId}
@@ -119,18 +119,8 @@ export function BusinessSiteCta({ title, description, actions, appearance = {}, 
         <h2 id={headingId}>{title}</h2>
         {description?.trim() && <p>{description}</p>}
       </div>
-      <div className="pz-business-cta__actions" data-motion-reveal data-has-contact={contactValue ? 'true' : undefined}>
-        {contactValue ? <>
-          {renderAction(primaryAction, primaryIndex)}
-          <div className="pz-business-cta__contact">
-            {contactLabel && <span className="pz-business-cta__contact-label">{contactLabel}</span>}
-            <Button href={primaryAction.href} variant="link" className="pz-business-cta__phone-number"
-              aria-label={[contactLabel, contactValue].filter(Boolean).join(' ')} data-action-id={primaryAction.id}>
-              {contactValue}
-            </Button>
-            {links.map((action, index) => index !== primaryIndex ? renderAction(action, index) : null)}
-          </div>
-        </> : links.map(renderAction)}
+      <div className="pz-business-cta__actions" data-motion-reveal>
+        {links.map(renderAction)}
       </div>
     </div>
   </section>

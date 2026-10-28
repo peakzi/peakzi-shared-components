@@ -2,6 +2,34 @@ import { describe, expect, it } from 'vitest'
 import { faqStyle } from './appearance'
 
 describe('faqStyle website palette', () => {
+  it('uses the header text color for secondary actions without changing the FAQ text or gradient', () => {
+    expect(faqStyle({ backgroundColor: '#ffffff', gradientStartColor: '#213b5a', gradientEndColor: '#2c95b5',
+      contactButtonColor: '#ee383d', contactSecondaryTextColor: '#2c95b5' })).toMatchObject({
+      '--pz-business-faq-contact-button': '#ee383d', '--pz-business-faq-on-contact-button': '#000000',
+      '--pz-business-faq-contact-secondary-text': '#2c95b5', '--pz-business-faq-text': '#213b5a',
+      '--pz-business-faq-fill': 'linear-gradient(135deg, #213b5a, #2c95b5)',
+    })
+  })
+  it.each([undefined, 'url(unsafe)', 'red; color:unsafe'])('falls back safely when the secondary text color is absent or unsafe: %s', (contactSecondaryTextColor) => {
+    const style = faqStyle({ gradientStartColor: '#102030', ...(contactSecondaryTextColor === undefined ? {} : { contactSecondaryTextColor }) })
+    expect(style).toMatchObject({ '--pz-business-faq-contact-secondary-text': '#102030' })
+    expect(JSON.stringify(style)).not.toContain('unsafe')
+  })
+  it.each([
+    ['#efbf57', '#000000'], ['#afe0e8', '#000000'], ['#01173c', '#ffffff'],
+  ])('uses the contact button theme color %s with readable text %s', (contactButtonColor, foreground) => {
+    const style = faqStyle({ gradientStartColor: '#102030', gradientEndColor: '#405060', contactButtonColor })
+    expect(style).toMatchObject({
+      '--pz-business-faq-contact-button': contactButtonColor,
+      '--pz-business-faq-on-contact-button': foreground,
+      '--pz-business-faq-accent': '#102030',
+    })
+  })
+  it.each([undefined, 'url(unsafe)', 'red; color:unsafe'])('preserves the old button palette without a safe explicit color: %s', (contactButtonColor) => {
+    const style = faqStyle({ gradientStartColor: '#102030', ...(contactButtonColor === undefined ? {} : { contactButtonColor }) })
+    expect(style).toMatchObject({ '--pz-business-faq-contact-button': '#ffffff', '--pz-business-faq-on-contact-button': '#102030' })
+    expect(JSON.stringify(style)).not.toContain('unsafe')
+  })
   it('uses the same website gradient for the contact card and disclosure controls', () => {
     expect(faqStyle({ backgroundColor: '#fff8ee', gradientStartColor: '#17392f', gradientEndColor: '#416951' })).toMatchObject({
       '--pz-business-faq-background': '#fff8ee',

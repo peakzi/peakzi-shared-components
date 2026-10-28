@@ -11,6 +11,9 @@ export function faqStyle(appearance: BusinessSiteFaqAppearance): CSSProperties {
   const contactEnd = safeColor(appearance.gradientEndColor, usesPalette ? contactBackground : safeColor(appearance.contactGradientEndColor, contactBackground))
   const text = readableText(usesPalette ? contactBackground : safeColor(appearance.textColor, '#12171c'), background)
   const contactText = readableText(usesPalette ? background : safeColor(appearance.contactTextColor, '#ffffff'), contactBackground)
+  const suppliedButton = safeColor(appearance.contactButtonColor, '')
+  const contactButton = suppliedButton || background
+  const contactButtonText = suppliedButton ? readableText('#ffffff', contactButton) : text
 
   return {
     '--pz-business-faq-background': background,
@@ -20,6 +23,9 @@ export function faqStyle(appearance: BusinessSiteFaqAppearance): CSSProperties {
     '--pz-business-faq-contact-background': contactBackground,
     '--pz-business-faq-contact-end': contactEnd,
     '--pz-business-faq-contact-text': contactText,
+    '--pz-business-faq-contact-button': contactButton,
+    '--pz-business-faq-on-contact-button': contactButtonText,
+    '--pz-business-faq-contact-secondary-text': safeColor(appearance.contactSecondaryTextColor, text),
     '--pz-business-faq-font': safeFont(appearance.font ?? 'plex-sans'),
     '--pz-business-faq-heading-font': safeFont(appearance.headingFont ?? 'archivo'),
     '--pz-business-faq-radius': RADII.find((radius) => radius === appearance.buttonRadius) ?? '8px',

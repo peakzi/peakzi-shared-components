@@ -49,16 +49,17 @@ describe('BusinessSiteCta', () => {
     call.focus()
     expect(call).toHaveFocus()
   })
-  it('pairs the direct-line primary action with a plain, accessible scheduling link', () => {
-    render(<BusinessSiteCta title="Ready?" actions={actions} variant="direct-line" />)
+  it.each<BusinessSiteCtaVariant>(['direct-line', 'invitation', 'service-desk'])('uses familiar primary and secondary buttons in %s', (variant) => {
+    render(<BusinessSiteCta title="Ready?" actions={actions} variant={variant} />)
     const call = screen.getByRole('link', { name: 'Call now' })
     const book = screen.getByRole('link', { name: 'Schedule service' })
     expect(call).toHaveClass('pz-business-cta__action--primary', 'pz-btn--primary')
     expect(call.querySelector('.pz-business-cta__icon')).not.toBeNull()
-    expect(book).toHaveClass('pz-business-cta__action--text-link', 'pz-btn--link')
-    expect(book).not.toHaveClass('pz-btn--secondary')
-    expect(book.querySelector('.pz-business-cta__icon')).toBeNull()
-    expect(book.querySelector('.pz-business-cta__arrow')).toHaveAttribute('aria-hidden', 'true')
+    expect(book).toHaveClass('pz-btn--secondary')
+    expect(book).not.toHaveClass('pz-btn--link')
+    expect(book.querySelector('.pz-business-cta__icon')).not.toBeNull()
+    expect(book.querySelector('.pz-business-cta__arrow')).toBeNull()
+    expect(call.querySelector('.pz-business-cta__arrow')).toBeNull()
     expect(book).toHaveAttribute('href', actions[1]!.href)
     expect(book).toHaveAttribute('data-action-id', 'book')
     expect(book).toHaveAttribute('target', '_blank')
@@ -66,75 +67,33 @@ describe('BusinessSiteCta', () => {
     book.focus()
     expect(book).toHaveFocus()
   })
-  it('places the formatted phone number and scheduling link beside the direct-line circle', () => {
-    render(<BusinessSiteCta title="Ready?" variant="direct-line" actions={[
-      { ...actions[0]!, displayValue: ' (555) 010-0142 ', displayLabel: 'Call us' }, actions[1]!,
-    ]} />)
-    const call = screen.getByRole('link', { name: 'Call now' })
-    const phone = screen.getByRole('link', { name: 'Call us (555) 010-0142' })
-    const book = screen.getByRole('link', { name: 'Schedule service' })
-    const contact = phone.closest('.pz-business-cta__contact')!
-    expect(call.parentElement).toHaveAttribute('data-has-contact', 'true')
-    expect(contact).toContainElement(book)
-    expect(contact).not.toContainElement(call)
-    expect(phone).toHaveAttribute('href', actions[0]!.href)
-    expect(phone).toHaveAttribute('data-action-id', 'call')
-    expect(phone).not.toHaveAttribute('target')
-    expect(phone).not.toHaveAttribute('role', 'button')
-    phone.focus()
-    expect(phone).toHaveFocus()
-    expect(book).toHaveAttribute('rel', 'noopener noreferrer')
-    expect(screen.getAllByRole('link')).toHaveLength(3)
-    expect(screen.queryByText(/text us|call or text/i)).toBeNull()
-  })
-  it('keeps the phone details without an empty scheduling placeholder for call-only clients', () => {
-    const html = renderToStaticMarkup(<BusinessSiteCta title="Ready?" variant="direct-line" actions={[
-      { ...actions[0]!, displayValue: '(555) 010-0142', displayLabel: 'Call us' },
-    ]} />)
-    expect(html).toContain('data-has-contact="true"')
-    expect(html.match(/href="tel:15550100142"/g)).toHaveLength(2)
-    expect(html).not.toContain('Schedule service')
-    expect(html).not.toContain('pz-business-cta__action--text-link')
-  })
-  it.each(['', '   '])('omits the contact column and label without a phone display value: %j', (displayValue) => {
-    const html = renderToStaticMarkup(<BusinessSiteCta title="Ready?" variant="direct-line" actions={[
-      { ...actions[0]!, displayValue, displayLabel: 'Call us' }, actions[1]!,
-    ]} />)
-    expect(html).not.toContain('data-has-contact')
-    expect(html).not.toContain('pz-business-cta__contact')
-    expect(html).not.toContain('Call us')
-    expect(html.match(/<a /g)).toHaveLength(2)
-  })
-  it('does not present booking-only actions as phone numbers', () => {
-    const html = renderToStaticMarkup(<BusinessSiteCta title="Ready?" variant="direct-line" actions={[
-      { ...actions[1]!, displayValue: 'Not a phone', displayLabel: 'Call us' },
-    ]} />)
-    expect(html).not.toContain('data-has-contact')
-    expect(html).not.toContain('Not a phone')
-    expect(html.match(/<a /g)).toHaveLength(1)
-  })
-  it.each<BusinessSiteCtaVariant>(['invitation', 'service-desk'])('does not add a phone-details column to %s', (variant) => {
+  it.each<BusinessSiteCtaVariant>(['direct-line', 'invitation', 'service-desk'])('renders one Call now action without duplicate legacy contact details in %s', (variant) => {
     const html = renderToStaticMarkup(<BusinessSiteCta title="Ready?" variant={variant} actions={[
       { ...actions[0]!, displayValue: '(555) 010-0142', displayLabel: 'Call us' }, actions[1]!,
     ]} />)
+    expect(html.match(/href="tel:15550100142"/g)).toHaveLength(1)
+    expect(html.match(/Call now/g)).toHaveLength(1)
+    expect(html).not.toContain('Call us')
+    expect(html).not.toContain('data-has-contact')
     expect(html).not.toContain('pz-business-cta__contact')
     expect(html).not.toContain('(555) 010-0142')
     expect(html.match(/<a /g)).toHaveLength(2)
   })
-  it('keeps one circular primary action when a phone action is not first in the input', () => {
+  it('keeps only the phone action primary when it is not first in the input', () => {
     render(<BusinessSiteCta title="Ready?" variant="direct-line" actions={[
       actions[1]!, { ...actions[0]!, displayValue: '(555) 010-0142' },
     ]} />)
     const links = screen.getAllByRole('link')
-    expect(links[0]).toHaveAccessibleName('Call now')
+    expect(screen.getByRole('link', { name: 'Call now' })).toHaveClass('pz-business-cta__action--primary')
     expect(links.filter(link => link.classList.contains('pz-business-cta__action--primary'))).toHaveLength(1)
-    expect(screen.getByRole('link', { name: '(555) 010-0142' })).toHaveAttribute('href', actions[0]!.href)
+    expect(links).toHaveLength(2)
+    expect(screen.queryByRole('link', { name: '(555) 010-0142' })).toBeNull()
   })
-  it('escapes optional contact display text as plain text', () => {
+  it('does not render deprecated contact metadata or interpret it as markup', () => {
     const html = renderToStaticMarkup(<BusinessSiteCta title="Ready?" variant="direct-line" actions={[
       { ...actions[0]!, displayValue: '<img src=x>', displayLabel: '<b>Call</b>' },
     ]} />)
-    expect(html).toContain('&lt;img src=x&gt;')
+    expect(html).not.toContain('&lt;img src=x&gt;')
     expect(html).not.toContain('<img')
     expect(html).not.toContain('<b>Call</b>')
   })
@@ -273,5 +232,24 @@ describe('BusinessSiteCta', () => {
     expect(html).not.toContain('color:red')
     expect(html).not.toContain('999px')
     expect(input).toEqual(before)
+  })
+  it.each<BusinessSiteCtaVariant>(['direct-line', 'invitation', 'service-desk'])('passes every supported theme radius unchanged in %s', (variant) => {
+    for (const buttonRadius of ['2px', '8px', '16px', '32px'] as const) {
+      const html = renderToStaticMarkup(<BusinessSiteCta title="Ready?" actions={actions} variant={variant} appearance={{ buttonRadius }} />)
+      expect(html).toContain(`--pz-business-cta-radius:${buttonRadius}`)
+    }
+  })
+  it.each([
+    ['#01173c', '#ffffff'], ['#efbf57', '#000000'], ['#0000', '#000000'],
+  ])('uses the supplied surface button color %s with readable text %s', (buttonColor, foreground) => {
+    const html = renderToStaticMarkup(<BusinessSiteCta title="Ready?" actions={actions}
+      appearance={{ surfaceColor: '#ffffff', backgroundColor: '#102030', buttonColor }} />)
+    expect(html).toContain(`--pz-business-cta-button:${buttonColor}`)
+    expect(html).toContain(`--pz-business-cta-on-button:${foreground}`)
+  })
+  it('falls back to the existing dark palette when no surface button color is supplied', () => {
+    const html = renderToStaticMarkup(<BusinessSiteCta title="Ready?" actions={actions} appearance={{ backgroundColor: '#102030' }} />)
+    expect(html).toContain('--pz-business-cta-button:#102030')
+    expect(html).toContain('--pz-business-cta-on-button:#ffffff')
   })
 })

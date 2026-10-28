@@ -32,6 +32,7 @@ export function BusinessSiteFaq({
     const href = safeHref(action.href)
     return href && action.label.trim() ? [{ ...action, href }] : []
   })
+  const primaryIndex = Math.max(0, actions.findIndex((action) => action.type === 'primary'))
   const questions = visibleItems.map((item, index) => (
     <details className="pz-business-faq__item" key={item.id} name={`${instanceId}-questions`}
       open={defaultOpenFirst && index === 0}>
@@ -69,7 +70,7 @@ export function BusinessSiteFaq({
               {contact?.description?.trim() && <p>{contact.description}</p>}
               {actions.length > 0 && (
                 <div className="pz-business-faq__actions">
-                  {actions.map((action) => {
+                  {actions.map((action, index) => {
                     const newTab = action.newTab === true && /^https?:\/\//i.test(action.href)
                     const icon = businessSiteIcon(action.iconName)
                     return (
@@ -79,6 +80,7 @@ export function BusinessSiteFaq({
                         target={newTab ? '_blank' : undefined}
                         rel={newTab ? 'noopener noreferrer' : undefined}
                         data-action-id={action.id}
+                        data-action-type={index === primaryIndex ? 'primary' : 'secondary'}
                       >
                         {action.iconPosition !== 'after' && icon}
                         <span>{action.label}</span>

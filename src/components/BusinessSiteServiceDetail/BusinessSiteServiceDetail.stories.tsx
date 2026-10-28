@@ -20,6 +20,8 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 export const Comfortable: Story = {}
+export const HeaderMatchedPrimary: Story = { args: { appearance: { ...meta.args.appearance,
+  gradientStartColor: '#213b5a', gradientEndColor: '#2c95b5', buttonColor: '#ee383d' } } }
 export const Compact: Story = { args: { appearance: { ...meta.args.appearance, density: 'compact' } } }
 export const LongHeading: Story = { args: { headline: 'Electrical troubleshooting and repair in Denver-Aurora-Centennial', trade: 'Electrical' } }
 export const Minimal: Story = { args: { description: undefined, actions: [], reasons: [], businessName: undefined } }

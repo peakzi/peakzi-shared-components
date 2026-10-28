@@ -70,33 +70,48 @@
 .pz-business-faq__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
   margin-top: 20px;
 }
 
 .pz-business-faq__actions a {
+  --faq-action-background: var(--pz-business-faq-background);
+  --faq-action-text: var(--pz-business-faq-contact-secondary-text);
+  --faq-action-border: color-mix(in srgb, var(--faq-action-text) 25%, var(--pz-business-faq-background));
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 10px 16px;
-  border: 1px solid var(--pz-business-faq-background);
+  min-width: 48px;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 48px;
+  padding: 8px 16px;
+  border: 1px solid var(--faq-action-border);
   border-radius: var(--pz-business-faq-radius);
-  background: var(--pz-business-faq-background);
-  color: var(--pz-business-faq-text);
+  background: var(--faq-action-background);
+  color: var(--faq-action-text);
+  font-family: inherit;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
   text-decoration: none;
   box-sizing: border-box;
 }
 
 .pz-business-faq__actions a:hover {
-  background: var(--pz-business-faq-background);
-  color: var(--pz-business-faq-text);
+  background: var(--faq-action-background);
+  color: var(--faq-action-text);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.pz-business-faq__actions a[data-action-type='primary'] {
+  --faq-action-background: var(--pz-business-faq-contact-button);
+  --faq-action-border: var(--pz-business-faq-contact-button);
+  --faq-action-text: var(--pz-business-faq-on-contact-button);
 }
 
 .pz-business-faq__item {

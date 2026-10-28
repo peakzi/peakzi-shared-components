@@ -2,9 +2,8 @@ import type { ReactNode } from 'react'
 import { ArrowDown, Check } from 'lucide-react'
 import { businessSiteIcon } from '../../utils/businessSiteIcon'
 import { safeHref } from '../../utils/safeHref'
-import { servicesStyle } from '../BusinessSiteServices/helpers/appearance'
+import { serviceDetailStyle, type BusinessSiteServiceDetailAppearance } from './helpers/appearance'
 import { tradeIcon } from '../BusinessSiteServices/helpers/trade-icon'
-import type { BusinessSiteServicesAppearance } from '../BusinessSiteServices/helpers/types'
 import type { BusinessSiteHeroAction } from '../BusinessSiteHero/helpers/types'
 import './BusinessSiteServiceDetail.scss'
 
@@ -33,7 +32,7 @@ export interface BusinessSiteServiceDetailProps {
   breadcrumb?: ReactNode
   /** Compose existing Gallery, Offers, Reviews, FAQ, Blogs and Areas sections. */
   children?: ReactNode
-  appearance?: BusinessSiteServicesAppearance
+  appearance?: BusinessSiteServiceDetailAppearance
   sectionId?: string
   className?: string
 }
@@ -59,7 +58,7 @@ export function BusinessSiteServiceDetail({ headline, description, trade, busine
 
   return <div className={['pz-service-detail', className].filter(Boolean).join(' ')}
     data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
-    data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'} style={servicesStyle(appearance)}>
+    data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'} style={serviceDetailStyle(appearance)}>
     {breadcrumb}
     <header className="pz-service-detail__intro" data-has-copy={hasCopy}>
       <div className="pz-service-detail__lead">
