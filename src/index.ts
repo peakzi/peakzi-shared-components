@@ -363,3 +363,6 @@ export type { PeakziLogoProps, LogoVariant, LogoSize } from './components/Peakzi
 //   import { GeoMap, MapMarker } from '@peakzi/components/GeoMap'
 // Available subpaths: ColumnChart, TimeSeriesChart, PieChart, TreeMapChart,
 // GaugeChart, PyramidChart, RadialGauge, GeoMap.
+
+export { BusinessSitePhotoCarousel } from './components/BusinessSitePhotoCarousel'
+export type { BusinessSitePhotoCarouselProps, BusinessSitePhotoCarouselImage } from './components/BusinessSitePhotoCarousel'

@@ -16,6 +16,8 @@ export function heroStyle(
   const overlayValue = Number.isFinite(overlay) ? Math.min(0.85, Math.max(0.55, overlay!)) : 0.62
 
   return {
+    '--pz-business-hero-gallery-surface': safeColor(appearance.galleryBackgroundColor, '#ffffff'),
+    '--pz-business-hero-gallery-text': safeColor(appearance.galleryTextColor, '#12171c'),
     '--pz-business-hero-background': safeColor(appearance.backgroundColor, dark ? '#12171c' : '#ffffff'),
     '--pz-business-hero-gradient-end': safeColor(appearance.gradientEndColor, accent),
     '--pz-business-hero-text': safeColor(appearance.textColor, dark ? '#ffffff' : '#12171c'),

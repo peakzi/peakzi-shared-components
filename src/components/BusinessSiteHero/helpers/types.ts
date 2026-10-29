@@ -28,6 +28,9 @@ export interface BusinessSiteHeroAppearance {
   font?: string
   headingFont?: string
   backgroundColor?: string
+  /** Surface and text for gallery controls beneath hero photos. */
+  galleryBackgroundColor?: string
+  galleryTextColor?: string
   /** Optional gradient end color, independent of CTA accent color. */
   gradientEndColor?: string
   textColor?: string

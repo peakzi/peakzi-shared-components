@@ -412,3 +412,24 @@
     transition: none;
   }
 }
+
+/* Photo and copy share a grid row, so long copy grows the image on small screens. */
+.pz-business-hero:has(.pz-photo-gallery) { --pz-photo-fit: cover; }
+.pz-business-hero[data-image-fit='contain'] { --pz-photo-fit: contain; }
+.pz-business-hero[data-image-position='left'] { --pz-photo-position-x: left; }
+.pz-business-hero[data-image-position='right'] { --pz-photo-position-x: right; }
+.pz-business-hero .pz-business-hero__media:has(.pz-photo-gallery) { position: relative; aspect-ratio: auto; overflow: visible; border-radius: 0; background: transparent; }
+.pz-business-hero .pz-business-hero__carousel.pz-photo-gallery { position: relative; inset: auto; }
+.pz-business-hero[data-layout='background']:has(.pz-photo-gallery) { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; overflow: hidden; background: var(--pz-business-hero-gallery-surface); }
+.pz-business-hero[data-layout='background'] .pz-business-hero__media:has(.pz-photo-gallery),
+.pz-business-hero[data-layout='background'] .pz-photo-gallery { display: contents; }
+.pz-business-hero[data-layout='background'] .pz-business-hero__media:has(.pz-photo-gallery)::after { display: none; }
+.pz-business-hero[data-layout='background'] .pz-photo-gallery__viewport { grid-area: 1 / 1; height: auto; min-height: 520px; }
+.pz-business-hero[data-layout='background'] .pz-photo-gallery__controls { grid-area: 2 / 1; }
+.pz-business-hero[data-layout='background']:has(.pz-photo-gallery) .pz-business-hero__inner { grid-area: 1 / 1; align-self: center; width: calc(100% - clamp(18px, 4vw, 72px) * 2); margin: 0 auto; padding: clamp(32px, 4vw, 64px); min-height: 520px; }
+.pz-business-hero[data-layout='background'] .pz-photo-gallery__slide { --pz-photo-overlay: rgba(0, 0, 0, var(--pz-business-hero-overlay)); }
+.pz-business-hero[data-layout='background'][data-surface='gradient'] .pz-photo-gallery__slide { --pz-photo-overlay: linear-gradient(90deg, rgba(0, 0, 0, var(--pz-business-hero-overlay)), color-mix(in srgb, var(--pz-business-hero-gradient-end) 35%, transparent)); }
+@media (max-width: 720px) {
+  .pz-business-hero[data-layout='background'] .pz-photo-gallery__viewport { min-height: 440px; }
+  .pz-business-hero[data-layout='background']:has(.pz-photo-gallery) .pz-business-hero__inner { width: calc(100% - 36px); min-height: 440px; padding: 32px 20px; }
+}

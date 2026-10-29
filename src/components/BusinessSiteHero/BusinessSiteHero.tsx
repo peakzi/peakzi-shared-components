@@ -102,31 +102,7 @@ export function BusinessSiteHero({
 
   const media = showMedia && photos.length > 0 && (
     <div className="pz-business-hero__media">
-      {photos.length > 1 ? (
-        <BusinessSiteHeroCarousel images={photos} intervalMs={autoplay} showBlurredBackdrop={showBlurredBackdrop} />
-      ) : (
-        <>
-          <img
-            className="pz-business-hero__image-foreground"
-            src={photos[0]!.src}
-            alt={photos[0]!.alt}
-            width={photos[0]!.width}
-            height={photos[0]!.height}
-            loading="eager"
-            fetchPriority="high"
-          />
-          {showBlurredBackdrop && (
-            <img
-              className="pz-business-hero__image-backdrop"
-              src={photos[0]!.src}
-              alt=""
-              aria-hidden="true"
-              width={photos[0]!.width}
-              height={photos[0]!.height}
-            />
-          )}
-        </>
-      )}
+      <BusinessSiteHeroCarousel images={photos} intervalMs={autoplay} motion={motion} showBlurredBackdrop={showBlurredBackdrop} />
     </div>
   )
   const splitVisual = resolvedLayout === 'split'
