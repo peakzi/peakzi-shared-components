@@ -420,6 +420,7 @@
 .pz-business-hero[data-image-position='right'] { --pz-photo-position-x: right; }
 .pz-business-hero .pz-business-hero__media:has(.pz-photo-gallery) { position: relative; aspect-ratio: auto; overflow: visible; border-radius: 0; background: transparent; }
 .pz-business-hero .pz-business-hero__carousel.pz-photo-gallery { position: relative; inset: auto; }
+.pz-business-hero[data-layout='split'] .pz-photo-gallery__viewport { height: auto; aspect-ratio: 16 / 9; min-height: 220px; }
 .pz-business-hero .pz-photo-gallery__controls {
   position: absolute;
   z-index: 4;
