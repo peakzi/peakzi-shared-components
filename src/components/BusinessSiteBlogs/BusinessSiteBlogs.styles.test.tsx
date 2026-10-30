@@ -71,9 +71,10 @@ describe('blog grid image sizing', () => {
     expect(card('placeholder').frame.aspectRatio.replace(/\s/g, '')).toBe('16/9')
   })
 
-  it('limits grid titles and excerpts while aligning Read more without a tall fixed card height', () => {
+  it('shows full grid titles with short excerpts and aligned Read more without a fixed card height', () => {
     const { heading, excerpt, content, card: box, read } = card('cover')
-    expect(heading.getPropertyValue('-webkit-line-clamp')).toBe('2')
+    expect(heading.getPropertyValue('-webkit-line-clamp')).toBe('')
+    expect(heading.overflow).not.toBe('hidden')
     expect(excerpt.getPropertyValue('-webkit-line-clamp')).toBe('2')
     expect(content.display).toBe('flex')
     expect(content.flexDirection).toBe('column')
