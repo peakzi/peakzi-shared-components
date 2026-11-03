@@ -1,15 +1,18 @@
 import { useState } from 'react'
-import type { Options, Series, SeriesOptionsType, TooltipFormatterCallbackFunction } from 'highcharts'
+import type { ColorType, Options, PointOptionsObject, Series, SeriesOptionsType, TooltipFormatterCallbackFunction } from 'highcharts'
 import { defaultSeriesColors, Highcharts, HighchartsReact } from '../../internal/highchartsSetup'
 import { chartExportImageTheme, chartExportMenuTheme, pruneUndefined, toPx } from '../../internal/chartTheme'
 import { useChartFrame } from '../../internal/useChartFrame'
 import { Skeleton } from '../Progress'
 
-export type TimeSeriesChartType = 'line' | 'area' | 'spline'
+export type TimeSeriesChartType = 'line' | 'area' | 'spline' | 'areaspline'
 
 export interface TimeSeriesChartSeries {
   name: string
-  data: Array<number | null>
+  data: Array<number | null | PointOptionsObject>
+  /** Optional per-series styles, including area gradients. Numeric-series callers are unchanged. */
+  color?: ColorType
+  fillColor?: ColorType
 }
 
 export interface TimeSeriesChartProps {
@@ -59,8 +62,10 @@ export function TimeSeriesChart({
     type,
     name: entry.name,
     data: entry.data,
+    ...(entry.color !== undefined ? { color: entry.color } : {}),
+    ...(entry.fillColor !== undefined ? { fillColor: entry.fillColor } : {}),
     ...(activeColors.length > 0 ? { colorIndex: index % activeColors.length } : {}),
-  })) as unknown as SeriesOptionsType[]
+  })) as SeriesOptionsType[]
 
   const options = pruneUndefined<Options>({
     colors: colors ?? defaultSeriesColors,

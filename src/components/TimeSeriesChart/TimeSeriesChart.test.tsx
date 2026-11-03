@@ -83,3 +83,19 @@ describe('TimeSeriesChart', () => {
     expect((document.querySelector('.highcharts-menu') as HTMLElement).style.background).toBe('rgb(10, 20, 30)')
   })
 })
+
+ it('preserves dated points, null gaps and the configured area gradient in rendering and SVG export', async () => {
+   const { Highcharts } = await import('../../internal/highchartsSetup')
+   const fillColor = { linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 }, stops: [[0, 'rgba(135,128,249,0.09)'], [1, 'rgba(135,128,249,0)']] as [number, string][] }
+   const dates = [Date.UTC(2026, 0, 1), Date.UTC(2026, 1, 1), Date.UTC(2026, 2, 1)]
+   render(<TimeSeriesChart type="areaspline" series={[{
+     name: 'Dated demand', color: '#8780f9', fillColor,
+     data: [{ x: dates[0], y: 10 }, { x: dates[1], y: null }, { x: dates[2], y: 35, marker: { enabled: true, radius: 5 } }],
+   }]} />)
+   const chart = Highcharts.charts.find(chart => chart?.series[0]?.name === 'Dated demand')!
+   expect(chart.series[0].data.map(point => [point.x, point.y])).toEqual([[dates[0], 10], [dates[1], null], [dates[2], 35]])
+   expect(chart.series[0].options).toMatchObject({ color: '#8780f9', fillColor })
+   expect(chart.series[0].data[2].options.marker?.enabled).toBe(true)
+   expect(chart.getSVG()).toContain('stop-opacity="0.09"')
+   expect(chart.getSVG()).toContain('stop-opacity="0"')
+ })

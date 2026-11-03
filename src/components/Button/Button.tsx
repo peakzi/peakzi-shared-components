@@ -66,6 +66,9 @@ export interface ButtonProps {
    */
   'aria-label'?: string
 
+  /** Native hover text, forwarded to the rendered button or link. */
+  title?: string
+
   onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>
   children?: ReactNode
   /** Append extra class names (e.g. for one-off spacing overrides). */
