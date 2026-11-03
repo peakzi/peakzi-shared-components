@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import type { Meta, StoryObj } from '@storybook/react'
 import { BusinessSiteHero } from './BusinessSiteHero'
+import { BusinessSiteContactForm } from '../BusinessSiteContactForm'
 import type {
   BusinessSiteHeroAppearance,
   BusinessSiteHeroImage,
@@ -11,10 +12,10 @@ type Appearance = Required<Pick<BusinessSiteHeroAppearance,
   'font' | 'headingFont' | 'backgroundColor' | 'textColor' | 'accentColor' | 'buttonRadius' | 'density' | 'motion'
 >>
 
-interface StoryArgs extends Omit<BusinessSiteHeroProps, 'appearance' | 'aside'>, Appearance {
+interface StoryArgs extends Omit<BusinessSiteHeroProps, 'appearance' | 'formContent'>, Appearance {
   gradientEndColor?: string
   ratingIconColor?: string
-  showFormSlot: boolean
+  formSlot: 'none' | 'placeholder' | 'contact-form'
 }
 
 const images: BusinessSiteHeroImage[] = [
@@ -23,7 +24,7 @@ const images: BusinessSiteHeroImage[] = [
   { src: '/demo-assets/hero-example-service.svg', alt: 'Illustration placeholder for a client service photo', width: 800, height: 640 },
 ]
 
-const formSlot = (
+const formPlaceholder = (
   <div style={{
     padding: 28,
     borderRadius: 16,
@@ -39,6 +40,22 @@ const formSlot = (
   </div>
 )
 
+// Illustrative contact form wiring; no requests are sent.
+const demoAddresses = [
+  { id: 'example-oak', label: '123 Oak Street, Austin, TX 78701', description: 'Austin, Texas' },
+  { id: 'example-pine', label: '123 Pine Avenue, Austin, TX 78702', description: 'Austin, Texas' },
+]
+const contactFormDemo = {
+  title: 'Request an estimate',
+  consentText: 'I agree to calls and text messages from Blue Line Electric about my request, appointment updates and notifications, including automated messages. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to opt out of texts or HELP for assistance.',
+  privacyPolicy: { href: '/privacy-policy' },
+  addressSearch: { search: async (query: string) => demoAddresses.filter((address) => address.label.toLowerCase().includes(query.toLowerCase())) },
+  onSubmit: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    return { success: true as const, message: 'Demo request received. No data was sent.' }
+  },
+}
+
 const meta = {
   title: 'Components/Business Site/Hero',
   component: BusinessSiteHero,
@@ -47,18 +64,20 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Server-rendered, tenant-configurable hero. The headline, answer, and real action links are present in initial HTML; only the photo carousel hydrates. Image illustrations and the estimate form slot in these stories are placeholders. Load the chosen font and provide real, descriptive photo alt text in the consuming app. Use only once per page because this component renders an h1.',
+        component: 'Server-rendered, tenant-configurable hero. The headline, answer, and real action links are present in initial HTML; only the photo carousel hydrates. Pass a form, typically a compact BusinessSiteContactForm, through `formContent`; in a split layout it replaces the image column. Image illustrations and contact form data in these stories are placeholders. Load the chosen font and provide real, descriptive photo alt text in the consuming app. Use only once per page because this component renders an h1.',
       },
     },
   },
   render: ({
     font, headingFont, backgroundColor, gradientEndColor, textColor, accentColor, ratingIconColor, buttonRadius, density, motion,
-    showFormSlot, ...hero
+    formSlot, ...hero
   }: StoryArgs) => (
     <BusinessSiteHero
       {...hero}
       appearance={{ font, headingFont, backgroundColor, gradientEndColor, textColor, accentColor, ratingIconColor, buttonRadius, density, motion }}
-      aside={showFormSlot ? formSlot : undefined}
+      formContent={formSlot === 'placeholder' ? formPlaceholder
+        : formSlot === 'contact-form' ? <BusinessSiteContactForm {...contactFormDemo} appearance={{ font, headingFont, accentColor, buttonRadius, motion, density: 'compact' }} />
+          : undefined}
     />
   ),
   argTypes: {
@@ -89,7 +108,7 @@ const meta = {
     images: { control: 'object' },
     rating: { control: 'object' },
     actions: { control: 'object' },
-    showFormSlot: { control: 'boolean', description: 'Shows the Storybook-only estimate form placeholder.' },
+    formSlot: { control: 'inline-radio', options: ['none', 'placeholder', 'contact-form'], description: 'Content passed as `formContent`: nothing, a Storybook-only placeholder, or a compact BusinessSiteContactForm.' },
   },
   args: {
     headline: 'Home service answers, from people you can trust.',
@@ -119,7 +138,7 @@ const meta = {
     buttonRadius: '8px',
     density: 'comfortable',
     motion: 'subtle',
-    showFormSlot: false,
+    formSlot: 'none',
   },
 } satisfies Meta<StoryArgs>
 
@@ -198,14 +217,29 @@ export const Gradient: Story = {
 }
 
 export const FormSlotPlaceholder: Story = {
-  args: { layout: 'split', showFormSlot: true, background: 'soft', images: [] },
+  args: { layout: 'split', formSlot: 'placeholder', background: 'soft', images: [] },
 }
 
 export const BackgroundCarouselWithFormSlot: Story = {
   args: {
     layout: 'background',
     background: 'gradient',
-    showFormSlot: true,
+    formSlot: 'placeholder',
+    textColor: '#ffffff',
+    backgroundColor: '#12171c',
+    accentColor: '#f6c54b',
+  },
+}
+
+export const WithContactForm: Story = {
+  args: { layout: 'split', formSlot: 'contact-form', background: 'soft', images: [] },
+}
+
+export const BackgroundCarouselWithContactForm: Story = {
+  args: {
+    layout: 'background',
+    background: 'gradient',
+    formSlot: 'contact-form',
     textColor: '#ffffff',
     backgroundColor: '#12171c',
     accentColor: '#f6c54b',
