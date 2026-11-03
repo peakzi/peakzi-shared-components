@@ -25,7 +25,15 @@ export interface BusinessSiteContactFormAddressSearch {
     readonly BusinessSiteContactFormAddressSuggestion[] | Promise<readonly BusinessSiteContactFormAddressSuggestion[]>
   /** Optional notification for consumer-owned place metadata. */
   onSelect?: (suggestion: BusinessSiteContactFormAddressSuggestion) => void
-  /** Defaults to 3 characters and 250ms. */
+  /** Defaults to 3 characters and 300ms. */
+  minLength?: number
+  debounceMs?: number
+}
+
+export interface BusinessSiteContactFormPhoneValidation {
+  /** Backend phone validation API, e.g. Twilio Lookup. Return an error message, or nothing when the number is valid. */
+  validate: (phone: string, context: { signal: AbortSignal }) => void | string | Promise<void | string>
+  /** Defaults to 3 characters and 300ms. Numbers failing the built-in rules are reported locally without calling the API. */
   minLength?: number
   debounceMs?: number
 }
@@ -60,9 +68,6 @@ export interface BusinessSiteContactFormProps {
   /** Required. The consumer submits to its own backend; resolving without a result means success. */
   onSubmit: (values: Readonly<BusinessSiteContactFormValues>, context: BusinessSiteContactFormContext) =>
     void | BusinessSiteContactFormResult | Promise<void | BusinessSiteContactFormResult>
-  /** Optional separate backend validation, e.g. Twilio phone/email and Google address checks. Runs before submission. */
-  onValidate?: (values: Readonly<BusinessSiteContactFormValues>, context: BusinessSiteContactFormContext) =>
-    void | BusinessSiteContactFormErrors | Promise<void | BusinessSiteContactFormErrors>
   /** Used on mount and when choosing to send another request; prop updates do not overwrite a draft. */
   initialValues?: Partial<Omit<BusinessSiteContactFormValues, 'consent'>>
   /** Required business-specific TCPA disclosure. The checkbox is always initially unchecked. */
@@ -70,13 +75,17 @@ export interface BusinessSiteContactFormProps {
   privacyPolicy?: { href: string; label?: string; newTab?: boolean }
   /** Debounced address suggestions from the consumer's backend. Without this provider, manual entry remains available. */
   addressSearch?: BusinessSiteContactFormAddressSearch
+  /** Backend phone check, run debounced while typing and again before submission unless the same number was already checked. */
+  phoneValidation?: BusinessSiteContactFormPhoneValidation
   title?: string
   description?: string
   labels?: Partial<Record<BusinessSiteContactFormField, string>>
   hints?: Partial<Record<BusinessSiteContactFormField, string>>
+  placeholders?: Partial<Record<Exclude<BusinessSiteContactFormField, 'consent'>, string>>
   submitLabel?: string
   validatingLabel?: string
   submittingLabel?: string
+  successTitle?: string
   successMessage?: string
   resetLabel?: string
   disabled?: boolean

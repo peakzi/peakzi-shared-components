@@ -146,6 +146,7 @@ export type {
   BusinessSiteContactFormContext,
   BusinessSiteContactFormErrors,
   BusinessSiteContactFormField,
+  BusinessSiteContactFormPhoneValidation,
   BusinessSiteContactFormProps,
   BusinessSiteContactFormResult,
   BusinessSiteContactFormValues,

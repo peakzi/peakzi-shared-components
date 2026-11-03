@@ -129,7 +129,7 @@ describe('BusinessSiteHero', () => {
     const { rerender } = render(<BusinessSiteHero {...props} images={[images[0]!]} />)
     expect(screen.getByAltText('Front of the client home')).toHaveAttribute('loading', 'eager')
     expect(screen.queryByRole('button', { name: 'Next photo' })).toBeNull()
-    rerender(<BusinessSiteHero {...props} images={[]} aside={<div>Form supplied by app</div>} />)
+    rerender(<BusinessSiteHero {...props} images={[]} formContent={<div>Form supplied by app</div>} />)
     expect(screen.getByText('Form supplied by app')).toBeTruthy()
     expect(screen.queryByRole('img')).toBeNull()
   })
@@ -200,7 +200,7 @@ describe('BusinessSiteHero', () => {
     expect(coveredSplit).not.toContain('class="pz-business-hero__image-backdrop"')
   })
 
-  it('uses the requested split order in the DOM, including the aside slot', () => {
+  it('uses the requested split order in the DOM, including the form slot', () => {
     const textFirst = renderToStaticMarkup(<BusinessSiteHero {...props} />)
     const imageFirst = renderToStaticMarkup(<BusinessSiteHero {...props} contentOrder="image-first" />)
     expect(textFirst.indexOf('class="pz-business-hero__copy"'))
@@ -211,7 +211,7 @@ describe('BusinessSiteHero', () => {
       {...props}
       images={[]}
       contentOrder="image-first"
-      aside={<div>Estimate form</div>}
+      formContent={<div>Estimate form</div>}
     />)
     expect(withAside.indexOf('class="pz-business-hero__aside"'))
       .toBeLessThan(withAside.indexOf('class="pz-business-hero__copy"'))

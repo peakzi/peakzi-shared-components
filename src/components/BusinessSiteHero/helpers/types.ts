@@ -63,8 +63,8 @@ export interface BusinessSiteHeroProps {
   background?: 'surface' | 'tint' | 'soft' | 'gradient' | 'ink'
   align?: 'left' | 'center'
   headlineSize?: 'auto' | 'xl' | 'lg' | 'md' | 'sm'
-  /** Content such as an estimate form. In a split layout it replaces the image column. */
-  aside?: ReactNode
+  /** Form shown beside the copy, typically a compact `BusinessSiteContactForm`. In a split layout it replaces the image column. */
+  formContent?: ReactNode
   /** Carousel autoplay in milliseconds. Requires subtle motion; 0 disables it. */
   intervalMs?: number
   /** Darkness of a photo-background overlay; clamped to 0.55–0.85. */

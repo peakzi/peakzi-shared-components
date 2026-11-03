@@ -114,6 +114,8 @@ export default defineConfig({
         'react/jsx-runtime',
         'lucide-react',
         /^lucide-react\//,
+        'validator',
+        /^validator\//,
         'highcharts',
         'highcharts-react-official',
         /^highcharts\//,

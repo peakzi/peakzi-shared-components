@@ -9,6 +9,7 @@ export function contactFormStyle(appearance: BusinessSiteContactFormAppearance):
   const accent = safeColor(appearance.accentColor, '#1d4f8c')
   const defaultError = readableText('#b42318', background) === '#b42318' ? '#b42318' : '#ffb4ab'
   const error = safeColor(appearance.errorColor, defaultError)
+  const success = readableText('#166534', background) === '#166534' ? '#166534' : '#9be3b4'
   return {
     '--pz-contact-form-background': background,
     '--pz-contact-form-text': text,
@@ -20,6 +21,7 @@ export function contactFormStyle(appearance: BusinessSiteContactFormAppearance):
     '--pz-contact-form-focus': readableText(accent, background),
     '--pz-contact-form-error': readableText(error, background),
     '--pz-contact-form-error-border': readableText(error, inputBackground),
+    '--pz-contact-form-success': success,
     '--pz-contact-form-font': safeFont(appearance.font ?? 'plex-sans'),
     '--pz-contact-form-heading-font': safeFont(appearance.headingFont ?? 'archivo'),
     '--pz-contact-form-radius': ['2px', '8px', '16px', '32px'].find((value) => value === appearance.buttonRadius) ?? '8px',

@@ -1,6 +1,13 @@
+import { Loader2, MapPin } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { Field, Input } from '../../Input'
+import { DEFAULT_DEBOUNCE_MS } from '../helpers/validation'
 import type { BusinessSiteContactFormAddressSearch, BusinessSiteContactFormAddressSuggestion } from '../helpers/types'
+
+/** Trailing in-field loader shown while a backend call for the field is in flight; typing stays enabled. */
+export function InputSpinner() {
+  return <span className="pz-business-contact-form__input-spinner" aria-hidden="true"><Loader2 size={16} /></span>
+}
 
 interface AddressFieldProps {
   id: string
@@ -8,6 +15,9 @@ interface AddressFieldProps {
   value: string
   error?: string | undefined
   hint?: string | undefined
+  placeholder?: string | undefined
+  required?: boolean
+  maxLength?: number
   disabled: boolean
   provider?: BusinessSiteContactFormAddressSearch | undefined
   onChange: (value: string) => void
@@ -23,7 +33,7 @@ function validSuggestions(items: readonly BusinessSiteContactFormAddressSuggesti
 }
 
 /** API-neutral autocomplete: the host maps its backend response to suggestions. */
-export function AddressField({ id, label, value, error, hint, disabled, provider, onChange }: AddressFieldProps) {
+export function AddressField({ id, label, value, error, hint, placeholder, required = false, maxLength, disabled, provider, onChange }: AddressFieldProps) {
   const [focused, setFocused] = useState(false)
   const [dismissedQuery, setDismissedQuery] = useState<string | null>(null)
   const [active, setActive] = useState(-1)
@@ -32,7 +42,7 @@ export function AddressField({ id, label, value, error, hint, disabled, provider
   const rootRef = useRef<HTMLDivElement>(null)
   const query = value.trim()
   const minLength = Number.isFinite(provider?.minLength) ? Math.max(1, provider!.minLength!) : 3
-  const delay = Number.isFinite(provider?.debounceMs) ? Math.max(0, provider!.debounceMs!) : 250
+  const delay = Number.isFinite(provider?.debounceMs) ? Math.max(0, provider!.debounceMs!) : DEFAULT_DEBOUNCE_MS
   const search = provider?.search
   const enabled = Boolean(search && focused && !disabled && query.length >= minLength && dismissedQuery !== query)
   const current = result.query === query
@@ -86,24 +96,29 @@ export function AddressField({ id, label, value, error, hint, disabled, provider
   }
 
   const message = error || lookupError
-  return <Field id={id} label={label} error={message || ''} hint={hint || ''} className="pz-business-contact-form__address-field">
-    <div ref={rootRef} className="pz-business-contact-form__address"
+  return <Field id={id} label={label} required={required} error={message || ''} hint={hint || ''} className="pz-business-contact-form__address-field">
+    <div ref={rootRef} className="pz-business-contact-form__control pz-business-contact-form__address"
       onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) { setFocused(false); setActive(-1) } }}>
-      <Input ref={inputRef} id={id} name="address" value={value} disabled={disabled} autoComplete={provider ? 'off' : 'street-address'}
-        placeholder={provider ? 'Search for your service address' : undefined}
+      <span className="pz-business-contact-form__input-icon" aria-hidden="true"><MapPin size={18} /></span>
+      <Input ref={inputRef} id={id} name="address" value={value} required={required} maxLength={maxLength} disabled={disabled} autoComplete={provider ? 'off' : 'street-address'}
+        placeholder={placeholder ?? (provider ? 'Search for your service address' : undefined)}
         role={provider ? 'combobox' : undefined} aria-autocomplete={provider ? 'list' : undefined}
         aria-expanded={provider ? open : undefined} aria-controls={open ? listId : undefined}
         aria-activedescendant={open && items[active] ? `${id}-option-${active}` : undefined}
-        hasError={Boolean(message)} onFocus={() => setFocused(true)} onKeyDown={keyDown}
+        aria-busy={pending || undefined} hasError={Boolean(message)} onFocus={() => setFocused(true)} onKeyDown={keyDown}
         onChange={(event) => { setActive(-1); setDismissedQuery(null); onChange(event.currentTarget.value) }} />
+      {pending && <InputSpinner />}
       {open && <div className="pz-business-contact-form__dropdown">
         {pending && <p role="status" className="pz-business-contact-form__search-status">Searching addresses…</p>}
         <ul id={listId} role="listbox" aria-label="Suggested service addresses" aria-busy={pending}>
           {items.map((suggestion, index) => <li role="presentation" key={suggestion.id}>
             <button id={`${id}-option-${index}`} type="button" role="option" tabIndex={-1} aria-selected={active === index}
               onMouseDown={(event) => event.preventDefault()} onClick={() => select(suggestion)}>
-              <span>{suggestion.label}</span>
-              {suggestion.description?.trim() && <small>{suggestion.description}</small>}
+              <MapPin size={16} aria-hidden="true" />
+              <span className="pz-business-contact-form__option-text">
+                <span>{suggestion.label}</span>
+                {suggestion.description?.trim() && <small>{suggestion.description}</small>}
+              </span>
             </button>
           </li>)}
         </ul>

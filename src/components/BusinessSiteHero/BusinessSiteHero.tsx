@@ -72,7 +72,7 @@ export function BusinessSiteHero({
   background = 'surface',
   align = 'left',
   headlineSize: requestedSize = 'auto',
-  aside,
+  formContent,
   intervalMs = 5000,
   overlay,
   appearance = {},
@@ -84,11 +84,11 @@ export function BusinessSiteHero({
   const photos = validImages(images)
   const requestedLayout = layout ?? (photos.length > 0 ? 'split' : 'flat')
   const resolvedLayout = requestedLayout === 'background' && photos.length === 0 ? 'flat'
-    : requestedLayout === 'split' && photos.length === 0 && !aside ? 'flat'
+    : requestedLayout === 'split' && photos.length === 0 && !formContent ? 'flat'
       : requestedLayout
-  const showMedia = resolvedLayout === 'background' || (resolvedLayout === 'split' && !aside)
+  const showMedia = resolvedLayout === 'background' || (resolvedLayout === 'split' && !formContent)
   const showBlurredBackdrop = showMedia && imageFit === 'contain' && imageBackdrop === 'blur'
-  const showAside = Boolean(aside) && (resolvedLayout === 'split' || resolvedLayout === 'background')
+  const showAside = Boolean(formContent) && (resolvedLayout === 'split' || resolvedLayout === 'background')
   const imageFirst = resolvedLayout === 'split' && contentOrder === 'image-first'
   const motion = appearance.motion === 'subtle' ? 'subtle' : 'none'
   const autoplay = motion === 'none' || intervalMs === 0 ? 0 : Number.isFinite(intervalMs) ? Math.max(2000, intervalMs) : 5000
@@ -106,7 +106,7 @@ export function BusinessSiteHero({
     </div>
   )
   const splitVisual = resolvedLayout === 'split'
-    ? aside ? <div className="pz-business-hero__aside">{aside}</div> : media
+    ? formContent ? <div className="pz-business-hero__aside">{formContent}</div> : media
     : null
 
   return (
@@ -122,7 +122,7 @@ export function BusinessSiteHero({
       data-size={headlineSize(title, requestedSize)}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
       data-motion={motion}
-      data-has-aside={showAside || (resolvedLayout === 'split' && Boolean(aside))}
+      data-has-aside={showAside || (resolvedLayout === 'split' && Boolean(formContent))}
       style={heroStyle(appearance, resolvedLayout, background, overlay)}
     >
       {resolvedLayout === 'background' && media}
@@ -150,7 +150,7 @@ export function BusinessSiteHero({
           )}
         </div>
         {!imageFirst && splitVisual}
-        {resolvedLayout === 'background' && showAside && <div className="pz-business-hero__aside">{aside}</div>}
+        {resolvedLayout === 'background' && showAside && <div className="pz-business-hero__aside">{formContent}</div>}
       </div>
     </section>
   )

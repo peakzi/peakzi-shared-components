@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { CONTACT_FIELDS, contactValues, fieldErrors, requiredErrors, trimmedValues } from './validation'
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
+import { CONTACT_FIELDS, contactValues, fieldErrors, localError, localErrors, trimmedValues, type TextField } from './validation'
+import { usePhoneValidation, type PhoneCheck } from './usePhoneValidation'
 import type { BusinessSiteContactFormErrors, BusinessSiteContactFormField, BusinessSiteContactFormProps, BusinessSiteContactFormValues } from './types'
 
 interface FormState {
@@ -9,13 +10,26 @@ interface FormState {
 }
 const idleState: FormState = { phase: 'idle', errors: {}, message: '' }
 
-export function useContactForm({ onSubmit, onValidate, initialValues, disabled, successMessage, consentText, appearance }: BusinessSiteContactFormProps) {
+export function useContactForm({ onSubmit, phoneValidation, initialValues, disabled, successMessage, consentText, appearance }: BusinessSiteContactFormProps) {
   const [values, setValues] = useState(() => contactValues(initialValues))
   const [acceptedDisclosure, setAcceptedDisclosure] = useState('')
   const [state, setState] = useState<FormState>(idleState)
+  const [phoneEdited, setPhoneEdited] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const active = useRef<AbortController | null>(null)
+  const lastPhoneCheck = useRef<PhoneCheck | null>(null)
   const focusError = useRef(false)
+  const compact = appearance?.density === 'compact'
+
+  const showError = useCallback((field: BusinessSiteContactFormField, message: string) => {
+    setState((previous) => previous.phase === 'idle' ? { ...previous, errors: { ...previous.errors, [field]: message } } : previous)
+  }, [])
+  const phoneLocalError = useCallback((message: string) => showError('phone', message), [showError])
+  const phoneChecked = useCallback((check: PhoneCheck) => {
+    lastPhoneCheck.current = check
+    if (check.message) showError('phone', check.message)
+  }, [showError])
+  const checkingPhone = usePhoneValidation(values.phone, state.phase === 'idle' && !disabled && phoneEdited, phoneValidation, phoneLocalError, phoneChecked)
 
   useEffect(() => () => { active.current?.abort(); active.current = null }, [])
   useEffect(() => {
@@ -26,19 +40,22 @@ export function useContactForm({ onSubmit, onValidate, initialValues, disabled, 
     if (element instanceof HTMLElement) element.focus()
   }, [state])
 
+  // Field errors replace the form-level message; only errors without a visible field fall back to it.
   function fail(errors: BusinessSiteContactFormErrors, message: string) {
-    if (appearance?.density === 'compact' && errors.email) {
-      message = `${message} ${errors.email}`
+    let hidden = ''
+    if (compact && errors.email) {
+      hidden = errors.email
       errors = { ...errors }
       delete errors.email
     }
     focusError.current = true
-    setState({ phase: 'idle', errors, message })
+    setState({ phase: 'idle', errors, message: Object.keys(errors).length ? hidden : [message, hidden].filter(Boolean).join(' ') })
   }
 
   function change<K extends BusinessSiteContactFormField>(field: K, value: BusinessSiteContactFormValues[K]) {
     if (active.current || disabled) return
     if (field === 'consent') setAcceptedDisclosure(value === true ? consentText.trim() : '')
+    if (field === 'phone') setPhoneEdited(true)
     setValues((previous) => ({ ...previous, [field]: value }))
     setState((previous) => {
       const errors = { ...previous.errors }
@@ -47,27 +64,43 @@ export function useContactForm({ onSubmit, onValidate, initialValues, disabled, 
     })
   }
 
+  /** Applies the built-in rules when leaving a filled field; empty required fields are only flagged on submit. */
+  function blur(field: TextField) {
+    if (active.current || disabled) return
+    const message = localError(field, values[field].trim())
+    if (message) showError(field, message)
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (active.current || disabled) return
-    const submitted = trimmedValues({ ...values, email: appearance?.density === 'compact' ? '' : values.email,
+    const submitted = trimmedValues({ ...values, email: compact ? '' : values.email,
       consent: values.consent && acceptedDisclosure === consentText.trim() })
-    const required = requiredErrors(submitted)
-    if (Object.keys(required).length) {
-      fail(required, 'Please complete the required fields.')
+    const local = localErrors(submitted)
+    if (Object.keys(local).length) {
+      fail(local, '')
+      return
+    }
+    // Reuse a completed live check of the same number instead of calling the phone API again.
+    const known = lastPhoneCheck.current?.phone === submitted.phone ? lastPhoneCheck.current : null
+    if (known?.message) {
+      fail({ phone: known.message }, '')
       return
     }
     const controller = new AbortController()
     active.current = controller
+    setPhoneEdited(false)
     const context = { signal: controller.signal, consentText: consentText.trim() }
-    let validating = Boolean(onValidate)
+    let validating = Boolean(phoneValidation && !known)
     setState({ phase: validating ? 'validating' : 'submitting', errors: {}, message: '' })
     try {
-      if (onValidate) {
-        const errors = fieldErrors(await onValidate(submitted, context))
+      if (validating) {
+        const result = await phoneValidation!.validate(submitted.phone, { signal: controller.signal })
         if (controller.signal.aborted) return
-        if (Object.keys(errors).length) {
-          fail(errors, 'Please check the highlighted details and try again.')
+        const message = typeof result === 'string' ? result.trim() : ''
+        lastPhoneCheck.current = { phone: submitted.phone, message }
+        if (message) {
+          fail({ phone: message }, '')
           return
         }
         validating = false
@@ -93,9 +126,10 @@ export function useContactForm({ onSubmit, onValidate, initialValues, disabled, 
   function reset() {
     setValues(contactValues(initialValues))
     setAcceptedDisclosure('')
+    setPhoneEdited(false)
     setState(idleState)
   }
 
   return { values: { ...values, consent: values.consent && acceptedDisclosure === consentText.trim() },
-    state, formRef, change, submit, reset, busy: state.phase === 'validating' || state.phase === 'submitting' }
+    state, checkingPhone, formRef, change, blur, submit, reset, busy: state.phase === 'validating' || state.phase === 'submitting' }
 }
