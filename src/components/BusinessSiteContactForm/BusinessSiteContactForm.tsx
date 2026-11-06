@@ -8,6 +8,7 @@ import { Field, Input, Textarea } from '../Input'
 import { Checkbox } from '../Checkbox'
 import { safeHref } from '../../utils/safeHref'
 import { AddressField, InputSpinner } from './address/AddressField'
+import { PhoneInput } from './phone/PhoneInput'
 import { contactFormStyle } from './helpers/appearance'
 import { useContactForm } from './helpers/useContactForm'
 import { FIELD_LIMITS } from './helpers/validation'
@@ -25,6 +26,7 @@ export function BusinessSiteContactForm(props: BusinessSiteContactFormProps) {
   const generatedId = useId()
   const prefix = id ?? `pz-contact-${generatedId}`
   const { values, state, checkingPhone, formRef, change, blur, submit, reset, busy } = useContactForm(props)
+  const succeeded = state.phase === 'success'
   const label = { ...LABELS, ...(compact ? { consent: 'I agree to the contact terms below.' } : {}), ...labels }
   const placeholder = { ...(compact ? {} : { description: 'What’s going on, and when did it start?' }), ...placeholders }
   const policyHref = safeHref(privacyPolicy?.href)
@@ -33,18 +35,20 @@ export function BusinessSiteContactForm(props: BusinessSiteContactFormProps) {
 
   return <section id={id} className={['pz-business-contact-form', className].filter(Boolean).join(' ')}
     data-density={compact ? 'compact' : 'comfortable'} data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
-    data-contact-placement={placement} data-disabled={disabled || busy} style={contactFormStyle(appearance)} aria-labelledby={`${prefix}-heading`}>
+    data-contact-placement={placement} data-disabled={disabled || busy} data-state={state.phase} style={contactFormStyle(appearance)}
+    aria-labelledby={succeeded ? (successTitle.trim() ? `${prefix}-success-heading` : undefined) : `${prefix}-heading`}
+    aria-label={succeeded && !successTitle.trim() ? 'Service request confirmation' : undefined}>
     <div className="pz-business-contact-form__layout">
-      <header className="pz-business-contact-form__intro">
+      {!succeeded && <header className="pz-business-contact-form__intro">
         <h2 id={`${prefix}-heading`}>{title}</h2>
         {description.trim() && <p id={`${prefix}-intro-description`}>{description}</p>}
         {!compact && <p className="pz-business-contact-form__required">Fields marked <span aria-hidden="true">*</span> are required.</p>}
-      </header>
-      {state.phase === 'success' ? <div className="pz-business-contact-form__success">
+      </header>}
+      {succeeded ? <div className="pz-business-contact-form__success">
         <div role="status" className="pz-business-contact-form__success-body">
           <span className="pz-business-contact-form__success-icon" aria-hidden="true"><Check size={22} /></span>
           <div>
-            {successTitle.trim() && <p className="pz-business-contact-form__success-title">{successTitle}</p>}
+            {successTitle.trim() && <h2 id={`${prefix}-success-heading`} className="pz-business-contact-form__success-title">{successTitle}</h2>}
             <p className="pz-business-contact-form__success-message">{state.message}</p>
           </div>
         </div>
@@ -65,8 +69,8 @@ export function BusinessSiteContactForm(props: BusinessSiteContactFormProps) {
             <Field id={`${prefix}-phone`} label={label.phone} required error={state.errors.phone ?? ''} hint={hints?.phone ?? ''}>
               <div className="pz-business-contact-form__control">
                 <span className="pz-business-contact-form__input-icon" aria-hidden="true"><Phone size={18} /></span>
-                <Input id={`${prefix}-phone`} name="phone" type="tel" inputMode="tel" autoComplete="tel" required maxLength={FIELD_LIMITS.phone} value={values.phone} placeholder={placeholder.phone}
-                  aria-busy={checkingPhone || undefined} hasError={Boolean(state.errors.phone)} onChange={(event) => change('phone', event.currentTarget.value)}
+                <PhoneInput id={`${prefix}-phone`} name="phone" type="tel" inputMode="tel" autoComplete="tel" required maxLength={FIELD_LIMITS.phone} value={values.phone} placeholder={placeholder.phone}
+                  aria-busy={checkingPhone || undefined} hasError={Boolean(state.errors.phone)} onValueChange={(value) => change('phone', value)}
                   onBlur={() => blur('phone')} />
                 {checkingPhone && <InputSpinner />}
               </div>
