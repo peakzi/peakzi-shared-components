@@ -76,12 +76,28 @@ describe('BusinessSiteContactForm', () => {
     expect(checkbox).toHaveAccessibleDescription(`${disclosure} Please agree to the contact terms before sending your request.`)
   })
 
-  it('clears consent when starting another request', async () => {
-    render(<BusinessSiteContactForm consentText={disclosure} onSubmit={() => {}} initialValues={requiredValues} />)
+  it.each(['compact', 'comfortable'] as const)('replaces the %s form introduction with confirmation and restores it for another request', async (density) => {
+    render(<BusinessSiteContactForm consentText={disclosure} title="Book Service" description="Tell us about the work you need."
+      successTitle="Request received" onSubmit={() => {}} initialValues={requiredValues} appearance={{ density }} />)
     submit()
-    await waitFor(() => expect(screen.queryByRole('form')).not.toBeInTheDocument())
+    expect(await screen.findByRole('heading', { name: 'Request received' })).toBeVisible()
+    expect(screen.getByRole('region', { name: 'Request received' })).toBeVisible()
+    expect(screen.queryByRole('form')).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Book Service' })).not.toBeInTheDocument()
+    expect(screen.queryByText('Tell us about the work you need.')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Fields marked/)).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Send another request' }))
+    expect(screen.getByRole('heading', { name: 'Book Service' })).toBeVisible()
+    expect(screen.getByText('Tell us about the work you need.')).toBeVisible()
+    if (density === 'comfortable') expect(screen.getByText(/Fields marked/)).toBeVisible()
     expect(screen.getByRole('checkbox')).not.toBeChecked()
+  })
+
+  it('keeps confirmation labelled when its title is intentionally empty', async () => {
+    render(<BusinessSiteContactForm consentText={disclosure} onSubmit={() => {}} initialValues={requiredValues} successTitle="" />)
+    submit()
+    expect(await screen.findByRole('region', { name: 'Service request confirmation' })).toHaveTextContent('Your request has been sent.')
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument()
   })
 
   it('requires fresh acknowledgement when the consumer changes the disclosure', () => {

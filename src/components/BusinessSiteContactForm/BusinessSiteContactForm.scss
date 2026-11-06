@@ -133,7 +133,7 @@
 .pz-business-contact-form__consent {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-1);
   padding: 14px 16px 16px;
   border: 1px solid var(--pz-contact-form-border);
   border-radius: var(--pz-contact-form-radius);
@@ -145,7 +145,8 @@
 }
 .pz-business-contact-form .pz-checkbox {
   display: flex;
-  align-items: flex-start;
+  // Center the label in its tap target so unused height does not sit below it.
+  align-items: center;
   gap: 12px;
   min-height: 44px;
   padding-block: 1px 0;
@@ -390,7 +391,7 @@
 .pz-business-contact-form[data-density='compact'] .pz-field { gap: 5px; }
 .pz-business-contact-form[data-density='compact'] .pz-textarea { min-height: 76px; }
 .pz-business-contact-form[data-density='compact'] .pz-business-contact-form__footer { gap: 14px; margin-top: 14px; }
-.pz-business-contact-form[data-density='compact'] .pz-business-contact-form__consent { gap: 6px; padding: 10px 12px 12px; }
+.pz-business-contact-form[data-density='compact'] .pz-business-contact-form__consent { gap: var(--space-1); padding: 10px 12px 12px; }
 .pz-business-contact-form[data-density='compact'] .pz-business-contact-form__submit { min-height: 50px; }
 .pz-business-contact-form[data-density='compact'] .pz-business-contact-form__success { padding: 16px; }
 .pz-business-contact-form[data-density='compact'] .pz-business-contact-form__address-field { grid-column: 1 / -1; }
@@ -418,3 +419,6 @@
   }
   .pz-business-contact-form[data-density='comfortable'] .pz-business-contact-form__intro h2 { font-size: 32px; }
 }
+
+// Confirmation replaces both form columns, including the introduction.
+.pz-business-contact-form[data-state='success'] .pz-business-contact-form__layout { grid-template-columns: minmax(0, 1fr); }
