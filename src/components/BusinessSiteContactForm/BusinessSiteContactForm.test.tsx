@@ -221,6 +221,8 @@ describe('BusinessSiteContactForm', () => {
     expect(screen.queryByText('We need a different contact number.')).not.toBeInTheDocument()
     await waitFor(() => expect(screen.getByLabelText(/Phone number/)).toHaveFocus())
     expect(screen.getByLabelText(/Full name/)).toHaveValue(requiredValues.fullName)
+    expect(screen.getByRole('button', { name: 'Send request' })).toBeDisabled()
+    fireEvent.change(screen.getByLabelText(/Phone number/), { target: { value: '+44 20 7946 0999' } })
     expect(screen.getByRole('button', { name: 'Send request' })).toBeEnabled()
   })
 
@@ -361,13 +363,15 @@ describe('BusinessSiteContactForm', () => {
     }
   })
 
-  it('does not live-check prefilled, short or disabled phone numbers', async () => {
+  it('checks prefilled phone numbers but does not check short or disabled numbers', async () => {
     vi.useFakeTimers()
     try {
       const validatePhone = vi.fn<BusinessSiteContactFormPhoneValidation['validate']>(async () => 'Invalid')
       const { rerender } = render(<BusinessSiteContactForm consentText={disclosure} onSubmit={() => {}} phoneValidation={{ validate: validatePhone }}
         initialValues={{ phone: '2145550142' }} />)
       await act(async () => { await vi.advanceTimersByTimeAsync(1000) })
+      expect(validatePhone).toHaveBeenCalledOnce()
+      validatePhone.mockClear()
       fireEvent.change(screen.getByLabelText(/Phone number/), { target: { value: '21' } })
       await act(async () => { await vi.advanceTimersByTimeAsync(1000) })
       rerender(<BusinessSiteContactForm consentText={disclosure} onSubmit={() => {}} phoneValidation={{ validate: validatePhone }} disabled />)

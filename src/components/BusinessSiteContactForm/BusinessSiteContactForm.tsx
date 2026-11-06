@@ -25,7 +25,7 @@ export function BusinessSiteContactForm(props: BusinessSiteContactFormProps) {
     successTitle = 'Request sent', resetLabel = 'Send another request', disabled = false, appearance = {}, placement, id, className, consentText, privacyPolicy } = props
   const generatedId = useId()
   const prefix = id ?? `pz-contact-${generatedId}`
-  const { values, state, checkingPhone, formRef, change, blur, submit, reset, busy } = useContactForm(props)
+  const { values, state, canSubmit, checkingPhone, formRef, change, blur, submit, reset, busy } = useContactForm(props)
   const succeeded = state.phase === 'success'
   const label = { ...LABELS, ...(compact ? { consent: 'I agree to the contact terms below.' } : {}), ...labels }
   const placeholder = { ...(compact ? {} : { description: 'What’s going on, and when did it start?' }), ...placeholders }
@@ -83,12 +83,12 @@ export function BusinessSiteContactForm(props: BusinessSiteContactFormProps) {
               </div>
             </Field>}
             <AddressField id={`${prefix}-address`} label={label.address} value={values.address} error={state.errors.address} hint={hints?.address} placeholder={placeholder.address} required
-              maxLength={FIELD_LIMITS.address} disabled={disabled || busy} provider={props.addressSearch} onChange={(value) => change('address', value)} />
+              maxLength={FIELD_LIMITS.address} disabled={disabled || busy} provider={props.addressSearch} onChange={(value) => change('address', value)} onBlur={() => blur('address')} />
             <Field id={`${prefix}-description`} label={label.description} error={state.errors.description ?? ''} hint={hints?.description ?? ''}
               className="pz-business-contact-form__problem">
               <Textarea id={`${prefix}-description`} name="description" rows={compact ? 2 : 4} maxLength={FIELD_LIMITS.description} value={values.description}
                 placeholder={placeholder.description}
-                hasError={Boolean(state.errors.description)} onChange={(event) => change('description', event.currentTarget.value)} />
+                hasError={Boolean(state.errors.description)} onChange={(event) => change('description', event.currentTarget.value)} onBlur={() => blur('description')} />
               {values.description.length >= FIELD_LIMITS.description * 0.8 && <span className="pz-business-contact-form__count">
                 {values.description.length}/{FIELD_LIMITS.description}</span>}
             </Field>
@@ -98,16 +98,16 @@ export function BusinessSiteContactForm(props: BusinessSiteContactFormProps) {
               <Checkbox id={`${prefix}-consent`} name="consent" required checked={values.consent}
                 aria-invalid={Boolean(state.errors.consent)}
                 aria-describedby={[`${prefix}-consent-disclosure`, state.errors.consent && `${prefix}-consent-error`].filter(Boolean).join(' ')}
-                onChange={(event) => change('consent', event.currentTarget.checked)}>
+                onChange={(event) => change('consent', event.currentTarget.checked)} onBlur={() => blur('consent')}>
                 <span>{label.consent} <span aria-hidden="true">*</span></span>
               </Checkbox>
               <p id={`${prefix}-consent-disclosure`} className="pz-business-contact-form__disclosure">{consentText}</p>
               {state.errors.consent && <p id={`${prefix}-consent-error`} role="alert" className="pz-business-contact-form__consent-error">{state.errors.consent}</p>}
             </div>
             <div className="pz-business-contact-form__actions">
-              <Button type="submit" variant="primary" loading={busy} disabled={disabled} className="pz-business-contact-form__submit">
+              <Button type="submit" variant="primary" loading={busy} disabled={!canSubmit} className="pz-business-contact-form__submit">
                 <span>{state.phase === 'validating' ? validatingLabel : busy ? submittingLabel : submitLabel}</span>
-                {!busy && !disabled && <ArrowRight size={18} aria-hidden="true" />}
+                {!busy && canSubmit && <ArrowRight size={18} aria-hidden="true" />}
               </Button>
               <span role="status" aria-live="polite" className="pz-business-contact-form__legend">{busy ? state.phase === 'validating' ? validatingLabel : submittingLabel : ''}</span>
               {privacyHref && <a className="pz-business-contact-form__privacy" href={privacyHref}
