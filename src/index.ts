@@ -151,6 +151,8 @@ export type {
   BusinessSiteContactFormResult,
   BusinessSiteContactFormValues,
 } from './components/BusinessSiteContactForm'
+export { BusinessSiteContactDialog } from './components/BusinessSiteContactDialog'
+export type { BusinessSiteContactDialogProps } from './components/BusinessSiteContactDialog'
 export { BusinessSitePolicy } from './components/BusinessSitePolicy'
 export type { BusinessSitePolicyAppearance, BusinessSitePolicyProps } from './components/BusinessSitePolicy'
 export type { BusinessSiteCtaAction, BusinessSiteCtaAppearance, BusinessSiteCtaProps, BusinessSiteCtaVariant } from './components/BusinessSiteCta'

@@ -14,6 +14,8 @@ export interface BusinessSiteServicesDirectoryProps {
   eyebrow?: string
   intro?: string
   headingLevel?: 'h1' | 'h2'
+  /** Hide the repeated introduction when a page hero already provides the main heading. Counts and search remain visible. */
+  showHeading?: boolean
   appearance?: BusinessSiteServicesAppearance
   sectionId?: string
   className?: string
@@ -26,7 +28,7 @@ function searchable(value: string): string {
 /** A price-free directory. Every service link is server-rendered; hydration only
  * enhances search. The existing homepage Services component stays unchanged. */
 export function BusinessSiteServicesDirectory({ groups, title = 'Our services', eyebrow, intro,
-  headingLevel = 'h2', appearance = {}, sectionId, className }: BusinessSiteServicesDirectoryProps) {
+  headingLevel = 'h2', showHeading = true, appearance = {}, sectionId, className }: BusinessSiteServicesDirectoryProps) {
   const generatedId = useId()
   const baseId = sectionId || `services-directory-${generatedId.replace(/:/g, '')}`
   const [query, setQuery] = useState('')
@@ -46,19 +48,21 @@ export function BusinessSiteServicesDirectory({ groups, title = 'Our services', 
   const total = catalogue.reduce((count, group) => count + group.services.length, 0)
   const matches = filtered.reduce((count, group) => count + group.services.length, 0)
   const Heading = headingLevel
-  const TradeHeading = headingLevel === 'h1' ? 'h2' : 'h3'
-  const ServiceHeading = headingLevel === 'h1' ? 'h3' : 'h4'
+  const TradeHeading = headingLevel === 'h1' || !showHeading ? 'h2' : 'h3'
+  const ServiceHeading = TradeHeading === 'h2' ? 'h3' : 'h4'
   const clear = () => { setQuery(''); input.current?.focus() }
 
   return <section id={baseId} className={['pz-services-directory', className].filter(Boolean).join(' ')}
-    aria-labelledby={`${baseId}-heading`} data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
+    aria-labelledby={showHeading ? `${baseId}-heading` : undefined} aria-label={showHeading ? undefined : title} data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
     data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'} style={servicesStyle(appearance)}>
     <div className="pz-services-directory__inner">
       <header className="pz-services-directory__header">
         <div className="pz-services-directory__intro">
-          {eyebrow?.trim() && <p className="pz-services-directory__eyebrow">{eyebrow.trim()}</p>}
-          <Heading id={`${baseId}-heading`}>{title}</Heading>
-          {intro?.trim() && <p className="pz-services-directory__description">{intro.trim()}</p>}
+          {showHeading && <>
+            {eyebrow?.trim() && <p className="pz-services-directory__eyebrow">{eyebrow.trim()}</p>}
+            <Heading id={`${baseId}-heading`}>{title}</Heading>
+            {intro?.trim() && <p className="pz-services-directory__description">{intro.trim()}</p>}
+          </>}
           <p className="pz-services-directory__inventory">{total} {total === 1 ? 'service' : 'services'}
             {catalogue.length > 1 && <><span aria-hidden="true"> / </span>{catalogue.length} trades</>}</p>
         </div>

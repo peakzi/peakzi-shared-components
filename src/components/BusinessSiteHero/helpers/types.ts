@@ -11,6 +11,8 @@ export interface BusinessSiteHeroImage {
 export interface BusinessSiteHeroAction {
   id: string
   label: string
+  /** Optional full label on desktop; label stays visible in the mobile layout. */
+  desktopLabel?: string
   href: string
   type: 'primary' | 'secondary'
   iconName?: string
@@ -45,6 +47,10 @@ export interface BusinessSiteHeroAppearance {
 export interface BusinessSiteHeroProps {
   /** Use once per page: this component renders the page's h1. */
   headline: string
+  /** Optional stable anchor for the page heading. */
+  headingId?: string
+  /** Inner pages share compact spacing while retaining their supplied theme settings. */
+  variant?: 'default' | 'inner-page'
   eyebrow?: string
   answer?: string
   rating?: BusinessSiteHeroRating

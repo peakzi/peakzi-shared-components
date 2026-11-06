@@ -1,3 +1,4 @@
+import { BusinessSiteActionLabel, businessSiteActionAriaLabel } from '../../internal/BusinessSiteActionLabel'
 import { safeHref } from '../../utils/safeHref'
 import { Star } from 'lucide-react'
 import { businessSiteIcon } from '../../utils/businessSiteIcon'
@@ -49,9 +50,10 @@ function actionLink(action: BusinessSiteHeroAction) {
       target={newTab ? '_blank' : undefined}
       rel={newTab ? 'noopener noreferrer' : undefined}
       data-action-id={action.id}
+      aria-label={businessSiteActionAriaLabel(action)}
     >
       {icon && action.iconPosition !== 'after' && <span aria-hidden="true">{icon}</span>}
-      <span>{action.label}</span>
+      <span><BusinessSiteActionLabel {...action} /></span>
       {icon && action.iconPosition === 'after' && <span aria-hidden="true">{icon}</span>}
     </a>
   )
@@ -59,6 +61,8 @@ function actionLink(action: BusinessSiteHeroAction) {
 
 export function BusinessSiteHero({
   headline,
+  headingId,
+  variant = 'default',
   eyebrow,
   answer,
   rating,
@@ -112,6 +116,7 @@ export function BusinessSiteHero({
   return (
     <section
       className={['pz-business-hero', className].filter(Boolean).join(' ')}
+      data-variant={variant === 'inner-page' ? 'inner-page' : undefined}
       data-layout={resolvedLayout}
       data-image-fit={imageFit === 'contain' ? 'contain' : 'cover'}
       data-image-backdrop={showBlurredBackdrop ? 'blur' : 'solid'}
@@ -131,7 +136,7 @@ export function BusinessSiteHero({
         <div className="pz-business-hero__copy">
           <div className="pz-business-hero__lead">
             {eyebrow?.trim() && <span className="pz-business-hero__eyebrow">{eyebrow.trim()}</span>}
-            <h1 className="pz-business-hero__headline">{title}</h1>
+            <h1 id={headingId} className="pz-business-hero__headline">{title}</h1>
           </div>
           {answer?.trim() && <p className="pz-business-hero__answer">{answer.trim()}</p>}
           {(ratingLabel || validActions.length > 0) && (

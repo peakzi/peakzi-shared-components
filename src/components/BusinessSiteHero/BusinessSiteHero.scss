@@ -491,3 +491,7 @@
   .pz-business-hero[data-layout='background']:has(.pz-photo-gallery[data-multiple='true']) .pz-business-hero__inner { padding-bottom: 104px; }
   .pz-business-hero[data-layout='background'] .pz-photo-gallery__controls { justify-self: center; margin: 0 16px 16px; }
 }
+
+// Shared inner-page rhythm; the home hero keeps its existing spacing.
+.pz-business-hero[data-variant='inner-page'] .pz-business-hero__inner { padding-block: 36px; }
+.pz-business-hero[data-variant='inner-page'][data-density='compact'] .pz-business-hero__inner { padding-block: 24px; }

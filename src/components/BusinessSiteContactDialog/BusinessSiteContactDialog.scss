@@ -1,0 +1,58 @@
+.pz-modal.pz-business-contact-dialog {
+  max-height: calc(100dvh - 32px);
+  border: 1px solid color-mix(in srgb, var(--pz-contact-form-text) 20%, var(--pz-contact-form-background));
+  border-radius: var(--pz-contact-form-radius);
+  background: var(--pz-contact-form-background);
+  color: var(--pz-contact-form-text);
+  font-family: var(--pz-contact-form-font);
+
+  .pz-modal__header { flex-shrink: 0; }
+  .pz-modal__body { min-height: 0; color: inherit; overscroll-behavior: contain; }
+  .pz-modal__close {
+    width: 44px; height: 44px; color: var(--pz-contact-form-text); border-radius: var(--pz-contact-form-radius);
+  }
+  .pz-modal__close:focus-visible { outline: 2px solid var(--pz-contact-form-focus); outline-offset: 2px; box-shadow: none; }
+  .pz-business-contact-form { border: 0; }
+  .pz-business-contact-form__layout { padding: 0; }
+}
+
+// Keep the complete form usable on laptop screens, with a scrollable dialog body.
+@media (min-width: 768px) {
+  .pz-modal.pz-business-contact-dialog {
+    .pz-modal__header { padding: 8px 20px 0; }
+    .pz-modal__body { padding: 8px 24px 20px; }
+    .pz-business-contact-form[data-density] {
+      .pz-business-contact-form__layout { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 0; }
+      .pz-business-contact-form__intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; padding: 0; border: 0; }
+      .pz-business-contact-form__intro h2 { font-size: 26px; }
+      .pz-business-contact-form__intro p:not(.pz-business-contact-form__required) { grid-column: 1 / -1; grid-row: 2; max-width: none; font-size: 15px; line-height: 1.4; }
+      .pz-business-contact-form__required { grid-column: 2; grid-row: 1; align-self: center; }
+      .pz-business-contact-form__fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+      .pz-field { gap: 4px; }
+      .pz-input { min-height: 44px; padding-block: 9px; }
+      .pz-textarea { height: 72px; min-height: 72px; }
+      .pz-business-contact-form__footer { margin-top: 14px; gap: 12px; }
+      .pz-business-contact-form__consent { padding: 8px 12px; gap: 4px; }
+      .pz-business-contact-form__disclosure { line-height: 1.45; }
+      .pz-business-contact-form__submit { min-height: 44px; padding-block: 10px; }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .pz-modal-backdrop:has(.pz-business-contact-dialog) { padding: 8px; }
+  .pz-modal.pz-business-contact-dialog {
+    max-height: calc(100dvh - 16px);
+    .pz-modal__header { padding: 12px 16px 0; }
+    .pz-modal__body { padding: 16px; }
+    .pz-business-contact-form__fields { grid-template-columns: minmax(0, 1fr); }
+  }
+}
+
+.pz-modal.pz-business-contact-dialog--no-motion,
+.pz-modal-backdrop:has(.pz-business-contact-dialog--no-motion) { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pz-modal.pz-business-contact-dialog,
+  .pz-modal-backdrop:has(.pz-business-contact-dialog) { animation: none; }
+}

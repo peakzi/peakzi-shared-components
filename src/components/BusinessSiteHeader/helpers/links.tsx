@@ -1,3 +1,4 @@
+import { BusinessSiteActionLabel, businessSiteActionAriaLabel } from '../../../internal/BusinessSiteActionLabel'
 import { ChevronDown } from 'lucide-react'
 import { safeHref } from '../../../utils/safeHref'
 import { actionIcon } from './icons'
@@ -18,9 +19,10 @@ export function actionLink(action: BusinessSiteHeaderAction, className = '') {
       target={opensNewTab ? '_blank' : undefined}
       rel={opensNewTab ? 'noopener noreferrer' : undefined}
       data-action-id={action.id}
+      aria-label={businessSiteActionAriaLabel(action)}
     >
       {action.iconPosition !== 'after' && icon}
-      <span>{action.label}</span>
+      <span><BusinessSiteActionLabel {...action} /></span>
       {action.iconPosition === 'after' && icon}
     </a>
   )

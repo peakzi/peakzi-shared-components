@@ -101,4 +101,14 @@ describe('BusinessSiteServicesDirectory', () => {
     expect(html).toContain('linear-gradient(135deg, #123456, #456789)'); expect(html).toContain('--pz-business-services-radius:16px')
     expect(html).toContain('&quot;Nunito Sans&quot;'); expect(html).toContain('&quot;Open Sans&quot;')
   })
+  it('keeps search and the inventory beneath an external page hero without repeating the page heading', () => {
+    const html = renderToStaticMarkup(<><h1>Page hero</h1><BusinessSiteServicesDirectory sectionId="catalog" title="Browse services" showHeading={false}
+      groups={[{ id: 'plumbing', trade: 'Plumbing', services: [{ id: 'water', title: 'Water heater', href: '/services/Plumbing/Water-Heater' }] }]} /></>)
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
+    expect(html).toContain('<h2 id="catalog-trade-1-heading">Plumbing</h2>')
+    expect(html).toContain('aria-label="Browse services"')
+    expect(html).toContain('type="search"')
+    expect(html).not.toContain('id="catalog-heading"')
+  })
+
 })

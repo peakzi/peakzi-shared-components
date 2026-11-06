@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { ArrowUpRight, Award, BadgeCheck, CalendarDays, Calculator, Check, ClipboardCheck, Clock, DollarSign, Droplet, Flame, House, Phone, Shield, ShieldCheck, Snowflake, Star, Tag, Thermometer, Wrench, Zap } from 'lucide-react'
+import { ArrowUpRight, Award, BadgeCheck, CalendarDays, Calculator, Check, ClipboardCheck, ClipboardList, Clock, DollarSign, Droplet, Flame, House, Phone, Shield, ShieldCheck, Snowflake, Star, Tag, Thermometer, Wrench, Zap } from 'lucide-react'
 import type { IconName } from 'lucide-react/dynamic'
 
 const STATIC_ICONS = {
@@ -15,6 +15,7 @@ const STATIC_ICONS = {
   'badge-check': BadgeCheck,
   clock: Clock,
   'clipboard-check': ClipboardCheck,
+  'clipboard-list': ClipboardList,
   tag: Tag,
   check: Check,
   shield: Shield,

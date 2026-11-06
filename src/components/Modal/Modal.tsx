@@ -1,7 +1,7 @@
 import {
   type ReactNode,
+  type CSSProperties,
   type MouseEventHandler,
-  type KeyboardEvent as ReactKeyboardEvent,
   useEffect,
   useRef,
   useId,
@@ -27,6 +27,9 @@ export interface ModalProps {
   'aria-label'?: string
   description?: string
   size?: ModalSize
+  /** Optional scoped presentation supplied by a themed dialog. */
+  className?: string
+  style?: CSSProperties
   /** Footer slot — typically action buttons */
   footer?: ReactNode
   children?: ReactNode
@@ -41,6 +44,8 @@ export function Modal({
   'aria-label': ariaLabel,
   description,
   size,
+  className,
+  style,
   footer,
   children,
   dismissible = true,
@@ -59,7 +64,33 @@ export function Modal({
     const previousOverflow = document.body.style.overflow
 
     const handleKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return
       if (e.key === 'Escape' && dismissible) onClose()
+      if (e.key !== 'Tab') return
+
+      const dialog = dialogRef.current
+      if (!dialog) return
+      const focusable = dialog.querySelectorAll<HTMLElement>(
+        ':is(a[href], button:not(:disabled), textarea:not(:disabled), input:not(:disabled), select:not(:disabled), [tabindex]:not([tabindex="-1"]))',
+      )
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (!first || !last) {
+        e.preventDefault()
+        dialog.focus()
+        return
+      }
+
+      // Opening and replacing form contents can leave focus on the dialog or body.
+      const active = document.activeElement
+      const enter = active === dialog || !dialog.contains(active)
+      if (e.shiftKey && (enter || active === first)) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && (enter || active === last)) {
+        e.preventDefault()
+        first.focus()
+      }
     }
 
     document.addEventListener('keydown', handleKey)
@@ -81,32 +112,6 @@ export function Modal({
     if (dismissible && e.target === e.currentTarget) onClose()
   }
 
-  const handleDialogKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== 'Tab') return
-
-    const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
-      'a[href], button:not(:disabled), textarea:not(:disabled), input:not(:disabled), select:not(:disabled), [tabindex]:not([tabindex="-1"])',
-    )
-
-    if (!focusable?.length) {
-      e.preventDefault()
-      dialogRef.current?.focus()
-      return
-    }
-
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
-    if (!first || !last) return
-
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault()
-      last.focus()
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault()
-      first.focus()
-    }
-  }
-
   return createPortal(
     <div className="pz-modal-backdrop" onMouseDown={handleBackdropClick} aria-hidden={!open}>
       <div
@@ -116,11 +121,11 @@ export function Modal({
         aria-labelledby={title ? labelId : undefined}
         aria-label={title ? undefined : (ariaLabel ?? 'Dialog')}
         aria-describedby={description ? `${labelId}-desc` : undefined}
-        className={['pz-modal', size && size !== 'md' && `pz-modal--${size}`]
+        className={['pz-modal', size && size !== 'md' && `pz-modal--${size}`, className]
           .filter(Boolean)
           .join(' ')}
+        style={style}
         tabIndex={-1}
-        onKeyDown={handleDialogKeyDown}
       >
         {/* Header */}
         <div className="pz-modal__header">

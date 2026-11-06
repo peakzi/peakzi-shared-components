@@ -28,4 +28,15 @@ describe('BusinessSitePolicy', () => {
     expect(html).toContain('--pz-business-policy-text:#000000')
     expect(html).toContain('--pz-business-policy-accent:#000000')
   })
+  it('places a supplied hero between the breadcrumb and the complete legal document', () => {
+    const html = renderToStaticMarkup(<BusinessSitePolicy breadcrumb={<nav>Policy breadcrumb</nav>}
+      hero={<section><h1>Company privacy policy</h1></section>}>
+      <p>Effective date from the API.</p><h2>Information</h2><p>The complete policy.</p>
+    </BusinessSitePolicy>)
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
+    expect(html.indexOf('Policy breadcrumb')).toBeLessThan(html.indexOf('Company privacy policy'))
+    expect(html.indexOf('Company privacy policy')).toBeLessThan(html.indexOf('pz-business-policy__body'))
+    expect(html).toContain('The complete policy.')
+  })
+
 })

@@ -11,6 +11,8 @@ export interface BusinessSiteFaqItem {
 export interface BusinessSiteFaqAction {
   id: string
   label: string
+  /** Optional full label on desktop; label stays visible in the mobile layout. */
+  desktopLabel?: string
   href: string
   /** First primary action wins; otherwise the first valid action is primary. */
   type?: 'primary' | 'secondary'

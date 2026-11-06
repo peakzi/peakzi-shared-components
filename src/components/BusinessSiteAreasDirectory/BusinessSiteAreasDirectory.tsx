@@ -10,6 +10,8 @@ import { safeHref } from '../../utils/safeHref'
 export interface BusinessSiteAreasDirectoryProps {
   areas: readonly BusinessSiteArea[]
   title?: string
+  /** Use h2 when the consuming page supplies a separate hero heading. */
+  headingLevel?: 'h1' | 'h2'
   /** Plain-text introduction beneath the heading; omitted without reserving space. */
   intro?: string
   appearance?: BusinessSiteAreasAppearance
@@ -19,7 +21,7 @@ export interface BusinessSiteAreasDirectoryProps {
 
 const normalize = (value: string) => value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
 
-export function BusinessSiteAreasDirectory({ areas, title, intro, appearance, renderMap }: BusinessSiteAreasDirectoryProps) {
+export function BusinessSiteAreasDirectory({ areas, title, intro, headingLevel = 'h1', appearance, renderMap }: BusinessSiteAreasDirectoryProps) {
   const [query, setQuery] = useState('')
   const searchId = useId()
   const ordered = useMemo(() => areas.filter((area) => area.label.trim() &&
@@ -30,7 +32,7 @@ export function BusinessSiteAreasDirectory({ areas, title, intro, appearance, re
 
   return <BusinessSiteAreas areas={filtered} {...(title !== undefined ? { title } : {})}
     {...(appearance !== undefined ? { appearance } : {})}
-    variant="directory" headingLevel="h1" map={renderMap?.(filtered)}
+    variant="directory" headingLevel={headingLevel} map={renderMap?.(filtered)}
     controls={<>
       {intro?.trim() && <p className="pz-business-areas__intro">{intro.trim()}</p>}
       <div className="pz-business-areas__search">

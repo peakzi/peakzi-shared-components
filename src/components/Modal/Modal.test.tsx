@@ -76,6 +76,15 @@ describe('Modal', () => {
     const close = screen.getByRole('button', { name: 'Close dialog' })
     const confirm = screen.getByRole('button', { name: 'Confirm' })
 
+    dialog.focus()
+    fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true })
+    expect(confirm).toHaveFocus()
+
+    // The focused submit button can disappear when a form switches to confirmation.
+    confirm.blur()
+    fireEvent.keyDown(document, { key: 'Tab' })
+    expect(close).toHaveFocus()
+
     confirm.focus()
     fireEvent.keyDown(dialog, { key: 'Tab' })
     expect(close).toHaveFocus()

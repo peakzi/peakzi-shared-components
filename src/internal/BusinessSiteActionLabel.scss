@@ -1,0 +1,8 @@
+// Match BusinessSiteHeader's desktop navigation breakpoint.
+.pz-business-action-label__desktop { display: none; white-space: nowrap; }
+.pz-business-action-label__mobile { display: inline; }
+
+@media (min-width: 1281px) {
+  .pz-business-action-label__desktop { display: inline; }
+  .pz-business-action-label__mobile { display: none; }
+}

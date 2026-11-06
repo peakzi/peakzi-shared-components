@@ -17,6 +17,7 @@ const componentEntries = [
   'BusinessSitePhotoCarousel',
   'BusinessSiteCta',
   'BusinessSiteContactForm',
+  'BusinessSiteContactDialog',
   'BusinessSitePolicy',
   'BusinessSiteServices',
   'BusinessSiteServicesDirectory',
@@ -128,7 +129,7 @@ export default defineConfig({
       ],
       output: {
         // Keep the client boundary on extracted chunks too, not only their entry facades.
-        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteOffers\/details\/BusinessSiteOfferDetails|BusinessSitePhotoCarousel\/BusinessSitePhotoCarousel|BusinessSiteContactForm\/BusinessSiteContactForm|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteBlogs\/cover\/BlogCoverImage|BusinessSiteFaq\/accordion\/FaqAccordion|BusinessSiteAreas\/map\/BusinessSiteAreasMap|BusinessSite(?:Areas|Services)Directory\/BusinessSite(?:Areas|Services)Directory|BusinessSiteContentFilterNav\/sheet\/ContentFilterNavSheet|BusinessSiteProjectGallery\/preview\/BusinessSiteProjectGalleryPreview)\.tsx$/.test(id.replace(/\\/g, '/')))
+        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteOffers\/details\/BusinessSiteOfferDetails|BusinessSitePhotoCarousel\/BusinessSitePhotoCarousel|BusinessSiteContactForm\/BusinessSiteContactForm|BusinessSiteContactDialog\/BusinessSiteContactDialog|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteBlogs\/cover\/BlogCoverImage|BusinessSiteFaq\/accordion\/FaqAccordion|BusinessSiteAreas\/map\/BusinessSiteAreasMap|BusinessSite(?:Areas|Services)Directory\/BusinessSite(?:Areas|Services)Directory|BusinessSiteContentFilterNav\/sheet\/ContentFilterNavSheet|BusinessSiteProjectGallery\/preview\/BusinessSiteProjectGalleryPreview)\.tsx$/.test(id.replace(/\\/g, '/')))
           ? '"use client";' : '',
         globals: {
           react: 'React',

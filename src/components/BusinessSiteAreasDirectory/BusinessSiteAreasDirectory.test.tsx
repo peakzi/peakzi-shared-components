@@ -108,4 +108,12 @@ describe('BusinessSiteAreasDirectory', () => {
     expect(screen.queryByText('Unsafe')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: '<script>city</script>' })).toBeInTheDocument()
   })
+  it('supports a subordinate heading when the page already has a hero H1', () => {
+    const html = renderToStaticMarkup(<><h1>Page hero</h1><BusinessSiteAreasDirectory areas={areas} title="Cities we serve" headingLevel="h2" /></>)
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
+    expect(html).toContain('<h2>Cities we serve</h2>')
+    expect(html).toContain('type="search"')
+    expect(html).toContain('Salem, VA')
+  })
+
 })

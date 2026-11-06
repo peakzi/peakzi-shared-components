@@ -1,3 +1,4 @@
+import { BusinessSiteActionLabel, businessSiteActionAriaLabel } from '../../internal/BusinessSiteActionLabel'
 import { useId } from 'react'
 import { Minus, Plus } from 'lucide-react'
 import { businessSiteIcon } from '../../utils/businessSiteIcon'
@@ -80,10 +81,11 @@ export function BusinessSiteFaq({
                         target={newTab ? '_blank' : undefined}
                         rel={newTab ? 'noopener noreferrer' : undefined}
                         data-action-id={action.id}
+                        aria-label={businessSiteActionAriaLabel(action)}
                         data-action-type={index === primaryIndex ? 'primary' : 'secondary'}
                       >
                         {action.iconPosition !== 'after' && icon}
-                        <span>{action.label}</span>
+                        <span><BusinessSiteActionLabel {...action} /></span>
                         {action.iconPosition === 'after' && icon}
                       </a>
                     )

@@ -1,3 +1,4 @@
+import { BusinessSiteActionLabel, businessSiteActionAriaLabel } from '../../internal/BusinessSiteActionLabel'
 import { useId, type CSSProperties } from 'react'
 import { Button } from '../Button'
 import { businessSiteIcon } from '../../utils/businessSiteIcon'
@@ -9,6 +10,8 @@ export type BusinessSiteCtaVariant = 'direct-line' | 'invitation' | 'service-des
 export interface BusinessSiteCtaAction {
   id: string
   label: string
+  /** Optional full label on desktop; label stays visible in the mobile layout. */
+  desktopLabel?: string
   href: string
   type?: 'primary' | 'secondary'
   iconName?: string
@@ -103,12 +106,13 @@ export function BusinessSiteCta({ title, description, actions, appearance = {}, 
   const layout = variant === 'direct-line' || variant === 'invitation' ? variant : 'service-desk'
   const renderAction = (action: BusinessSiteCtaAction, index: number) => {
     const primary = index === primaryIndex
+    const ariaLabel = businessSiteActionAriaLabel(action)
     const newTab = action.newTab === true && /^https?:\/\//i.test(action.href)
     return <Button key={action.id} href={action.href} variant={primary ? 'primary' : 'secondary'}
       className={['pz-business-cta__action', primary && 'pz-business-cta__action--primary'].filter(Boolean).join(' ')}
-      {...(newTab ? { target: '_blank' as const } : {})} data-action-id={action.id}>
+      {...(newTab ? { target: '_blank' as const } : {})} data-action-id={action.id} {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}>
       {action.iconName && <span className="pz-business-cta__icon" aria-hidden="true">{businessSiteIcon(action.iconName)}</span>}
-      <span className="pz-business-cta__label">{action.label}</span>
+      <span className="pz-business-cta__label"><BusinessSiteActionLabel {...action} /></span>
     </Button>
   }
   return <section id={sectionId} className={['pz-business-cta', className].filter(Boolean).join(' ')} aria-labelledby={headingId}

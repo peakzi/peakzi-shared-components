@@ -25,6 +25,8 @@ export interface BusinessSiteHeaderLink extends BusinessSiteHeaderSubmenuLink {
 export interface BusinessSiteHeaderAction {
   id: string
   label: string
+  /** Optional full label on desktop; label stays visible in the mobile layout. */
+  desktopLabel?: string
   href: string
   type: 'primary' | 'secondary'
   iconName?: BusinessSiteHeaderIconName

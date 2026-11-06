@@ -1,3 +1,4 @@
+import { BusinessSiteActionLabel, businessSiteActionAriaLabel } from '../../internal/BusinessSiteActionLabel'
 import type { ReactNode } from 'react'
 import { ArrowDown, Check } from 'lucide-react'
 import { businessSiteIcon } from '../../utils/businessSiteIcon'
@@ -30,6 +31,8 @@ export interface BusinessSiteServiceDetailProps {
   sections?: readonly BusinessSiteServiceDetailSectionLink[]
   /** Routing stays with the consumer; supply its existing breadcrumb navigation. */
   breadcrumb?: ReactNode
+  /** Supply a theme-controlled page hero in place of the default introduction. */
+  hero?: ReactNode
   /** Compose existing Gallery, Offers, Reviews, FAQ, Blogs and Areas sections. */
   children?: ReactNode
   appearance?: BusinessSiteServiceDetailAppearance
@@ -39,7 +42,7 @@ export interface BusinessSiteServiceDetailProps {
 
 /** Server-renderable service presentation. No data fetching, hooks or pricing. */
 export function BusinessSiteServiceDetail({ headline, description, trade, businessName, actions = [], reasons = [],
-  reasonsTitle = 'Why choose us', sections = [], breadcrumb, children, appearance = {}, sectionId = 'service-detail', className }: BusinessSiteServiceDetailProps) {
+  reasonsTitle = 'Why choose us', sections = [], breadcrumb, hero, children, appearance = {}, sectionId = 'service-detail', className }: BusinessSiteServiceDetailProps) {
   const title = headline?.trim()
   if (!title) throw new Error('BusinessSiteServiceDetail requires a non-empty headline')
   const id = /^[a-zA-Z][a-zA-Z0-9_-]*$/.test(sectionId) ? sectionId : 'service-detail'
@@ -60,7 +63,7 @@ export function BusinessSiteServiceDetail({ headline, description, trade, busine
     data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
     data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'} style={serviceDetailStyle(appearance)}>
     {breadcrumb}
-    <header className="pz-service-detail__intro" data-has-copy={hasCopy}>
+    {hero ?? (<header className="pz-service-detail__intro" data-has-copy={hasCopy}>
       <div className="pz-service-detail__lead">
         {trade?.trim() && <p className="pz-service-detail__trade">
           {icon && <span className="pz-service-detail__trade-icon" aria-hidden="true">{icon}</span>}{trade}
@@ -75,16 +78,17 @@ export function BusinessSiteServiceDetail({ headline, description, trade, busine
             const newTab = action.newTab === true && /^https?:\/\//i.test(action.href)
             const actionIcon = businessSiteIcon(action.iconName)
             return <a key={action.id} href={action.href} data-action-id={action.id}
+              aria-label={businessSiteActionAriaLabel(action)}
               className={`pz-service-detail__action pz-service-detail__action--${action.type === 'primary' ? 'primary' : 'secondary'}`}
               target={newTab ? '_blank' : undefined} rel={newTab ? 'noopener noreferrer' : undefined}>
               {actionIcon && action.iconPosition !== 'after' && <span aria-hidden="true">{actionIcon}</span>}
-              <span>{action.label}</span>
+              <span><BusinessSiteActionLabel {...action} /></span>
               {actionIcon && action.iconPosition === 'after' && <span aria-hidden="true">{actionIcon}</span>}
             </a>
           })}
         </div>}
       </div>}
-    </header>
+    </header>)}
     {links.length > 1 && <nav className="pz-service-detail__nav" aria-label="On this page">
       <span>On this page</span><ul role="list">{links.map((link) => <li key={link.id}>
         <a href={`#${link.id}`}>{link.label}<ArrowDown size={14} aria-hidden="true" /></a>

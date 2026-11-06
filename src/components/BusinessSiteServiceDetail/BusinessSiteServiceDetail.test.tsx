@@ -88,4 +88,19 @@ describe('BusinessSiteServiceDetail', () => {
   it('requires a meaningful page title', () => {
     expect(() => renderToStaticMarkup(<BusinessSiteServiceDetail headline=" " />)).toThrow('non-empty headline')
   })
+  it('accepts a page hero while preserving proof and section navigation beneath it', () => {
+    const html = renderToStaticMarkup(<BusinessSiteServiceDetail headline="Default title"
+      hero={<section><h1>Themed service title</h1><p>Service introduction</p></section>}
+      reasons={[{ label: 'Experienced team' }]} sections={[{ id: 'reviews', label: 'Reviews' }]}>
+      <section id="reviews">Customer feedback</section>
+    </BusinessSiteServiceDetail>)
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
+    expect(html).toContain('Themed service title')
+    expect(html).not.toContain('Default title')
+    expect(html).not.toContain('pz-service-detail__intro')
+    expect(html).toContain('href="#reviews"')
+    expect(html).toContain('Experienced team')
+    expect(html).toContain('Customer feedback')
+  })
+
 })

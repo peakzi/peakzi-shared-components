@@ -14,12 +14,14 @@ export interface BusinessSitePolicyProps {
   /** The consuming app safely renders the complete policy, including its page heading. */
   children: ReactNode
   breadcrumb?: ReactNode
+  /** Optional page hero, rendered between the breadcrumb and the legal content. */
+  hero?: ReactNode
   appearance?: BusinessSitePolicyAppearance
   className?: string
 }
 
 /** Server-safe legal reading layout. No API calls, generated legal copy, or promotional actions. */
-export function BusinessSitePolicy({ children, breadcrumb, appearance = {}, className }: BusinessSitePolicyProps) {
+export function BusinessSitePolicy({ children, breadcrumb, hero, appearance = {}, className }: BusinessSitePolicyProps) {
   const background = safeColor(appearance.backgroundColor, '#ffffff')
   const text = readableText(safeColor(appearance.textColor, '#12171c'), background)
   return <div className={['pz-business-policy', className].filter(Boolean).join(' ')}
@@ -30,8 +32,12 @@ export function BusinessSitePolicy({ children, breadcrumb, appearance = {}, clas
       '--pz-business-policy-font': safeFont(appearance.font ?? 'plex-sans'),
       '--pz-business-policy-heading-font': safeFont(appearance.headingFont ?? 'archivo'),
     } as CSSProperties}>
+    {hero && <>
+      {breadcrumb && <div className="pz-business-policy__navigation"><div className="pz-business-policy__breadcrumb">{breadcrumb}</div></div>}
+      {hero}
+    </>}
     <div className="pz-business-policy__inner">
-      {breadcrumb && <div className="pz-business-policy__breadcrumb">{breadcrumb}</div>}
+      {!hero && breadcrumb && <div className="pz-business-policy__breadcrumb">{breadcrumb}</div>}
       <article className="pz-business-policy__body">{children}</article>
     </div>
   </div>
