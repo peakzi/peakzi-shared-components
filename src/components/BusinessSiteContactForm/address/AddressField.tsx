@@ -21,6 +21,7 @@ interface AddressFieldProps {
   disabled: boolean
   provider?: BusinessSiteContactFormAddressSearch | undefined
   onChange: (value: string) => void
+  onBlur?: () => void
 }
 
 function validSuggestions(items: readonly BusinessSiteContactFormAddressSuggestion[]) {
@@ -33,7 +34,7 @@ function validSuggestions(items: readonly BusinessSiteContactFormAddressSuggesti
 }
 
 /** API-neutral autocomplete: the host maps its backend response to suggestions. */
-export function AddressField({ id, label, value, error, hint, placeholder, required = false, maxLength, disabled, provider, onChange }: AddressFieldProps) {
+export function AddressField({ id, label, value, error, hint, placeholder, required = false, maxLength, disabled, provider, onChange, onBlur }: AddressFieldProps) {
   const [focused, setFocused] = useState(false)
   const [dismissedQuery, setDismissedQuery] = useState<string | null>(null)
   const [active, setActive] = useState(-1)
@@ -98,7 +99,7 @@ export function AddressField({ id, label, value, error, hint, placeholder, requi
   const message = error || lookupError
   return <Field id={id} label={label} required={required} error={message || ''} hint={hint || ''} className="pz-business-contact-form__address-field">
     <div ref={rootRef} className="pz-business-contact-form__control pz-business-contact-form__address"
-      onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) { setFocused(false); setActive(-1) } }}>
+      onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) { setFocused(false); setActive(-1); onBlur?.() } }}>
       <span className="pz-business-contact-form__input-icon" aria-hidden="true"><MapPin size={18} /></span>
       <Input ref={inputRef} id={id} name="address" value={value} required={required} maxLength={maxLength} disabled={disabled} autoComplete={provider ? 'off' : 'street-address'}
         placeholder={placeholder ?? (provider ? 'Search for your service address' : undefined)}

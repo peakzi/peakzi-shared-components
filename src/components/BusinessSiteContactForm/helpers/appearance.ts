@@ -19,6 +19,7 @@ export function contactFormStyle(appearance: BusinessSiteContactFormAppearance):
     '--pz-contact-form-on-accent': readableText('#ffffff', accent),
     '--pz-contact-form-button-border': readableText(accent, background),
     '--pz-contact-form-focus': readableText(accent, background),
+    '--pz-contact-form-field-focus': readableText('#525252', inputBackground),
     '--pz-contact-form-error': readableText(error, background),
     '--pz-contact-form-error-border': readableText(error, inputBackground),
     '--pz-contact-form-success': success,

@@ -102,10 +102,11 @@
 }
 .pz-business-contact-form .pz-textarea { display: block; min-height: 128px; resize: vertical; }
 .pz-business-contact-form .pz-input::placeholder { color: var(--pz-contact-form-input-text-2); opacity: 1; }
+.pz-business-contact-form .pz-textarea::placeholder { font-size: var(--text-sm); }
 .pz-business-contact-form .pz-input:hover:not(:disabled):not([aria-invalid='true']) { border-color: var(--pz-contact-form-input-text); }
 .pz-business-contact-form .pz-input:focus-visible {
-  border-color: var(--pz-contact-form-focus);
-  box-shadow: 0 0 0 1px var(--pz-contact-form-focus), 0 0 0 4px color-mix(in srgb, var(--pz-contact-form-focus) 18%, transparent);
+  border-color: var(--pz-contact-form-field-focus);
+  box-shadow: 0 0 0 1px var(--pz-contact-form-field-focus), 0 0 0 4px color-mix(in srgb, var(--pz-contact-form-field-focus) 18%, transparent);
   outline: none;
 }
 .pz-business-contact-form .pz-input[aria-invalid='true'] {
@@ -169,7 +170,7 @@
 .pz-business-contact-form .pz-checkbox:hover .pz-checkbox__box { border-color: var(--pz-contact-form-input-text); }
 .pz-business-contact-form .pz-checkbox input:checked + .pz-checkbox__box { background: var(--pz-contact-form-accent); border-color: var(--pz-contact-form-button-border); }
 .pz-business-contact-form .pz-checkbox input:checked + .pz-checkbox__box::after { width: 11px; height: 6px; border-color: var(--pz-contact-form-on-accent); }
-.pz-business-contact-form .pz-checkbox input:focus-visible + .pz-checkbox__box { outline: 2px solid var(--pz-contact-form-focus); outline-offset: 2px; box-shadow: none; }
+.pz-business-contact-form .pz-checkbox input:focus-visible + .pz-checkbox__box { outline: 2px solid var(--pz-contact-form-field-focus); outline-offset: 2px; box-shadow: none; }
 .pz-business-contact-form .pz-checkbox input[aria-invalid='true'] + .pz-checkbox__box { border-color: var(--pz-contact-form-error-border); box-shadow: 0 0 0 1px var(--pz-contact-form-error-border); }
 .pz-business-contact-form .pz-checkbox input:disabled + .pz-checkbox__box {
   background: color-mix(in srgb, var(--pz-contact-form-input-text) 10%, var(--pz-contact-form-input-background));
@@ -311,7 +312,7 @@
 // Inputs with a leading icon
 .pz-business-contact-form__control { position: relative; min-width: 0; }
 .pz-business-contact-form .pz-business-contact-form__control .pz-input { padding-inline-start: 40px; }
-.pz-business-contact-form__control:focus-within .pz-business-contact-form__input-icon { color: var(--pz-contact-form-focus); }
+.pz-business-contact-form__control:focus-within .pz-business-contact-form__input-icon { color: var(--pz-contact-form-field-focus); }
 .pz-business-contact-form__control:has([aria-invalid='true']) .pz-business-contact-form__input-icon { color: var(--pz-contact-form-error-border); }
 
 .pz-business-contact-form .pz-business-contact-form__control:has(.pz-business-contact-form__input-spinner) .pz-input,

@@ -6,14 +6,16 @@ import type { BusinessSiteContactFormPhoneValidation } from './types'
 export interface PhoneCheck {
   phone: string
   message: string
+  unavailable?: boolean
 }
 
-/** Debounced backend phone check while typing; outdated checks are aborted and their results ignored. Returns true while a check is in flight. */
+/** Debounced backend checks with cancellation, in-flight status and retry after an unavailable check. */
 export function usePhoneValidation(value: string, enabled: boolean, validation: BusinessSiteContactFormPhoneValidation | undefined,
   onLocalError: (message: string) => void, onChecked: (check: PhoneCheck) => void) {
   const latest = useRef(validation)
   const runs = useRef(0)
   const [checking, setChecking] = useState<{ run: number; phone: string } | null>(null)
+  const [attempt, setAttempt] = useState(0)
   const minLength = Number.isFinite(validation?.minLength) ? Math.max(1, validation!.minLength!) : 3
   const delay = Number.isFinite(validation?.debounceMs) ? Math.max(0, validation!.debounceMs!) : DEFAULT_DEBOUNCE_MS
   const phone = value.trim()
@@ -36,13 +38,13 @@ export function usePhoneValidation(value: string, enabled: boolean, validation: 
         const message = await latest.current?.validate(phone, { signal: controller.signal })
         if (!controller.signal.aborted) onChecked({ phone, message: typeof message === 'string' ? message.trim() : '' })
       } catch {
-        // Submission re-checks the number; a failed live check never blocks typing.
+        if (!controller.signal.aborted) onChecked({ phone, message: 'We couldn’t check your phone number. Please try again.', unavailable: true })
       } finally {
         setChecking((current) => current?.run === run ? null : current)
       }
     }, delay)
     return () => { clearTimeout(timer); controller.abort() }
-  }, [active, phone, delay, onLocalError, onChecked])
+  }, [active, phone, delay, attempt, onLocalError, onChecked])
 
-  return active && checking?.phone === phone
+  return { checking: active && checking?.phone === phone, retry: () => setAttempt((previous) => previous + 1) }
 }
