@@ -20,6 +20,7 @@ const meta = {
     items: { control: 'object' },
     summary: { control: 'object' },
     viewAll: { control: 'object' },
+    compactHeader: { control: 'inline-radio', options: ['summary', 'heading-only'], description: 'Compact only. Heading-only keeps the title and eyebrow without the aggregate summary, mentions or header action. Comfortable density is unchanged.' },
     font: { control: 'text' },
     headingFont: { control: 'text' },
     backgroundColor: { control: 'color', description: 'Light review-card background and summary text/button surface.' },
@@ -32,6 +33,7 @@ const meta = {
   args: {
     title: 'Recent customer reviews in our service area',
     eyebrow: 'Reviews',
+    compactHeader: 'summary',
     items: [
       { id: 'alex', reviewerName: 'Alex Morgan', text: 'The team explained the repair clearly, kept us updated and left the work area tidy. We appreciated knowing what to expect before the work started.', rating: 5, reviewDate: '2026-09-20', tags: ['Communication', 'Professionalism', 'Quality of Work'], highlightedPhrases: ['explained the repair clearly', 'left the work area tidy'] },
       { id: 'sam', reviewerName: 'Sam Rivera', text: 'Helpful communication and a straightforward explanation of the available options.', rating: 4.5, reviewDate: '2026-09-18', tags: ['Communication', 'Service'], highlightedPhrases: ['Helpful communication'] },
@@ -69,6 +71,14 @@ export const AggregateMentions: Story = {
   parameters: { docs: { description: { story: 'API totals cover all customer reviews. Omit summary.mentionCounts to retain counts from displayed review tags; pass an empty object to hide mentions.' } } },
 }
 export const Compact: Story = { args: { density: 'compact' } }
+export const CompactHeadingOnly: Story = {
+  args: { density: 'compact', compactHeader: 'heading-only' },
+  parameters: { docs: { description: { story: 'Explicitly shows only the section title and eyebrow above compact reviews. Summary and viewAll data remain supplied to demonstrate that the option controls presentation independently of content; individual review ratings and attribution remain visible.' } } },
+}
+export const CompactHeadingOnlyMobile: Story = {
+  args: { density: 'compact', compactHeader: 'heading-only' },
+  decorators: [(Story) => <div style={{ maxWidth: 390, margin: '0 auto' }}><Story /></div>],
+}
 export const NoMotion: Story = { args: { motion: 'none' } }
 export const ScrollReveal: Story = {
   decorators: [

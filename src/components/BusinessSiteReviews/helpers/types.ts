@@ -1,5 +1,7 @@
 import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
 
+export type BusinessSiteReviewsCompactHeader = 'summary' | 'heading-only'
+
 export interface BusinessSiteReview {
   id: string
   text: string
@@ -39,6 +41,10 @@ export interface BusinessSiteReviewsProps {
   items: readonly BusinessSiteReview[]
   title?: string
   eyebrow?: string
+  /** Compact only: keep the full summary by default, or show just the title and eyebrow.
+   * Heading-only hides aggregate ratings, counts, customer mentions and viewAll.
+   * Comfortable density always retains its existing summary panel. */
+  compactHeader?: BusinessSiteReviewsCompactHeader
   summary?: BusinessSiteReviewsSummary
   viewAll?: { label: string; href: string; newTab?: boolean }
   appearance?: BusinessSiteReviewsAppearance
