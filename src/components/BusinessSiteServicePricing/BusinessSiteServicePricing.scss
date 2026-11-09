@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 .pz-service-pricing {
   width: 100%;
   container-type: inline-size;
@@ -35,10 +36,7 @@
 }
 
 .pz-service-pricing__eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  @include label.eyebrow(var(--pz-business-services-font), var(--pz-business-services-on-gradient));
 }
 
 .pz-service-pricing__title {

@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 .pz-services-directory {
   width: 100%; container-type: inline-size;
   background: var(--pz-business-services-background); color: var(--pz-business-services-text);
@@ -10,7 +11,10 @@
 .pz-services-directory__inner { max-width: 1200px; margin-inline: auto; padding: 12px 24px 48px; }
 .pz-services-directory__header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 360px); gap: 32px; align-items: center; padding-bottom: 18px; }
 .pz-services-directory__intro { min-width: 0; }
-.pz-services-directory__eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 10px; line-height: 1.6; }
+.pz-services-directory__eyebrow {
+  @include label.eyebrow(var(--pz-business-services-font), var(--pz-business-services-text));
+  margin: 0 0 10px;
+}
 .pz-services-directory__intro :is(h1, h2) { font-family: var(--pz-business-services-heading-font); font-size: clamp(32px, 4vw, 46px); line-height: 1.15; letter-spacing: -.045em; margin: 0; text-wrap: pretty; }
 .pz-services-directory__description { margin: 14px 0 0; font-size: 16px; line-height: 1.65; }
 .pz-services-directory__inventory { font-size: 13px; margin: 12px 0 0; }

@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 .pz-business-faq {
   width: 100%;
   background: var(--pz-business-faq-background, #ffffff);
@@ -19,12 +20,8 @@
 }
 
 .pz-business-faq .pz-business-faq__eyebrow {
+  @include label.eyebrow(var(--pz-business-faq-font), var(--pz-business-faq-text));
   margin: 0 0 16px;
-  color: var(--pz-business-faq-accent);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 .pz-business-faq h2 {

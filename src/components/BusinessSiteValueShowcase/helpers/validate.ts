@@ -41,6 +41,7 @@ export function validShowcase(props: BusinessSiteValueShowcaseProps) {
   const sealText = clean(props.seal?.text)
   return {
     title: clean(props.title),
+    eyebrow: clean(props.eyebrow),
     lead: clean(props.lead),
     note: clean(props.note),
     seal: sealText

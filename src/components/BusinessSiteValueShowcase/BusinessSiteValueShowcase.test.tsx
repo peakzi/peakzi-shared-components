@@ -22,6 +22,19 @@ const base: BusinessSiteValueShowcaseProps = {
 const render = (props: Partial<BusinessSiteValueShowcaseProps> = {}) => renderToStaticMarkup(<BusinessSiteValueShowcase {...base} {...props} />)
 
 describe('BusinessSiteValueShowcase', () => {
+  it('renders an optional, escaped eyebrow before the title', () => {
+    const { container } = mount(<BusinessSiteValueShowcase {...base} eyebrow="  Why choose <us>  " />)
+    const eyebrow = screen.getByText('Why choose <us>')
+    const heading = screen.getByRole('heading', { level: 2, name: base.title })
+    expect(eyebrow.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(container.querySelector('.pz-business-value-showcase__eyebrow')).toBe(eyebrow)
+    expect(eyebrow.querySelector('us')).toBeNull()
+  })
+
+  it.each([undefined, '', '   '])('omits the eyebrow when absent or blank: %s', (eyebrow) => {
+    expect(render({ eyebrow })).not.toContain('pz-business-value-showcase__eyebrow')
+  })
+
   it('renders one h2, an h3 per card and every part of the section', () => {
     const html = render()
     expect(html.match(/<h2/g)).toHaveLength(1)

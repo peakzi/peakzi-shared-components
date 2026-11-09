@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 .pz-business-hero {
   --pz-business-hero-background: #ffffff;
   --pz-business-hero-text: #12171c;
@@ -120,13 +121,7 @@
 }
 
 .pz-business-hero__eyebrow {
-  color: var(--pz-business-hero-text);
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  line-height: 1.5;
-  text-transform: uppercase;
+  @include label.eyebrow(var(--pz-business-hero-font), var(--pz-business-hero-text));
 }
 
 .pz-business-hero__headline {

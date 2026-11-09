@@ -50,7 +50,7 @@ describe('BusinessSiteReviews', () => {
     expect(html.match(/<li>/g)).toHaveLength(1)
   })
 
-  it('uses matching list rows rather than a large featured quote in compact density', () => {
+  it('uses equal review cards rather than a large featured quote in compact density', () => {
     const html = renderToStaticMarkup(<BusinessSiteReviews items={items} appearance={{ density: 'compact' }} />)
     expect(html).not.toContain('pz-business-reviews__featured')
     expect(html).not.toContain('pz-business-reviews__avatar')

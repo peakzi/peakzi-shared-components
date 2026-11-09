@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 .pz-business-reviews {
   width: 100%;
   container-type: inline-size;
@@ -35,12 +36,8 @@
 }
 
 .pz-business-reviews .pz-business-reviews__eyebrow {
+  @include label.eyebrow(var(--pz-business-reviews-font), var(--pz-business-reviews-text));
   margin: 0 0 12px;
-  color: var(--pz-business-reviews-accent);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 .pz-business-reviews h2 {
@@ -131,18 +128,38 @@
   overflow-wrap: anywhere;
 }
 .pz-business-reviews__featured blockquote { font-size: 16px; }
-.pz-business-reviews__text { margin: 12px 0 20px; }
-.pz-business-reviews__text > summary { list-style: none; cursor: pointer; }
-.pz-business-reviews__text > summary::-webkit-details-marker { display: none; }
-.pz-business-reviews__preview { display: block; font-size: 14px; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
-.pz-business-reviews__featured .pz-business-reviews__preview { font-size: 16px; }
-.pz-business-reviews__read-more, .pz-business-reviews__read-less { margin-top: 8px; color: var(--pz-business-reviews-accent); font-size: 12px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-.pz-business-reviews__read-more { display: block; }
-.pz-business-reviews__read-less { display: none; }
-.pz-business-reviews__text[open] .pz-business-reviews__preview, .pz-business-reviews__text[open] .pz-business-reviews__read-more { display: none; }
-.pz-business-reviews__text[open] .pz-business-reviews__read-less { display: block; }
-.pz-business-reviews__text > summary:focus-visible { outline: 2px solid var(--pz-business-reviews-accent); outline-offset: 4px; }
-.pz-business-reviews__text blockquote { margin-block: 8px 0; }
+.pz-business-reviews__review-text { width: 100%; min-width: 0; margin: var(--space-3) 0 var(--space-5); }
+.pz-business-reviews__preview { display: block; font-size: var(--text-sm); line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
+.pz-business-reviews__featured .pz-business-reviews__preview { font-size: var(--text-base); }
+.pz-business-reviews__read-more { display: block; width: fit-content; margin-top: var(--space-2); color: var(--pz-business-reviews-accent); font-size: var(--text-xs); font-weight: var(--weight-semibold); text-decoration: underline; text-underline-offset: var(--space-1); list-style: none; cursor: pointer; }
+.pz-business-reviews__read-more::-webkit-details-marker { display: none; }
+.pz-business-reviews__read-more:focus-visible, .pz-business-reviews__details-close:focus-visible { outline: thin solid currentColor; outline-offset: var(--space-1); }
+.pz-business-reviews__disclosure-body blockquote { margin-block: var(--space-2) 0; }
+
+.pz-business-reviews__details {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  inline-size: min(calc(100% - var(--space-8)), calc(var(--space-32) * 5));
+  block-size: fit-content;
+  max-block-size: calc(100dvh - var(--space-8));
+  box-sizing: border-box;
+  padding: var(--space-6);
+  border: thin solid color-mix(in srgb, var(--pz-business-reviews-text) 18%, var(--pz-business-reviews-background));
+  border-radius: var(--pz-business-reviews-radius);
+  background: var(--pz-business-reviews-background);
+  color: var(--pz-business-reviews-text);
+  font-family: var(--pz-business-reviews-font);
+  overflow: hidden;
+}
+.pz-business-reviews__details[open] { display: flex; flex-direction: column; gap: var(--space-4); }
+.pz-business-reviews__details::backdrop { background: var(--surface-overlay); }
+.pz-business-reviews__details-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); flex-shrink: 0; }
+.pz-business-reviews__details-header h3 { margin: 0; min-width: 0; overflow-wrap: anywhere; font-family: var(--pz-business-reviews-heading-font); font-size: var(--text-lg); color: inherit; }
+.pz-business-reviews__details-close { display: inline-flex; align-items: center; justify-content: center; flex: none; inline-size: var(--space-12); block-size: var(--space-12); padding: var(--space-2); border: 0; background: transparent; color: inherit; cursor: pointer; }
+.pz-business-reviews__details-body { min-block-size: 0; overflow-y: auto; overscroll-behavior: contain; }
+.pz-business-reviews__full-review { display: flex; flex-direction: column; gap: var(--space-4); margin: 0; }
+.pz-business-reviews .pz-business-reviews__details-body blockquote { margin: 0; font-size: var(--text-base); }
 .pz-business-reviews mark { background: transparent; color: inherit; font-weight: 700; }
 .pz-business-reviews figcaption { display: flex; align-items: center; gap: 10px; margin-top: auto; font-size: 12px; }
 .pz-business-reviews__avatar { display: grid; flex: none; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--pz-business-reviews-fill); color: var(--pz-business-reviews-avatar-text); font-weight: 600; }
@@ -158,15 +175,19 @@
 .pz-business-reviews[data-density='compact'] .pz-business-reviews__rating-value { font-size: 32px; }
 .pz-business-reviews[data-density='compact'] .pz-business-reviews__mentions { margin: 0; }
 .pz-business-reviews[data-density='compact'] .pz-business-reviews__view-all { justify-self: end; align-self: end; margin: 0; }
-.pz-business-reviews[data-density='compact'] .pz-business-reviews__list { grid-template-columns: minmax(0, 1fr); gap: 0; }
+.pz-business-reviews[data-density='compact'] .pz-business-reviews__list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
 .pz-business-reviews[data-density='compact'] .pz-business-reviews__list > li:first-child { grid-column: auto; }
-.pz-business-reviews[data-density='compact'] .pz-business-reviews__review { padding: 16px 0; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--pz-business-reviews-text) 14%, transparent); border-radius: 0; }
-.pz-business-reviews[data-density='compact'] blockquote { margin-block: 8px 12px; }
-.pz-business-reviews[data-density='compact'] .pz-business-reviews__text { margin-block: 8px 12px; }
+.pz-business-reviews[data-density='compact'] .pz-business-reviews__review { padding: var(--space-4); gap: var(--space-2); }
+.pz-business-reviews[data-density='compact'] blockquote { margin: 0; }
+.pz-business-reviews[data-density='compact'] .pz-business-reviews__review-text { margin: 0; }
+.pz-business-reviews[data-density='compact'] figcaption { flex-wrap: wrap; align-items: baseline; }
+.pz-business-reviews[data-density='compact'] .pz-business-reviews__attribution { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-2); }
+.pz-business-reviews[data-density='compact'] .pz-business-reviews__meta { margin: 0; }
 
 @container (min-width: 761px) and (max-width: 1000px) {
   .pz-business-reviews__inner { grid-template-columns: minmax(210px, 1fr) minmax(0, 2fr); gap: 20px; }
   .pz-business-reviews .pz-business-reviews__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pz-business-reviews[data-density='compact'] .pz-business-reviews__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @container (max-width: 760px) {
@@ -177,4 +198,5 @@
   .pz-business-reviews__review { padding: 20px; }
   .pz-business-reviews[data-density='compact'] .pz-business-reviews__aside { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .pz-business-reviews[data-density='compact'] .pz-business-reviews__view-all { justify-self: start; }
+  .pz-business-reviews[data-density='compact'] .pz-business-reviews__list { grid-template-columns: minmax(0, 1fr); }
 }
