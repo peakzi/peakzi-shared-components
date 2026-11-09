@@ -77,7 +77,7 @@ export function BusinessSiteFooter({
             <nav className="pz-business-footer__nav" aria-label={navigationLabel}>
               {linkColumns.map((column) => (
                 <div className="pz-business-footer__column" key={column.id}>
-                  <h2>{column.heading}</h2>
+                  <p className="pz-business-footer__heading">{column.heading}</p>
                   <ul>{column.links.map((link) => <li key={link.id}>{footerLink(link)}</li>)}</ul>
                 </div>
               ))}

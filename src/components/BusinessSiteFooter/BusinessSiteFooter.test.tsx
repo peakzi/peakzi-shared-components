@@ -33,6 +33,8 @@ describe('BusinessSiteFooter', () => {
     expect(html).toContain('123 Example Street')
     expect(html).toContain('href="tel:+15125550188"')
     expect(html).toContain('href="/services/rewiring"')
+    expect(html).toContain('<p class="pz-business-footer__heading">Services</p>')
+    expect(html).not.toMatch(/<h[1-6]\b/)
     expect(html).toContain('href="/privacy"')
     expect(html).toContain('alt="Blue Line Electric"')
     expect(html).toContain('© 2026 Blue Line Electric. All rights reserved.')
