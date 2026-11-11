@@ -1,6 +1,13 @@
 import { lazy, Suspense } from 'react'
 import { ArrowUpRight, Award, BadgeCheck, CalendarDays, Calculator, Check, ClipboardCheck, ClipboardList, Clock, DollarSign, Droplet, Flame, House, Phone, Shield, ShieldCheck, Snowflake, Star, Tag, Thermometer, Wrench, Zap } from 'lucide-react'
 import type { IconName } from 'lucide-react/dynamic'
+import { Icon as CustomIcon, type IconProps } from '../components/Icon'
+
+const CUSTOM_ICONS = {
+  'brand-chatgpt': { name: 'chatgpt' },
+  'brand-gemini': { name: 'gemini' },
+  'brand-gemini-color': { name: 'gemini', variant: 'color' },
+} as const satisfies Record<string, Pick<IconProps, 'name' | 'variant'>>
 
 const STATIC_ICONS = {
   phone: Phone,
@@ -51,6 +58,9 @@ export function businessSiteIcon(name: string | undefined) {
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
+  if (Object.prototype.hasOwnProperty.call(CUSTOM_ICONS, iconName)) {
+    return <CustomIcon {...CUSTOM_ICONS[iconName as keyof typeof CUSTOM_ICONS]} size={17} aria-hidden="true" />
+  }
   const Icon = Object.prototype.hasOwnProperty.call(STATIC_ICONS, iconName)
     ? STATIC_ICONS[iconName as keyof typeof STATIC_ICONS]
     : null

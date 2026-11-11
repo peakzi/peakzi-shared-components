@@ -47,6 +47,7 @@ const componentEntries = [
   'GeoMap',
   'Grid',
   'Input',
+  'Icon',
   'Modal',
   'Navbar',
   'PageHeader',

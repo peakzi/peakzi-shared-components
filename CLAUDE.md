@@ -104,6 +104,7 @@ Package name: `@peakzi/components`
 | Component | Key Props |
 |-----------|-----------|
 | `PeakziLogo` | `variant`: color \| white \| navy. `size`: xs \| sm \| md \| lg \| xl |
+| `Icon` | Local SVG artwork. `name`: chatgpt \| gemini. `variant`: monochrome \| color (Gemini). `size`: number or SVG length. Inherits text color in monochrome; optional `title` or ARIA label makes it accessible. |
 
 ### Charts & Maps
 Built on Highcharts / Leaflet, which are **optional peer dependencies**. A consuming app that uses these must install `highcharts` + `highcharts-react-official` and/or `leaflet` + `react-leaflet@^5` (requires React 19) itself. **They are not exported from the root entry.** Import from subpaths (`import { ColumnChart } from '@peakzi/components/ColumnChart'`), and never add them to `src/index.ts`: that would make every root import require the optional peers. Map CSS (including Leaflet's) only ships in `@peakzi/components/styles`. Every component takes `className` and `testId`; most take `isLoading` (renders `Skeleton`) and `chartHeight`.
