@@ -165,15 +165,25 @@ describe('BusinessSiteFooter social profiles', () => {
     expect(container.querySelector('footer address a')).toHaveAttribute('href', 'tel:+15125550188')
   })
 
-  it('takes icon size from appearance and inherits the footer theme colour', () => {
+  it.each([32, '2rem'])('uses natural artwork proportions at size %s and inherits the footer theme colour', (size) => {
     const { container } = render(<BusinessSiteFooter {...props} socialLinks={socialLinks}
-      appearance={{ backgroundColor: '#ffffff', textColor: '#123456', accentColor: '#abcdef', socialIconSize: 32 }} />)
+      appearance={{ backgroundColor: '#ffffff', textColor: '#123456', accentColor: '#abcdef', socialIconSize: size }} />)
     const footer = container.querySelector('footer')!
-    const icon = container.querySelector('.pz-business-footer__social svg')!
+    const icon = container.querySelector<SVGSVGElement>('.pz-business-footer__social svg')!
     expect(footer.style.getPropertyValue('--pz-business-footer-text')).toBe('#123456')
     expect(icon).toHaveAttribute('color', 'currentColor')
-    expect(icon).toHaveAttribute('width', '32')
-    expect(icon).toHaveAttribute('height', '32')
+    expect(icon).toHaveAttribute('height', String(size))
+    expect(icon.style.height).toBe(typeof size === 'number' ? size + 'px' : size)
+    for (const artwork of container.querySelectorAll<SVGSVGElement>('.pz-business-footer__social svg')) {
+      if (typeof size === 'number') {
+        const [, , width, height] = artwork.getAttribute('viewBox')!.split(/\s+/).map(Number)
+        const renderedRatio = Number.parseFloat(artwork.style.width) / Number.parseFloat(artwork.style.height)
+        expect(renderedRatio).toBeCloseTo(width! / height!, 4)
+      } else {
+        expect(artwork.style.width).toContain('rem')
+        expect(artwork.style.height).toContain('rem')
+      }
+    }
   })
 
   it.each([undefined, []])('omits empty social navigation without placeholders', (links) => {

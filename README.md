@@ -575,5 +575,7 @@ BusinessSiteFooter accepts socialLinks: an array of id, label, href and iconName
 It renders the shared Icon component beneath the business contact details. Only
 usable HTTP(S) profile URLs are shown; empty or invalid lists add no navigation or
 spacing. Links open in a new tab, include an accessible platform label, and use
-the footer's text/accent colours. appearance.socialIconSize is passed to Icon
-and defaults to 20. The profile row wraps to fit its available width.
+the footer's text/accent colours. appearance.socialIconSize sets the nominal icon
+height (default 20); widths follow the artwork's aspect ratio. Consistent padding
+balances the visible gaps while links retain at least 44 × 44 click targets.
+The profile row wraps to fit its available width.

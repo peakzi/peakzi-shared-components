@@ -137,33 +137,36 @@
 }
 
 
-.pz-business-footer__social {
+.pz-business-footer .pz-business-footer__social {
   margin-top: var(--space-2);
 }
 
-.pz-business-footer__social ul {
+.pz-business-footer .pz-business-footer__social ul {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
+  margin-inline-start: calc(-1 * var(--space-3));
 }
 
-.pz-business-footer__social a {
+.pz-business-footer .pz-business-footer__social a {
   position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  padding-inline: var(--space-4);
   min-inline-size: calc(var(--space-10) + var(--space-1));
   min-block-size: calc(var(--space-10) + var(--space-1));
 }
 
-.pz-business-footer__social svg {
+.pz-business-footer .pz-business-footer__social svg {
   display: block;
   flex: none;
 }
 
-.pz-business-footer__social svg[data-icon='bbb'] {
-  transform: scale(0.9);
-  transform-origin: left center;
+.pz-business-footer .pz-business-footer__social svg[data-icon='bbb'] {
+  // Optical sizing is included in layout, so it leaves no phantom SVG space.
+  transform: none;
 }
 
 .pz-business-footer__sr-only {

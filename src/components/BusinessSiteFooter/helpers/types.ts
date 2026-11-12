@@ -38,7 +38,7 @@ export interface BusinessSiteFooterAppearance {
   accentColor?: string
   density?: 'comfortable' | 'compact'
   motion?: BusinessSiteMotion
-  /** Size passed to the shared Icon renderer. Defaults to 20. */
+  /** Nominal icon height; width follows the artwork's aspect ratio. Defaults to 20. */
   socialIconSize?: number | string
 }
 
