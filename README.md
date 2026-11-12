@@ -93,6 +93,7 @@ export function Example() {
 | **Overlays** | `Modal`, `Dropdown`, `DropdownTrigger`, `DropdownMenu`, `DropdownItem`, `Tooltip` |
 | **Data Display** | `Table`, `Thead`, `Tbody`, `Tr`, `Th`, `Td`, `Avatar`, `AvatarStack`, `StatCard`, `CopyField`, `DefList`, `EditableField` |
 | **App Shell** | `AppFooter`, `PageHeader`, `SideNav` |
+| **Icons** | `Icon` |
 | **Brand** | `PeakziLogo` |
 | **Charts & Maps** | `ColumnChart`, `TimeSeriesChart`, `PieChart`, `TreeMapChart`, `GaugeChart`, `PyramidChart`, `RadialGauge`, `GeoMap`, `MapMarker` — **subpath imports only** (`@peakzi/components/ColumnChart`, ...), need extra peer dependencies; see [Charts & Maps](#charts--maps) |
 
@@ -506,3 +507,73 @@ schedule-only, missing-description and theme-token examples.
 - [ ] No raw hex values in custom styles — use `var(--token-name)` instead
 - [ ] Navigation links use `<Button href="...">` not `<Button onClick>` (for SEO crawlability)
 - [ ] If using any chart/map component: `highcharts` + `highcharts-react-official` and/or `leaflet` + `react-leaflet@^5` (React 19) installed directly, imported from subpaths (`@peakzi/components/ColumnChart`, ...), and `@peakzi/components/styles` imported (see [Charts & Maps](#charts--maps))
+
+## Icons
+
+Use the same Icon component for any registered icon, independent of its source:
+
+```tsx
+import { Icon } from '@peakzi/components/Icon'
+
+<Icon name="facebook" /> // black, 24px by default
+<Icon name="bbb" color="var(--fg-accent)" size={32} title="BBB" />
+```
+
+The root package also exports Icon, IconProps and IconName.
+Names are inferred from the registries, so adding an icon does not require changes
+to the renderer, public prop names, consuming imports, or Storybook's catalogue.
+
+```text
+src/components/Icon/
+  Icon.tsx                  shared SVG renderer and public props
+  Icon.scss
+  Icon.test.tsx
+  Icon.stories.tsx
+  index.ts
+  types.ts                  common artwork contract
+  registry.ts               Font Awesome first, custom fallback
+  fontAwesome.ts            explicitly imported Font Awesome definitions
+  customIcon/
+    index.ts                registers custom definitions
+    bbb.ts
+    angi.ts
+```
+
+### Adding an icon
+
+1. For a Font Awesome icon, import that individual definition in fontAwesome.ts
+   and add its name to fontAwesomeIcons. Use the corresponding icon pack only when
+   needed; never import the entire pack or dynamically load its catalogue.
+2. For custom artwork, add a file under customIcon and register it in
+   customIcon/index.ts. The definition supplies a viewBox and paths, or a Render
+   component containing SVG children for complex shapes. Gradient/mask IDs should
+   use the instance-scoped id passed to Render.
+3. The registry resolves a Font Awesome entry first, then custom artwork.
+   Unknown runtime names render nothing. Files are registered during development;
+   the application does not generate files or download icon artwork at runtime.
+
+The nine requested social/review icons are available as facebook, twitter,
+instagram, linkedin, tiktok, youtube, bbb, yelp and angi. The twitter key renders X.
+Only the seven required Font Awesome Brands modules are imported; Lucide usage
+elsewhere is unchanged.
+
+color accepts a CSS colour, variable, or currentColor. size accepts a number or
+SVG length. width and height can override the shared size individually. The
+default black colour is intentional even on dark surfaces; pass a contrasting
+theme colour in that case.
+
+Icons are decorative by default. Label the containing link/button, or pass title,
+aria-label or aria-labelledby for a standalone icon. The consuming app owns URLs,
+new-tab behaviour, and omitting links whose API URL is null.
+
+No CDN script, webfont, image request or Font Awesome stylesheet is needed.
+Artwork provenance is documented in assets/icon-artwork/README.md.
+
+## Footer profile links
+
+BusinessSiteFooter accepts socialLinks: an array of id, label, href and iconName.
+It renders the shared Icon component beneath the business contact details. Only
+usable HTTP(S) profile URLs are shown; empty or invalid lists add no navigation or
+spacing. Links open in a new tab, include an accessible platform label, and use
+the footer's text/accent colours. appearance.socialIconSize is passed to Icon
+and defaults to 20. The profile row wraps to fit its available width.

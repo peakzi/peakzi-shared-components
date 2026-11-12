@@ -29,6 +29,7 @@
 @use 'topbar' as *;
 
 // 7. Component styles
+@use '../components/Icon/Icon';
 @use '../components/Button/Button';
 @use '../components/Input/Input';
 @use '../components/Checkbox/Checkbox';

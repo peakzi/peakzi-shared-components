@@ -100,6 +100,11 @@ Package name: `@peakzi/components`
 | `EditableField` | Inline editable value |
 | `DefList`, `DefRow` | Key-value definition lists |
 
+### Icons
+| Component | Key Props |
+|-----------|-----------|
+| `Icon` | Generic SVG renderer. `name` comes from the Font Awesome/custom registries; `color` defaults to black; `size` defaults to 24. Add required Font Awesome imports in `Icon/fontAwesome.ts`, custom SVG definitions in `Icon/customIcon/`. |
+
 ### Brand
 | Component | Key Props |
 |-----------|-----------|

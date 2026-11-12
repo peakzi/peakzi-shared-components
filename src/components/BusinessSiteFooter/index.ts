@@ -5,5 +5,6 @@ export type {
   BusinessSiteFooterLink,
   BusinessSiteFooterLogo,
   BusinessSiteFooterPhone,
+  BusinessSiteFooterSocialLink,
   BusinessSiteFooterProps,
 } from './BusinessSiteFooter'

@@ -24,11 +24,14 @@ describe('HeaderMenuBehavior', () => {
   })
   it('closes on Escape and restores the menu summary focus', async () => {
     const { container } = render(<Example />)
+    const focus = vi.spyOn(screen.getByText('Menu'), 'focus')
     screen.getByText('Inside menu').focus()
     fireEvent.keyDown(document, { key: 'Escape' })
     await flushRaf()
     expect(container.querySelector('details')!.open).toBe(false)
     expect(document.activeElement).toBe(screen.getByText('Menu'))
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true })
+    focus.mockRestore()
   })
   it('ignores other keys and does not steal outside focus', () => {
     const { container } = render(<Example />)
@@ -111,6 +114,20 @@ describe('mobile menu overlay behavior', () => {
     expect(menu.querySelector('summary')).toHaveAttribute('aria-label', 'Menu')
   })
 
+  it('preserves the scroll position from activation before native details expansion changes it', () => {
+    const { container } = render(<MobileExample />)
+    const menu = container.querySelector<HTMLDetailsElement>('.pz-business-header__mobile-menu')!
+    vi.stubGlobal('scrollX', 0)
+    vi.stubGlobal('scrollY', 2400)
+    fireEvent.click(menu.querySelector('summary')!)
+    vi.stubGlobal('scrollY', 2100)
+    openMenu(container)
+    expect(document.body.style.top).toBe('-2400px')
+    menu.open = false
+    fireEvent(menu, new Event('toggle'))
+    expect(window.scrollTo).toHaveBeenCalledWith({ left: 0, top: 2400, behavior: 'instant' })
+  })
+
   it('cancels native backdrop pointer handling before closing and unlocking', async () => {
     const { container } = render(<MobileExample />)
     const menu = openMenu(container)
@@ -174,6 +191,7 @@ describe('mobile menu overlay behavior', () => {
     unmount()
     expect(document.body.style.position).not.toBe('fixed')
     expect(container.hasAttribute('inert')).toBe(false)
+    expect(document.querySelector('.pz-business-header__placeholder')).toBeNull()
     expect(viewport.removeEventListener).toHaveBeenCalledWith('change', expect.any(Function))
   })
 })

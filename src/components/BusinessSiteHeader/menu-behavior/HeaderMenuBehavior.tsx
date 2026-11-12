@@ -13,15 +13,17 @@ export function HeaderMenuBehavior() {
     const mobileMenu = header.querySelector<HTMLDetailsElement>('.pz-business-header__mobile-menu')
     const mobileViewport = window.matchMedia?.('(max-width: 1280px)')
     let restoreMobileMenu: (() => void) | undefined
+    let openingScroll: Pick<Window, 'scrollX' | 'scrollY'> | undefined
     const openMenus = () => Array.from(header.querySelectorAll<HTMLDetailsElement>('details[open]'))
     const syncMobileMenu = () => {
       if (mobileMenu?.open && mobileViewport?.matches) {
-        restoreMobileMenu ??= activateMobileMenu(header, mobileMenu)
+        restoreMobileMenu ??= activateMobileMenu(header, mobileMenu, openingScroll)
       } else if (restoreMobileMenu) {
         restoreMobileMenu()
         restoreMobileMenu = undefined
-        if (mobileMenu?.contains(document.activeElement)) mobileMenu.querySelector<HTMLElement>(':scope > summary')?.focus()
+        if (mobileMenu?.contains(document.activeElement)) mobileMenu.querySelector<HTMLElement>(':scope > summary')?.focus({ preventScroll: true })
       }
+      openingScroll = undefined
     }
     // Deferred a frame: closing a native <details> in the same synchronous tick
     // as the inert/style/scroll/focus cleanup it triggers (via syncMobileMenu)
@@ -71,15 +73,20 @@ export function HeaderMenuBehavior() {
       // The outermost trigger remains visible after nested menus close.
       const focused = menus.find((menu) => menu.contains(document.activeElement))
       closeMenus()
-      focused?.querySelector<HTMLElement>(':scope > summary')?.focus()
+      focused?.querySelector<HTMLElement>(':scope > summary')?.focus({ preventScroll: true })
     }
     const onClick = (event: MouseEvent) => {
-      if (!(event.target instanceof Element) || !event.target.closest('a[href]')) return
-      closeMenus()
+      if (!(event.target instanceof Element)) return
+      if (mobileMenu && !mobileMenu.open
+        && event.target.closest('summary') === mobileMenu.querySelector(':scope > summary')) {
+        // Native details expansion can adjust scroll before its queued toggle event.
+        openingScroll = { scrollX: window.scrollX, scrollY: window.scrollY }
+      }
+      if (event.target.closest('a[href]')) closeMenus()
     }
     const onFocusIn = (event: FocusEvent) => {
       if (restoreMobileMenu && mobileMenu && event.target instanceof Node && !mobileMenu.contains(event.target)) {
-        mobileMenu.querySelector<HTMLElement>(':scope > summary')?.focus()
+        mobileMenu.querySelector<HTMLElement>(':scope > summary')?.focus({ preventScroll: true })
       }
     }
     const onResize = () => {

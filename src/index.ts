@@ -9,6 +9,12 @@
 // =============================================================================
 
 // ---------------------------------------------------------------------------
+// Icons
+// ---------------------------------------------------------------------------
+export { Icon } from './components/Icon'
+export type { IconProps, IconName } from './components/Icon'
+
+// ---------------------------------------------------------------------------
 // Inputs
 // ---------------------------------------------------------------------------
 export { Button } from './components/Button'
@@ -124,6 +130,7 @@ export type {
   BusinessSiteFooterLink,
   BusinessSiteFooterLogo,
   BusinessSiteFooterPhone,
+  BusinessSiteFooterSocialLink,
   BusinessSiteFooterProps,
 } from './components/BusinessSiteFooter'
 
