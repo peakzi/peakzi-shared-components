@@ -50,11 +50,46 @@ describe('BusinessSiteReviews', () => {
     expect(html.match(/<li>/g)).toHaveLength(1)
   })
 
-  it('uses matching list rows rather than a large featured quote in compact density', () => {
+  it('uses equal review cards rather than a large featured quote in compact density', () => {
     const html = renderToStaticMarkup(<BusinessSiteReviews items={items} appearance={{ density: 'compact' }} />)
     expect(html).not.toContain('pz-business-reviews__featured')
     expect(html).not.toContain('pz-business-reviews__avatar')
     expect(html.match(/<blockquote>/g)).toHaveLength(2)
+  })
+
+  it('shows only the compact heading when explicitly requested, keeping individual review details', () => {
+    const { container } = render(<BusinessSiteReviews items={[{ ...items[0]!, tags: ['Service'] }, items[1]!]}
+      title="Reviews from our neighbors" eyebrow="Local feedback" compactHeader="heading-only"
+      summary={{ rating: 4.9, reviewCount: 1200, mentionCounts: { Service: 340 } }}
+      viewAll={{ label: 'See all reviews', href: '/reviews' }} appearance={{ density: 'compact' }} />)
+    expect(screen.getByRole('region', { name: 'Reviews from our neighbors' })).toHaveAttribute('data-compact-header', 'heading-only')
+    expect(screen.getByRole('heading', { level: 2, name: 'Reviews from our neighbors' })).toBeVisible()
+    expect(screen.getByText('Local feedback')).toBeVisible()
+    expect(container.querySelector('.pz-business-reviews__aside')).toBeNull()
+    expect(screen.queryByText('1,200 reviews')).toBeNull()
+    expect(screen.queryByRole('list', { name: 'Customer mentions' })).toBeNull()
+    expect(screen.queryByRole('img', { name: '4.9 out of 5 stars' })).toBeNull()
+    expect(screen.queryByRole('link', { name: 'See all reviews' })).toBeNull()
+    expect(screen.getByRole('img', { name: '4.5 out of 5 stars' })).toBeVisible()
+    expect(screen.getByText('Alex Morgan')).toBeVisible()
+    expect(screen.getByText(items[0]!.text)).toBeVisible()
+    expect(screen.getByText('Sep 20, 2026')).toBeVisible()
+  })
+
+  it.each([undefined, 'summary'] as const)('keeps compact summaries and derived mentions by default or with compactHeader=%s', (compactHeader) => {
+    render(<BusinessSiteReviews items={[{ ...items[0]!, tags: ['Service'] }]}
+      {...(compactHeader ? { compactHeader } : {})} summary={{ rating: 4.9, reviewCount: 1200 }}
+      viewAll={{ label: 'See all reviews', href: '/reviews' }} appearance={{ density: 'compact' }} />)
+    expect(screen.getByText('1,200 reviews')).toBeVisible()
+    expect(screen.getByRole('list', { name: 'Customer mentions' })).toHaveTextContent('Service')
+    expect(screen.getByRole('link', { name: 'See all reviews' })).toBeVisible()
+  })
+
+  it.each([undefined, 'comfortable'] as const)('leaves comfortable rendering unchanged even when compactHeader is supplied (density=%s)', (density) => {
+    const props = { items: [{ ...items[0]!, tags: ['Service'] }], summary: { rating: 4.9, reviewCount: 1200 },
+      viewAll: { label: 'See all reviews', href: '/reviews' }, ...(density ? { appearance: { density } } : {}) }
+    expect(renderToStaticMarkup(<BusinessSiteReviews {...props} compactHeader="heading-only" />))
+      .toBe(renderToStaticMarkup(<BusinessSiteReviews {...props} />))
   })
 
   it('uses backend totals rather than the number of displayed reviews', () => {

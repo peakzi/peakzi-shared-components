@@ -4,11 +4,13 @@ import { uniqueReviews } from './helpers/reviews'
 import type { BusinessSiteReviewsProps } from './helpers/types'
 import { Review } from './review/Review'
 import { ReviewsSummary } from './summary/ReviewsSummary'
+import { ReviewsHeading } from './summary/ReviewsHeading'
 
 export function BusinessSiteReviews({
   items,
   title = 'What our customers say',
   eyebrow = 'Reviews',
+  compactHeader = 'summary',
   summary,
   viewAll,
   appearance = {},
@@ -17,6 +19,7 @@ export function BusinessSiteReviews({
 }: BusinessSiteReviewsProps) {
   const headingId = `${useId()}-heading`
   const reviews = uniqueReviews(items)
+  const headingOnly = appearance.density === 'compact' && compactHeader === 'heading-only'
   if (!reviews.length) return null
 
   return (
@@ -25,11 +28,14 @@ export function BusinessSiteReviews({
       aria-labelledby={headingId}
       className={['pz-business-reviews', className].filter(Boolean).join(' ')}
       data-density={appearance.density === 'compact' ? 'compact' : 'comfortable'}
+      data-compact-header={headingOnly ? 'heading-only' : undefined}
       data-motion={appearance.motion === 'subtle' ? 'subtle' : 'none'}
       style={reviewsStyle(appearance)}
     >
       <div className="pz-business-reviews__inner">
-        <ReviewsSummary headingId={headingId} title={title} eyebrow={eyebrow} items={reviews} summary={summary} viewAll={viewAll} />
+        {headingOnly ? <header className="pz-business-reviews__heading">
+          <ReviewsHeading headingId={headingId} title={title} eyebrow={eyebrow} />
+        </header> : <ReviewsSummary headingId={headingId} title={title} eyebrow={eyebrow} items={reviews} summary={summary} viewAll={viewAll} />}
         <ul className="pz-business-reviews__list" role="list" aria-label="Customer reviews" data-single={reviews.length === 1 ? 'true' : 'false'}>
           {reviews.map((item, index) => <li key={item.id}>
             <Review item={item} featured={index === 0 && appearance.density !== 'compact'} />

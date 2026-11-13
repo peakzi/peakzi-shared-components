@@ -537,6 +537,9 @@ src/components/Icon/
     index.ts                registers custom definitions
     bbb.ts
     angi.ts
+    gemini.ts
+    nextdoor.ts
+    googleBusiness.ts
 ```
 
 ### Adding an icon
@@ -552,9 +555,12 @@ src/components/Icon/
    Unknown runtime names render nothing. Files are registered during development;
    the application does not generate files or download icon artwork at runtime.
 
-The nine requested social/review icons are available as facebook, twitter,
+The existing social/review icons are available as facebook, twitter,
 instagram, linkedin, tiktok, youtube, bbb, yelp and angi. The twitter key renders X.
-Only the seven required Font Awesome Brands modules are imported; Lucide usage
+Additional names are chatgpt, gemini, nextdoor and google-business. ChatGPT uses
+Font Awesome OpenAI; the others use custom definitions. The separate gemini-color
+name preserves the supplied multicolor artwork without adding variant props.
+Only the eight required Font Awesome Brands modules are imported; Lucide usage
 elsewhere is unchanged.
 
 color accepts a CSS colour, variable, or currentColor. size accepts a number or

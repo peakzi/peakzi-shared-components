@@ -4,6 +4,7 @@ import { customerMentions } from '../helpers/customer-mentions'
 import { validReviewRating } from '../helpers/reviews'
 import type { BusinessSiteReview, BusinessSiteReviewsProps } from '../helpers/types'
 import { ReviewRating } from '../rating/ReviewRating'
+import { ReviewsHeading } from './ReviewsHeading'
 
 interface ReviewsSummaryProps {
   headingId: string
@@ -24,8 +25,7 @@ export function ReviewsSummary({ headingId, title, eyebrow, items, summary, view
   return (
     <div className="pz-business-reviews__aside">
       <div className="pz-business-reviews__heading">
-        {eyebrow.trim() && <p className="pz-business-reviews__eyebrow">{eyebrow}</p>}
-        <h2 id={headingId}>{title.trim() || 'What our customers say'}</h2>
+        <ReviewsHeading headingId={headingId} title={title} eyebrow={eyebrow} />
       </div>
       {(validReviewRating(summary?.rating) || validCount) && (
         <div className="pz-business-reviews__summary">

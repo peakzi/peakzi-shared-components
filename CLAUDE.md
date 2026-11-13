@@ -103,7 +103,7 @@ Package name: `@peakzi/components`
 ### Icons
 | Component | Key Props |
 |-----------|-----------|
-| `Icon` | Generic SVG renderer. `name` comes from the Font Awesome/custom registries; `color` defaults to black; `size` defaults to 24. Add required Font Awesome imports in `Icon/fontAwesome.ts`, custom SVG definitions in `Icon/customIcon/`. |
+| `Icon` | Generic SVG renderer from main. `name` comes from the Font Awesome/custom registries; `color` defaults to black; `size` defaults to 24. Register Font Awesome imports in `Icon/fontAwesome.ts` and custom definitions in `Icon/customIcon/`. ChatGPT uses Font Awesome OpenAI; Gemini, `gemini-color`, Nextdoor and Google Business use local definitions alongside BBB/Angi. |
 
 ### Brand
 | Component | Key Props |
@@ -134,7 +134,9 @@ Chart internals (`src/internal/`, `src/hooks/`) follow the tokens-only rule this
 
 ## Design Tokens
 
-**Non-negotiable rule: never hardcode a hex, rgb, or pixel value. Use `var(--token)` exclusively.**
+**Non-negotiable rule: never hardcode a hex, rgb, or pixel value in UI styling. Use `var(--token)` exclusively.**
+
+Exception: SVG artwork may preserve its source coordinates and original brand colors as constants (for example Facebook blue or Gemini gradients). These identify the supplied artwork and must not be replaced by theme colors. The explicit monochrome treatment uses `currentColor`; availability in this library does not grant permission to recolor a brand or display accreditation/award marks. Consumers must follow the applicable brand requirements.
 
 ### Semantic Surfaces
 ```
@@ -336,7 +338,7 @@ Follow the exact two-line pattern (component export, then type export) already e
 
 ## Non-Negotiable Rules
 
-1. **Tokens only** — `var(--token)` everywhere. No hex, rgb, or hardcoded px in component SCSS or inline page styles.
+1. **Tokens only** — `var(--token)` everywhere in UI styling. No hex, rgb, or hardcoded px in component SCSS or inline page styles. Source geometry and original brand-color constants inside SVG artwork are the documented exception above.
 2. **Existing components first** — exhaust the inventory before scaffolding a new component.
 3. **BEM naming** — `.pz-{block}`, `.pz-{block}--{modifier}`, `.pz-{block}__{element}`.
 4. **Field wrapping** — Input, Textarea, Select must always be children of `<Field label="...">`.

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import { faFacebookF } from '@fortawesome/free-brands-svg-icons/faFacebookF'
+import { faOpenai } from '@fortawesome/free-brands-svg-icons/faOpenai'
 import { Icon, type IconName } from './Icon'
 import { getIconDefinition, iconNames } from './registry'
 
@@ -31,6 +32,17 @@ vi.mock('./customIcon', async (importOriginal) => {
 })
 
 describe('Icon registry', () => {
+  it('uses the installed Font Awesome OpenAI definition for ChatGPT', () => {
+    expect(getIconDefinition('chatgpt')?.paths).toEqual([faOpenai.icon[4]])
+  })
+
+  it.each(['gemini', 'gemini-color', 'nextdoor', 'google-business'] as const)('registers missing custom artwork through the shared registry: %s', (name) => {
+    const html = renderToStaticMarkup(<Icon name={name} color="currentColor" />)
+    expect(html).toContain(`data-icon="${name}"`)
+    expect(html).toContain('<path')
+    expect(html).not.toMatch(/<image\b|<img\b|data:image|<script\b/)
+  })
+
   it('uses Font Awesome first when both sources register the same name', () => {
     const definition = getIconDefinition('test-overlap')
     expect(definition?.paths).toEqual([faFacebookF.icon[4]])

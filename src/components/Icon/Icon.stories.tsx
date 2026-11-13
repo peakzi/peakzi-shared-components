@@ -4,6 +4,7 @@ import { Grid } from '../Grid'
 import { Stack } from '../Stack'
 import { Icon } from './Icon'
 import { iconNames } from './registry'
+import './Icon.stories.scss'
 
 const meta = {
   title: 'Components/Icon',
@@ -48,6 +49,25 @@ export const AllIcons: Story = {
 
 export const ThemeColour: Story = {
   args: { name: 'youtube', color: 'var(--fg-1)', title: 'YouTube' },
+}
+
+export const GeminiColour: Story = {
+  args: { name: 'gemini-color', title: 'Gemini' },
+}
+
+export const OnDarkSurfaces: Story = {
+  render: ({ size }) => (
+    <Grid columns={3} gap="md">
+      {iconNames.map((name) => (
+        <Card key={name} variant="dark">
+          <Stack direction="column" gap="sm" align="center">
+            <Icon name={name} color="currentColor" size={size} />
+            <span className="pz-icon-story__dark-name">{name === 'twitter' ? 'X (twitter)' : name}</span>
+          </Stack>
+        </Card>
+      ))}
+    </Grid>
+  ),
 }
 
 export const Sizes: Story = {

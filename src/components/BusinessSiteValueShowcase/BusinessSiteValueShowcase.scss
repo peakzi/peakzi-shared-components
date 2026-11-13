@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 .pz-business-value-showcase {
   width: 100%;
   container-type: inline-size;
@@ -32,6 +33,10 @@
 .pz-business-value-showcase__header[data-seal='false'] { grid-template-columns: minmax(0, 1fr); }
 .pz-business-value-showcase__intro { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .pz-business-value-showcase__intro .pz-business-value-showcase__lead { margin-top: 8px; }
+
+.pz-business-value-showcase .pz-business-value-showcase__eyebrow {
+  @include label.eyebrow(var(--pz-business-value-showcase-font), var(--pz-business-value-showcase-text));
+}
 
 // Title matches the page's other section headings (h2 at the same size as "Our Plumbing services in Roanoke").
 .pz-business-value-showcase .pz-business-value-showcase__title {

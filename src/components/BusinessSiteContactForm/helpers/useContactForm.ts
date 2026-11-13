@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
-import { CONTACT_FIELDS, contactValues, fieldErrors, localError, localErrors, trimmedValues } from './validation'
+import { addressMinLength, CONTACT_FIELDS, contactValues, fieldErrors, localError, localErrors, trimmedValues } from './validation'
 import { usePhoneValidation, type PhoneCheck } from './usePhoneValidation'
 import type { BusinessSiteContactFormErrors, BusinessSiteContactFormField, BusinessSiteContactFormProps, BusinessSiteContactFormValues } from './types'
 
@@ -10,7 +10,7 @@ interface FormState {
 }
 const idleState: FormState = { phase: 'idle', errors: {}, message: '' }
 
-export function useContactForm({ onSubmit, phoneValidation, initialValues, disabled, successMessage, consentText, appearance }: BusinessSiteContactFormProps) {
+export function useContactForm({ onSubmit, phoneValidation, addressSearch, initialValues, disabled, successMessage, consentText, appearance }: BusinessSiteContactFormProps) {
   const [values, setValues] = useState(() => contactValues(initialValues))
   const [acceptedDisclosure, setAcceptedDisclosure] = useState('')
   const [state, setState] = useState<FormState>(idleState)
@@ -22,6 +22,7 @@ export function useContactForm({ onSubmit, phoneValidation, initialValues, disab
   const lastPhoneCheck = useRef<PhoneCheck | null>(null)
   const focusError = useRef(false)
   const compact = appearance?.density === 'compact'
+  const minimumAddressLength = addressMinLength(addressSearch)
   const currentValues = { ...values, email: compact ? '' : values.email, consent: values.consent && acceptedDisclosure === consentText.trim() }
 
   const showError = useCallback((field: BusinessSiteContactFormField, message: string) => {
@@ -77,7 +78,7 @@ export function useContactForm({ onSubmit, phoneValidation, initialValues, disab
     setState((previous) => {
       const errors = { ...previous.errors }
       const next = trimmedValues({ ...currentValues, [field]: value, email: compact ? '' : field === 'email' ? String(value) : values.email })
-      const message = localErrors(next)[field] || (field === 'phone' && lastPhoneCheck.current?.phone === next.phone ? lastPhoneCheck.current.message : '')
+      const message = localErrors(next, minimumAddressLength)[field] || (field === 'phone' && lastPhoneCheck.current?.phone === next.phone ? lastPhoneCheck.current.message : '')
       if ((touched.current[field] || errors[field]) && message) errors[field] = message
       else delete errors[field]
       return { ...previous, errors, message: '' }
@@ -89,7 +90,7 @@ export function useContactForm({ onSubmit, phoneValidation, initialValues, disab
     if (active.current || disabled) return
     touched.current[field] = true
     const next = trimmedValues(currentValues)
-    const message = localErrors(next)[field] || (field === 'phone' && phoneCheck?.phone === next.phone ? phoneCheck.message : '')
+    const message = localErrors(next, minimumAddressLength)[field] || (field === 'phone' && phoneCheck?.phone === next.phone ? phoneCheck.message : '')
     if (message) showError(field, message)
     if (field === 'phone' && phoneValidation && !localError('phone', next.phone) && next.phone &&
       (!phoneEdited || phoneCheck?.unavailable)) {
@@ -103,7 +104,7 @@ export function useContactForm({ onSubmit, phoneValidation, initialValues, disab
     if (active.current || disabled) return
     const submitted = trimmedValues({ ...values, email: compact ? '' : values.email,
       consent: values.consent && acceptedDisclosure === consentText.trim() })
-    const local = localErrors(submitted)
+    const local = localErrors(submitted, minimumAddressLength)
     if (Object.keys(local).length) {
       fail(local, '')
       return
@@ -163,7 +164,7 @@ export function useContactForm({ onSubmit, phoneValidation, initialValues, disab
 
   const validPhone = !phoneValidation || (phoneCheck?.phone === values.phone.trim() && !phoneCheck.message && !phoneCheck.unavailable)
   const canSubmit = !disabled && state.phase === 'idle' && !checkingPhone && validPhone &&
-    !Object.keys(localErrors(trimmedValues(currentValues))).length && !Object.values(state.errors).some(Boolean)
+    !Object.keys(localErrors(trimmedValues(currentValues), minimumAddressLength)).length && !Object.values(state.errors).some(Boolean)
 
   return { values: currentValues,
     state, canSubmit, checkingPhone, formRef, change, blur, submit, reset, busy: state.phase === 'validating' || state.phase === 'submitting' }

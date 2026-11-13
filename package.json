@@ -1,6 +1,6 @@
 {
   "name": "@peakzi/components",
-  "version": "0.3.31",
+  "version": "0.3.32",
   "description": "Peakzi shared component library — brand-consistent UI for all Peakzi websites",
   "main": "./dist/index.cjs",
   "scripts": {
@@ -118,6 +118,11 @@
       "types": "./dist/src/components/BusinessSiteOffers/details/BusinessSiteOfferDetails.d.ts",
       "import": "./dist/BusinessSiteOfferDetails.js",
       "require": "./dist/BusinessSiteOfferDetails.cjs"
+    },
+    "./BusinessSiteReviewDetails": {
+      "types": "./dist/src/components/BusinessSiteReviews/review-text/BusinessSiteReviewDetails.d.ts",
+      "import": "./dist/BusinessSiteReviewDetails.js",
+      "require": "./dist/BusinessSiteReviewDetails.cjs"
     },
     "./BusinessSiteBlogCoverImage": {
       "types": "./dist/src/components/BusinessSiteBlogs/cover/BlogCoverImage.d.ts",

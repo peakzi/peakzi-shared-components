@@ -5,8 +5,9 @@ import { act, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { faXTwitter } from '@fortawesome/free-brands-svg-icons/faXTwitter'
 import { Icon, type IconName } from './Icon'
+import { iconNames } from './registry'
 
-const names: IconName[] = ['facebook', 'twitter', 'instagram', 'linkedin', 'tiktok', 'youtube', 'bbb', 'yelp', 'angi']
+const names = iconNames
 
 describe('Icon', () => {
   it.each(names)('renders local artwork for %s', (name) => {
@@ -98,7 +99,7 @@ describe('Icon', () => {
 
   it('server-renders all logos without image placeholders or client scripts', () => {
     const html = renderToStaticMarkup(<>{names.map((name) => <Icon key={name} name={name} title={name} />)}</>)
-    expect(html.match(/<svg\b/g)).toHaveLength(9)
+    expect(html.match(/<svg\b/g)).toHaveLength(names.length)
     expect(html).toContain('data-icon="bbb"')
     expect(html).toContain('data-icon="angi"')
     expect(html).not.toMatch(/<img\b|<script\b|<image\b|<use\b/)
@@ -109,8 +110,8 @@ describe('Icon', () => {
     expect(screen.getByTestId('icon')).toHaveAttribute('height', '30')
   })
 
-  it('keeps title IDs stable during hydration', async () => {
-    const tree = <><Icon name="facebook" title="Facebook" /><Icon name="bbb" title="BBB" /></>
+  it('keeps title and gradient IDs stable during hydration', async () => {
+    const tree = <><Icon name="gemini-color" title="Gemini" /><Icon name="bbb" title="BBB" /></>
     const holder = document.createElement('div')
     holder.innerHTML = renderToString(tree)
     document.body.append(holder)
@@ -124,6 +125,19 @@ describe('Icon', () => {
     } finally {
       await act(async () => root?.unmount())
       holder.remove()
+    }
+  })
+
+  it('scopes the colored Gemini gradients to each instance without changing the main Icon API', () => {
+    const { container } = render(<><Icon name="gemini-color" /><Icon name="gemini-color" /></>)
+    const gradients = [...container.querySelectorAll('linearGradient')]
+    expect(gradients).toHaveLength(6)
+    expect(new Set(gradients.map(gradient => gradient.id)).size).toBe(6)
+    for (const svg of container.querySelectorAll('svg')) {
+      for (const path of svg.querySelectorAll('path[fill^="url("]')) {
+        const target = path.getAttribute('fill')!.slice(5, -1)
+        expect([...svg.querySelectorAll('linearGradient')].some(gradient => gradient.id === target)).toBe(true)
+      }
     }
   })
 

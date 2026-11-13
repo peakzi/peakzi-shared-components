@@ -43,6 +43,7 @@ const meta = {
     <BusinessSiteValueShowcase {...props} appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, accentColor, buttonRadius, density, divider }} />
   ),
   argTypes: {
+    eyebrow: { control: 'text', description: 'Optional section label above the title. Omit or leave blank to hide.' },
     items: { control: 'object' },
     highlights: { control: 'object' },
     seal: { control: 'object' },
@@ -137,5 +138,6 @@ export const NoIcons: Story = {
   },
 }
 export const Compact: Story = { args: { density: 'compact' } }
+export const WithEyebrow: Story = { args: { eyebrow: 'Why choose us' } }
 export const NestedHeading: Story = { args: { headingLevel: 3 } }
 export const Mobile: Story = { globals: { viewport: { value: 'mobile1', isRotated: false } } }
