@@ -25,8 +25,9 @@ export interface BusinessSiteContactFormAddressSearch {
     readonly BusinessSiteContactFormAddressSuggestion[] | Promise<readonly BusinessSiteContactFormAddressSuggestion[]>
   /** Optional notification for consumer-owned place metadata. */
   onSelect?: (suggestion: BusinessSiteContactFormAddressSuggestion) => void
-  /** Defaults to 3 characters and 300ms. */
+  /** Minimum trimmed address length for search and submission. Defaults to 3 characters. */
   minLength?: number
+  /** Defaults to 300ms. */
   debounceMs?: number
 }
 

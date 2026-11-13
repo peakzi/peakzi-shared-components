@@ -366,7 +366,7 @@ export type { StackProps, StackGap } from './components/Stack'
 // Brand
 // ---------------------------------------------------------------------------
 export { Icon } from './components/Icon'
-export type { IconProps, IconName, IconVariant } from './components/Icon'
+export type { IconProps, IconName, IconVariant, IconAppearance, IconSurface } from './components/Icon'
 
 export { PeakziLogo } from './components/PeakziLogo'
 export type { PeakziLogoProps, LogoVariant, LogoSize } from './components/PeakziLogo'

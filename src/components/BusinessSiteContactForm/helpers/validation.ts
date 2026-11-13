@@ -1,8 +1,14 @@
 import isEmail from 'validator/es/lib/isEmail'
-import type { BusinessSiteContactFormErrors, BusinessSiteContactFormValues } from './types'
+import type { BusinessSiteContactFormAddressSearch, BusinessSiteContactFormErrors, BusinessSiteContactFormValues } from './types'
 
 /** Shared default wait before address search and live field checks call the backend. */
 export const DEFAULT_DEBOUNCE_MS = 300
+export const MIN_ADDRESS_LENGTH = 3
+
+/** One threshold for autocomplete, field feedback, eligibility and direct submission. */
+export function addressMinLength(provider?: Pick<BusinessSiteContactFormAddressSearch, 'minLength'>): number {
+  return Number.isFinite(provider?.minLength) ? Math.max(1, Math.ceil(provider!.minLength!)) : MIN_ADDRESS_LENGTH
+}
 
 const TEXT_FIELDS = ['fullName', 'phone', 'email', 'address', 'description'] as const
 export const CONTACT_FIELDS = [...TEXT_FIELDS, 'consent'] as const
@@ -27,9 +33,10 @@ export function trimmedValues(values: BusinessSiteContactFormValues): BusinessSi
 }
 
 /** In-component rules for one trimmed value. Email is validated here only; phone/address validity belongs to the backend. */
-export function localError(field: TextField, value: string): string | undefined {
+export function localError(field: TextField, value: string, minimumAddressLength = MIN_ADDRESS_LENGTH): string | undefined {
   if (value.length > FIELD_LIMITS[field]) return `Please keep this under ${FIELD_LIMITS[field]} characters.`
   if (field === 'fullName' && value && !/\p{L}/u.test(value)) return 'Please enter your full name.'
+  if (field === 'address' && value && value.length < minimumAddressLength) return `Please enter at least ${minimumAddressLength} characters for your service address.`
   if (field === 'phone' && value) {
     const digits = value.replace(/\D/g, '').length
     if (!PHONE_CHARACTERS.test(value) || digits < 7 || digits > 15) return 'Please enter a valid phone number.'
@@ -39,14 +46,14 @@ export function localError(field: TextField, value: string): string | undefined 
 }
 
 /** Required values, basic field rules and explicit consent, checked before any backend call. */
-export function localErrors(values: BusinessSiteContactFormValues): BusinessSiteContactFormErrors {
+export function localErrors(values: BusinessSiteContactFormValues, minimumAddressLength = MIN_ADDRESS_LENGTH): BusinessSiteContactFormErrors {
   const errors: BusinessSiteContactFormErrors = {
     ...(!values.fullName ? { fullName: 'Please enter your full name.' } : {}),
     ...(!values.phone ? { phone: 'Please enter your phone number.' } : {}),
     ...(!values.address ? { address: 'Please enter your service address.' } : {}),
   }
   for (const field of TEXT_FIELDS) {
-    const message = errors[field] ? undefined : localError(field, values[field])
+    const message = errors[field] ? undefined : localError(field, values[field], minimumAddressLength)
     if (message) errors[field] = message
   }
   if (values.consent !== true) errors.consent = 'Please agree to the contact terms before sending your request.'

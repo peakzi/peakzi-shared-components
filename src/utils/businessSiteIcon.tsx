@@ -6,7 +6,17 @@ import { Icon as CustomIcon, type IconProps } from '../components/Icon'
 const CUSTOM_ICONS = {
   'brand-chatgpt': { name: 'chatgpt' },
   'brand-gemini': { name: 'gemini' },
-  'brand-gemini-color': { name: 'gemini', variant: 'color' },
+  'brand-facebook': { name: 'facebook' },
+  'brand-instagram': { name: 'instagram' },
+  'brand-youtube': { name: 'youtube' },
+  'brand-x': { name: 'x' },
+  'brand-tiktok': { name: 'tiktok' },
+  'brand-linkedin': { name: 'linkedin' },
+  'brand-nextdoor': { name: 'nextdoor' },
+  'brand-yelp': { name: 'yelp' },
+  'brand-google-business': { name: 'google-business' },
+  'brand-angi': { name: 'angi' },
+  'brand-bbb': { name: 'bbb' },
 } as const satisfies Record<string, Pick<IconProps, 'name' | 'variant'>>
 
 const STATIC_ICONS = {
@@ -58,8 +68,10 @@ export function businessSiteIcon(name: string | undefined) {
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
-  if (Object.prototype.hasOwnProperty.call(CUSTOM_ICONS, iconName)) {
-    return <CustomIcon {...CUSTOM_ICONS[iconName as keyof typeof CUSTOM_ICONS]} size={17} aria-hidden="true" />
+  const color = iconName.endsWith('-color')
+  const customName = color ? iconName.slice(0, -6) : iconName
+  if (Object.prototype.hasOwnProperty.call(CUSTOM_ICONS, customName)) {
+    return <CustomIcon {...CUSTOM_ICONS[customName as keyof typeof CUSTOM_ICONS]} variant={color ? 'color' : 'monochrome'} size={17} aria-hidden="true" />
   }
   const Icon = Object.prototype.hasOwnProperty.call(STATIC_ICONS, iconName)
     ? STATIC_ICONS[iconName as keyof typeof STATIC_ICONS]

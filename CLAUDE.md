@@ -104,7 +104,7 @@ Package name: `@peakzi/components`
 | Component | Key Props |
 |-----------|-----------|
 | `PeakziLogo` | `variant`: color \| white \| navy. `size`: xs \| sm \| md \| lg \| xl |
-| `Icon` | Local SVG artwork. `name`: chatgpt \| gemini. `variant`: monochrome \| color (Gemini). `size`: number or SVG length. Inherits text color in monochrome; optional `title` or ARIA label makes it accessible. |
+| `Icon` | Local artwork behind one SVG API; Instagram alone retains a small gradient image. `name`: chatgpt, gemini, facebook, instagram, youtube, x, tiktok, linkedin, nextdoor, yelp, google-business, angi, bbb. `variant`: monochrome (currentColor) or supplied color. `appearance`: filled/outline (Angi and BBB have both; Google Business is outline; remaining icons are filled). `surface`: light/dark selects supplied color artwork. Missing treatments fall back to available artwork. `size`: number or SVG length; native width/height override independently. Optional `title` or ARIA label makes it accessible. |
 
 ### Charts & Maps
 Built on Highcharts / Leaflet, which are **optional peer dependencies**. A consuming app that uses these must install `highcharts` + `highcharts-react-official` and/or `leaflet` + `react-leaflet@^5` (requires React 19) itself. **They are not exported from the root entry.** Import from subpaths (`import { ColumnChart } from '@peakzi/components/ColumnChart'`), and never add them to `src/index.ts`: that would make every root import require the optional peers. Map CSS (including Leaflet's) only ships in `@peakzi/components/styles`. Every component takes `className` and `testId`; most take `isLoading` (renders `Skeleton`) and `chartHeight`.
@@ -130,7 +130,9 @@ Chart internals (`src/internal/`, `src/hooks/`) follow the tokens-only rule this
 
 ## Design Tokens
 
-**Non-negotiable rule: never hardcode a hex, rgb, or pixel value. Use `var(--token)` exclusively.**
+**Non-negotiable rule: never hardcode a hex, rgb, or pixel value in UI styling. Use `var(--token)` exclusively.**
+
+Exception: SVG artwork may preserve its source coordinates and original brand colors as constants (for example Facebook blue or Gemini gradients). These identify the supplied artwork and must not be replaced by theme colors. The explicit monochrome treatment uses `currentColor`; availability in this library does not grant permission to recolor a brand or display accreditation/award marks. Consumers must follow the applicable brand requirements.
 
 ### Semantic Surfaces
 ```
@@ -332,7 +334,7 @@ Follow the exact two-line pattern (component export, then type export) already e
 
 ## Non-Negotiable Rules
 
-1. **Tokens only** — `var(--token)` everywhere. No hex, rgb, or hardcoded px in component SCSS or inline page styles.
+1. **Tokens only** — `var(--token)` everywhere in UI styling. No hex, rgb, or hardcoded px in component SCSS or inline page styles. Source geometry and original brand-color constants inside SVG artwork are the documented exception above.
 2. **Existing components first** — exhaust the inventory before scaffolding a new component.
 3. **BEM naming** — `.pz-{block}`, `.pz-{block}--{modifier}`, `.pz-{block}__{element}`.
 4. **Field wrapping** — Input, Textarea, Select must always be children of `<Field label="...">`.
