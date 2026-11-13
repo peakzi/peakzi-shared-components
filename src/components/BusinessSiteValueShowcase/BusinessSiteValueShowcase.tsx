@@ -33,6 +33,7 @@ export function BusinessSiteValueShowcase(props: BusinessSiteValueShowcaseProps)
       <div className="pz-business-value-showcase__inner">
         <div className="pz-business-value-showcase__header" data-seal={data.seal ? 'true' : 'false'}>
           <div className="pz-business-value-showcase__intro">
+            {data.eyebrow && <p className="pz-business-value-showcase__eyebrow">{data.eyebrow}</p>}
             <Heading id={headingId} className="pz-business-value-showcase__title">{data.title}</Heading>
             {data.lead && <p className="pz-business-value-showcase__lead">{data.lead}</p>}
           </div>

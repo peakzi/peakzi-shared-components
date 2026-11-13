@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 .pz-business-content-list {
   --pz-business-content-list-background: #ffffff;
   --pz-business-content-list-text: #12171c;
@@ -29,15 +30,9 @@
 }
 
 .pz-business-content-list__eyebrow {
+  @include label.eyebrow(var(--pz-business-content-list-font), var(--pz-business-content-list-text));
   display: block;
   margin-bottom: 10px;
-  color: var(--pz-business-content-list-accent);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  line-height: 1.5;
-  text-transform: uppercase;
 }
 
 .pz-business-content-list__title {

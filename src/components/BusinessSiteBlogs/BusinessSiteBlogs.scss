@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 .pz-business-blogs {
   width: 100%;
   background: var(--pz-business-blogs-background, #ffffff);
@@ -8,8 +9,8 @@
 .pz-business-blogs__inner { max-width: 1200px; margin: 0 auto; padding: 32px 24px; box-sizing: border-box; }
 .pz-business-blogs__header { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-bottom: 24px; }
 .pz-business-blogs .pz-business-blogs__eyebrow {
-  margin: 0 0 10px; color: var(--pz-business-blogs-accent); font-family: inherit;
-  font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  @include label.eyebrow(var(--pz-business-blogs-font), var(--pz-business-blogs-text));
+  margin: 0 0 10px;
 }
 .pz-business-blogs h2 {
   margin: 0; color: var(--pz-business-blogs-text); font-family: var(--pz-business-blogs-heading-font);

@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 @use './preview/BusinessSiteProjectGalleryPreview';
 
 .pz-business-gallery {
@@ -24,13 +25,8 @@
 }
 
 .pz-business-gallery .pz-business-gallery__eyebrow {
+  @include label.eyebrow(var(--pz-business-gallery-font), var(--pz-business-gallery-text));
   margin: 0 0 12px;
-  color: var(--pz-business-gallery-accent);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 .pz-business-gallery h2 {

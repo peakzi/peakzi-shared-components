@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { ArrowUpRight, Award, BadgeCheck, CalendarDays, Calculator, Check, ClipboardCheck, ClipboardList, Clock, DollarSign, Droplet, Flame, House, Phone, Shield, ShieldCheck, Snowflake, Star, Tag, Thermometer, Wrench, Zap } from 'lucide-react'
 import type { IconName } from 'lucide-react/dynamic'
+import { Icon as RegisteredIcon, type IconName as RegisteredIconName } from '../components/Icon'
+import { getIconDefinition } from '../components/Icon/registry'
 
 const STATIC_ICONS = {
   phone: Phone,
@@ -55,6 +57,12 @@ export function businessSiteIcon(name: string | undefined) {
     ? STATIC_ICONS[iconName as keyof typeof STATIC_ICONS]
     : null
   if (Icon) return <Icon aria-hidden="true" size={17} strokeWidth={1.75} />
+  const registeredName = iconName.startsWith('brand-') ? iconName.slice(6) : iconName
+  // X uses main's existing twitter key; plain "x" remains the Lucide close icon.
+  const nameInRegistry = iconName === 'brand-x' ? 'twitter' : registeredName
+  if (getIconDefinition(nameInRegistry)) {
+    return <RegisteredIcon name={nameInRegistry as RegisteredIconName} color="currentColor" size={17} aria-hidden="true" />
+  }
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(iconName)) return null
   return <Suspense fallback={<IconPlaceholder />}><LazyLucideIcon name={iconName} /></Suspense>
 }

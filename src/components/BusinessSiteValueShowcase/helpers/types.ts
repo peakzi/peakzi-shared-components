@@ -49,6 +49,8 @@ export interface BusinessSiteValueShowcaseAppearance {
 
 export interface BusinessSiteValueShowcaseProps {
   title: string
+  /** Optional section label above the title. Omitted or blank hides it. */
+  eyebrow?: string
   lead?: string
   seal?: BusinessSiteValueShowcaseSeal
   highlights?: readonly BusinessSiteValueShowcaseHighlight[]

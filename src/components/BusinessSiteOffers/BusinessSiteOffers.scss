@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 @use '../../styles/breakpoints' as breakpoints;
 
 .pz-business-offers {
@@ -11,7 +12,10 @@
 
 .pz-business-offers__inner { max-width: 1200px; margin: 0 auto; padding: 32px 24px; box-sizing: border-box; }
 .pz-business-offers__header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 20px; border-bottom: 1px dashed color-mix(in srgb, var(--pz-business-offers-accent) 35%, var(--pz-business-offers-background)); }
-.pz-business-offers .pz-business-offers__eyebrow { margin: 0 0 10px; color: var(--pz-business-offers-accent); font: 600 12px/1.5 var(--pz-business-offers-font); letter-spacing: 0.14em; text-transform: uppercase; }
+.pz-business-offers .pz-business-offers__eyebrow {
+  @include label.eyebrow(var(--pz-business-offers-font), var(--pz-business-offers-text));
+  margin: 0 0 10px;
+}
 .pz-business-offers h2 { margin: 0; color: var(--pz-business-offers-text); font: 600 clamp(28px, 3.5vw, 40px)/1.2 var(--pz-business-offers-heading-font); letter-spacing: -0.03em; text-wrap: balance; }
 .pz-business-offers .pz-business-offers__intro { max-width: 65ch; margin: 12px 0 0; color: inherit; font: 400 15px/1.6 var(--pz-business-offers-font); }
 .pz-business-offers__list > li { display: flex; min-width: 0; margin: 0; padding: 0; }

@@ -81,6 +81,8 @@ const entries = {
   BusinessSiteHeaderMenuBehavior: resolve(__dirname, 'src/components/BusinessSiteHeader/menu-behavior/HeaderMenuBehavior.tsx'),
   BusinessSiteOffersCarousel: resolve(__dirname, 'src/components/BusinessSiteOffers/carousel/BusinessSiteOffersCarousel.tsx'),
   BusinessSiteOfferDetails: resolve(__dirname, 'src/components/BusinessSiteOffers/details/BusinessSiteOfferDetails.tsx'),
+  BusinessSiteReviewDetails: resolve(__dirname, 'src/components/BusinessSiteReviews/review-text/BusinessSiteReviewDetails.tsx'),
+  BusinessSiteReviewData: resolve(__dirname, 'src/components/BusinessSiteReviews/helpers/reviews.ts'),
   BusinessSiteCardCarousel: resolve(__dirname, 'src/components/BusinessSiteCardCarousel/BusinessSiteCardCarousel.tsx'),
   BusinessSiteBlogCoverImage: resolve(__dirname, 'src/components/BusinessSiteBlogs/cover/BlogCoverImage.tsx'),
   BusinessSiteFaqAccordion: resolve(__dirname, 'src/components/BusinessSiteFaq/accordion/FaqAccordion.tsx'),
@@ -133,7 +135,7 @@ export default defineConfig({
       ],
       output: {
         // Keep the client boundary on extracted chunks too, not only their entry facades.
-        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteOffers\/details\/BusinessSiteOfferDetails|BusinessSitePhotoCarousel\/BusinessSitePhotoCarousel|BusinessSiteContactForm\/BusinessSiteContactForm|BusinessSiteContactDialog\/BusinessSiteContactDialog|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteBlogs\/cover\/BlogCoverImage|BusinessSiteFaq\/accordion\/FaqAccordion|BusinessSiteAreas\/map\/BusinessSiteAreasMap|BusinessSite(?:Areas|Services)Directory\/BusinessSite(?:Areas|Services)Directory|BusinessSiteContentFilterNav\/sheet\/ContentFilterNavSheet|BusinessSiteProjectGallery\/preview\/BusinessSiteProjectGalleryPreview)\.tsx$/.test(id.replace(/\\/g, '/')))
+        banner: (chunk) => chunk.moduleIds.some((id) => /(?:BusinessSiteHeader\/menu-behavior\/HeaderMenuBehavior|BusinessSite(?:Hero|Offers)\/carousel\/BusinessSite(?:Hero|Offers)Carousel|BusinessSiteOffers\/details\/BusinessSiteOfferDetails|BusinessSiteReviews\/review-text\/BusinessSiteReviewDetails|BusinessSitePhotoCarousel\/BusinessSitePhotoCarousel|BusinessSiteContactForm\/BusinessSiteContactForm|BusinessSiteContactDialog\/BusinessSiteContactDialog|BusinessSiteCardCarousel\/BusinessSiteCardCarousel|BusinessSiteBlogs\/cover\/BlogCoverImage|BusinessSiteFaq\/accordion\/FaqAccordion|BusinessSiteAreas\/map\/BusinessSiteAreasMap|BusinessSite(?:Areas|Services)Directory\/BusinessSite(?:Areas|Services)Directory|BusinessSiteContentFilterNav\/sheet\/ContentFilterNavSheet|BusinessSiteProjectGallery\/preview\/BusinessSiteProjectGalleryPreview)\.tsx$/.test(id.replace(/\\/g, '/')))
           ? '"use client";' : '',
         globals: {
           react: 'React',

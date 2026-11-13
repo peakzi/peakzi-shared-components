@@ -11,7 +11,7 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
     controls: { exclude: ['appearance'] },
-    docs: { description: { component: 'Server-safe summary panel and review grid. Supplied phrases highlight literal matches without changing review copy. Customer mentions use supplied summary.mentionCounts totals across all reviews, or count each tag once per displayed review when the prop is omitted. Website theme applies throughout; compact density uses a light heading row, inline attribution and a responsive three/two/one-column card grid. Subtle motion shares the Blogs scroll reveal, featured-content reveal, card lift/shadow, compact-row slide and button shine. Full reviews fade in when expanded. Reduced-motion and unsupported-browser fallbacks keep content readable; cards remain quotations, not navigation links.' } },
+    docs: { description: { component: 'Server-safe summary panel and review grid. Supplied phrases highlight literal matches without changing review copy. Customer mentions use supplied summary.mentionCounts totals across all reviews, or count each tag once per displayed review when the prop is omitted. Website theme applies throughout; compact density uses equal bordered cards in three columns above 1000px, two from 761–1000px and one below, with the reviewer name and date on one line when space allows. compactHeader="heading-only" replaces the summary panel with just the eyebrow and title. Subtle motion shares the Blogs scroll reveal, featured-content reveal, card lift/shadow, compact text slide and button shine. In both densities, Read full review opens a themed dialog without expanding the card. Previews retain the existing 160-character card and 320-character featured limits. Full text remains server-rendered with a native disclosure fallback. Reduced-motion and unsupported-browser fallbacks keep content readable; cards remain quotations, not navigation links.' } },
   },
   render: ({ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion, ...props }: StoryArgs) => (
     <BusinessSiteReviews {...props} appearance={{ font, headingFont, backgroundColor, gradientStartColor, gradientEndColor, buttonRadius, density, motion }} />
@@ -20,6 +20,7 @@ const meta = {
     items: { control: 'object' },
     summary: { control: 'object' },
     viewAll: { control: 'object' },
+    compactHeader: { control: 'inline-radio', options: ['summary', 'heading-only'], description: 'Compact only. Heading-only keeps the title and eyebrow without the aggregate summary, mentions or header action. Comfortable density is unchanged.' },
     font: { control: 'text' },
     headingFont: { control: 'text' },
     backgroundColor: { control: 'color', description: 'Light review-card background and summary text/button surface.' },
@@ -32,6 +33,7 @@ const meta = {
   args: {
     title: 'Recent customer reviews in our service area',
     eyebrow: 'Reviews',
+    compactHeader: 'summary',
     items: [
       { id: 'alex', reviewerName: 'Alex Morgan', text: 'The team explained the repair clearly, kept us updated and left the work area tidy. We appreciated knowing what to expect before the work started.', rating: 5, reviewDate: '2026-09-20', tags: ['Communication', 'Professionalism', 'Quality of Work'], highlightedPhrases: ['explained the repair clearly', 'left the work area tidy'] },
       { id: 'sam', reviewerName: 'Sam Rivera', text: 'Helpful communication and a straightforward explanation of the available options.', rating: 4.5, reviewDate: '2026-09-18', tags: ['Communication', 'Service'], highlightedPhrases: ['Helpful communication'] },
@@ -70,6 +72,22 @@ export const AggregateMentions: Story = {
 }
 export const Compact: Story = { args: { density: 'compact' } }
 export const CompactWithoutSummary: Story = { args: { density: 'compact', summary: { mentionCounts: {} }, viewAll: undefined } }
+export const CompactTablet: Story = {
+  args: { density: 'compact' },
+  decorators: [(Story) => <div style={{ maxWidth: 900, margin: '0 auto' }}><Story /></div>],
+}
+export const CompactMobile: Story = {
+  args: { density: 'compact' },
+  decorators: [(Story) => <div style={{ maxWidth: 390, margin: '0 auto' }}><Story /></div>],
+}
+export const CompactHeadingOnly: Story = {
+  args: { density: 'compact', compactHeader: 'heading-only' },
+  parameters: { docs: { description: { story: 'Explicitly shows only the section title and eyebrow above compact reviews. Summary and viewAll data remain supplied to demonstrate that the option controls presentation independently of content; individual review ratings and attribution remain visible.' } } },
+}
+export const CompactHeadingOnlyMobile: Story = {
+  args: { density: 'compact', compactHeader: 'heading-only' },
+  decorators: [(Story) => <div style={{ maxWidth: 390, margin: '0 auto' }}><Story /></div>],
+}
 export const NoMotion: Story = { args: { motion: 'none' } }
 export const ScrollReveal: Story = {
   decorators: [
@@ -88,6 +106,7 @@ export const WithoutSummary: Story = { args: { summary: {} } }
 export const WithoutMentions: Story = { args: { items: meta.args.items.map((item) => ({ ...item, tags: [] })) } }
 export const WithoutHighlights: Story = { args: { items: meta.args.items.map((item) => ({ ...item, highlightedPhrases: [] })) } }
 export const LongReview: Story = { args: { items: [{ ...meta.args.items[0]!, text: meta.args.items[0]!.text.repeat(8) }, ...meta.args.items.slice(1)] } }
+export const LongReviewCompact: Story = { args: { ...LongReview.args, density: 'compact', compactHeader: 'heading-only' } }
 export const MissingRatingAndDate: Story = { args: { items: [{ id: 'no-rating', reviewerName: 'Alex Morgan', text: 'The team explained the available options.' }], summary: {} } }
 export const Mobile: Story = {
   decorators: [(Story) => <div style={{ maxWidth: 390, margin: '0 auto' }}><Story /></div>],

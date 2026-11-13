@@ -1,7 +1,7 @@
 import { Loader2, MapPin } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { Field, Input } from '../../Input'
-import { DEFAULT_DEBOUNCE_MS } from '../helpers/validation'
+import { addressMinLength, DEFAULT_DEBOUNCE_MS } from '../helpers/validation'
 import type { BusinessSiteContactFormAddressSearch, BusinessSiteContactFormAddressSuggestion } from '../helpers/types'
 
 /** Trailing in-field loader shown while a backend call for the field is in flight; typing stays enabled. */
@@ -42,7 +42,7 @@ export function AddressField({ id, label, value, error, hint, placeholder, requi
   const inputRef = useRef<HTMLInputElement>(null)
   const rootRef = useRef<HTMLDivElement>(null)
   const query = value.trim()
-  const minLength = Number.isFinite(provider?.minLength) ? Math.max(1, provider!.minLength!) : 3
+  const minLength = addressMinLength(provider)
   const delay = Number.isFinite(provider?.debounceMs) ? Math.max(0, provider!.debounceMs!) : DEFAULT_DEBOUNCE_MS
   const search = provider?.search
   const enabled = Boolean(search && focused && !disabled && query.length >= minLength && dismissedQuery !== query)

@@ -7,6 +7,50 @@ const initialValues = { fullName: 'Alex Homeowner', phone: '5125550123', address
 const send = () => screen.getByRole('button', { name: 'Send request' })
 
 describe('contact form submit eligibility and persistent validation', () => {
+  it.each(['compact', 'comfortable'] as const)('blocks short addresses and keeps their error visible after blur in %s forms', (density) => {
+    const onSubmit = vi.fn()
+    render(<BusinessSiteContactForm consentText={consentText} onSubmit={onSubmit}
+      appearance={{ density }} initialValues={initialValues} addressSearch={{ search: () => [] }} />)
+    fireEvent.click(screen.getByRole('checkbox'))
+    expect(send()).toBeEnabled()
+    const address = screen.getByLabelText(/Service address/)
+    fireEvent.change(address, { target: { value: ' te ' } })
+    expect(send()).toBeDisabled()
+    expect(screen.queryByText('Please enter at least 3 characters for your service address.')).toBeNull()
+    fireEvent.blur(address)
+    expect(address).toHaveAttribute('aria-invalid', 'true')
+    expect(address).toHaveAccessibleDescription('Please enter at least 3 characters for your service address.')
+    // Submission must also be blocked when triggered through the form itself.
+    fireEvent.submit(screen.getByRole('form'))
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(address).toHaveFocus()
+    fireEvent.change(address, { target: { value: 't' } })
+    fireEvent.blur(address)
+    expect(address).toHaveAccessibleDescription('Please enter at least 3 characters for your service address.')
+    expect(send()).toBeDisabled()
+    fireEvent.change(address, { target: { value: '123 Main Street' } })
+    expect(address).not.toHaveAttribute('aria-invalid')
+    expect(screen.queryByText('Please enter at least 3 characters for your service address.')).toBeNull()
+    expect(send()).toBeEnabled()
+  })
+
+  it.each(['compact', 'comfortable'] as const)('uses a custom address-search minimum for errors and submission in %s forms', (density) => {
+    const onSubmit = vi.fn()
+    render(<BusinessSiteContactForm consentText={consentText} onSubmit={onSubmit}
+      appearance={{ density }} initialValues={{ ...initialValues, address: '1234' }} addressSearch={{ search: () => [], minLength: 5 }} />)
+    fireEvent.click(screen.getByRole('checkbox'))
+    const address = screen.getByLabelText(/Service address/)
+    expect(send()).toBeDisabled()
+    fireEvent.blur(address)
+    expect(address).toHaveAttribute('aria-invalid', 'true')
+    expect(address).toHaveAccessibleDescription('Please enter at least 5 characters for your service address.')
+    fireEvent.submit(screen.getByRole('form'))
+    expect(onSubmit).not.toHaveBeenCalled()
+    fireEvent.change(address, { target: { value: '12345' } })
+    expect(address).not.toHaveAttribute('aria-invalid')
+    expect(send()).toBeEnabled()
+  })
+
   it('requires every mandatory field, consent and a valid optional email before enabling submit', () => {
     render(<BusinessSiteContactForm consentText={consentText} onSubmit={() => {}} />)
     expect(send()).toBeDisabled()

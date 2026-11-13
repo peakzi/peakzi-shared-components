@@ -238,7 +238,8 @@
   }
 
   .pz-business-blogs[data-motion='subtle'] a.pz-business-blogs__list-link:is(:hover, :focus-visible) .pz-business-blogs__list-content,
-  .pz-business-reviews[data-motion='subtle'][data-density='compact'] .pz-business-reviews__review:is(:hover, :focus-within) :is(blockquote, .pz-business-reviews__preview) {
+  .pz-business-reviews[data-motion='subtle'][data-density='compact'] .pz-business-reviews__review:is(:hover, :focus-within) > blockquote,
+  .pz-business-reviews[data-motion='subtle'][data-density='compact'] .pz-business-reviews__review:is(:hover, :focus-within) > .pz-business-reviews__review-text > .pz-business-reviews__preview {
     transform: translateX(4px);
   }
 
@@ -317,10 +318,6 @@
     transform: translateX(2px);
   }
 
-  .pz-business-reviews[data-motion='subtle'] .pz-business-reviews__text[open] > blockquote {
-    animation: pz-business-reviews-text-in var(--pz-business-motion-fast) ease-out;
-  }
-
   // Scroll reveal for the heading, every article and the button (same approach as the service
   // areas). The tall featured card finishes early so it isn't half-faded for a long scroll, and
   // the count follows the title a beat later.
@@ -391,9 +388,4 @@
 @keyframes pz-business-blogs-drift {
   from { translate: 0 -4%; }
   to { translate: 0 4%; }
-}
-
-@keyframes pz-business-reviews-text-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
 }

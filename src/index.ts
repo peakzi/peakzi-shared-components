@@ -214,6 +214,7 @@ export { BusinessSiteReviews } from './components/BusinessSiteReviews'
 export type {
   BusinessSiteReview,
   BusinessSiteReviewsAppearance,
+  BusinessSiteReviewsCompactHeader,
   BusinessSiteReviewsProps,
   BusinessSiteReviewsSummary,
 } from './components/BusinessSiteReviews'

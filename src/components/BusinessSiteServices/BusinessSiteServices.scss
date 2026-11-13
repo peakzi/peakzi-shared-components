@@ -1,3 +1,4 @@
+@use '../../styles/business-site-eyebrow' as label;
 @use './service-grid/ServiceGrid';
 @use './price-table/ServicePriceTable';
 
@@ -15,9 +16,7 @@
 .pz-business-services__intro { display: flex; flex-direction: column; gap: 10px; }
 .pz-business-services__intro p { margin: 0; color: inherit; line-height: 1.6; }
 .pz-business-services__eyebrow {
-  color: var(--pz-business-services-accent); font-family: inherit;
-  font-size: 11px; font-weight: 600; line-height: 1.5;
-  letter-spacing: 0.12em; text-transform: uppercase;
+  @include label.eyebrow(var(--pz-business-services-font), var(--pz-business-services-text));
 }
 .pz-business-services__title,
 .pz-business-services__group-head :is(h2, h3) {
