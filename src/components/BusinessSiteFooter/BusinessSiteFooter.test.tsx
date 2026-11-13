@@ -139,3 +139,79 @@ describe('BusinessSiteFooter', () => {
     expect(footer.style.getPropertyValue('--pz-business-footer-text')).toBe('#ffffff')
   })
 })
+
+describe('BusinessSiteFooter social profiles', () => {
+  const socialLinks = [
+    { id: 'facebook', label: 'Facebook', iconName: 'facebook', href: 'https://www.facebook.com/example' },
+    { id: 'bbb', label: 'Better Business Bureau', iconName: 'bbb', href: 'https://www.bbb.org/example' },
+    { id: 'angi', label: 'Angi', iconName: 'angi', href: 'https://www.angi.com/example' },
+  ] as const
+
+  it('server-renders profile links beneath the business contact details', () => {
+    const { container, getByRole } = render(<BusinessSiteFooter {...props} socialLinks={socialLinks} />)
+    const navigation = getByRole('navigation', { name: 'Social and review profiles' })
+    expect(navigation.parentElement).toHaveClass('pz-business-footer__brand')
+    expect(navigation.previousElementSibling?.tagName).toBe('ADDRESS')
+    const links = [...navigation.querySelectorAll('a')]
+    expect(links).toHaveLength(3)
+    for (const [index, link] of links.entries()) {
+      expect(link).toHaveAttribute('href', socialLinks[index]!.href)
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+      expect(link).toHaveAccessibleName(`${socialLinks[index]!.label} (opens in a new tab)`)
+      expect(link.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+      expect(link.querySelector('svg')).toHaveAttribute('color', 'currentColor')
+    }
+    expect(container.querySelector('footer address a')).toHaveAttribute('href', 'tel:+15125550188')
+  })
+
+  it.each([32, '2rem'])('uses natural artwork proportions at size %s and inherits the footer theme colour', (size) => {
+    const { container } = render(<BusinessSiteFooter {...props} socialLinks={socialLinks}
+      appearance={{ backgroundColor: '#ffffff', textColor: '#123456', accentColor: '#abcdef', socialIconSize: size }} />)
+    const footer = container.querySelector('footer')!
+    const icon = container.querySelector<SVGSVGElement>('.pz-business-footer__social svg')!
+    expect(footer.style.getPropertyValue('--pz-business-footer-text')).toBe('#123456')
+    expect(icon).toHaveAttribute('color', 'currentColor')
+    expect(icon).toHaveAttribute('height', String(size))
+    expect(icon.style.height).toBe(typeof size === 'number' ? size + 'px' : size)
+    for (const artwork of container.querySelectorAll<SVGSVGElement>('.pz-business-footer__social svg')) {
+      if (typeof size === 'number') {
+        const [, , width, height] = artwork.getAttribute('viewBox')!.split(/\s+/).map(Number)
+        const renderedRatio = Number.parseFloat(artwork.style.width) / Number.parseFloat(artwork.style.height)
+        expect(renderedRatio).toBeCloseTo(width! / height!, 4)
+      } else {
+        expect(artwork.style.width).toContain('rem')
+        expect(artwork.style.height).toContain('rem')
+      }
+    }
+  })
+
+  it.each([undefined, []])('omits empty social navigation without placeholders', (links) => {
+    const { container } = render(<BusinessSiteFooter {...props} socialLinks={links} />)
+    expect(container.querySelector('.pz-business-footer__social')).toBeNull()
+    expect(container.querySelector('address')).not.toBeNull()
+  })
+
+  it('omits unsafe, incomplete and unknown-icon profile links', () => {
+    const links = [
+      ...socialLinks,
+      { id: 'script', label: 'Bad', iconName: 'facebook', href: 'javascript:alert(1)' },
+      { id: 'relative', label: 'Relative', iconName: 'facebook', href: '/facebook' },
+      { id: 'email', label: 'Email', iconName: 'facebook', href: 'mailto:test@example.com' },
+      { id: 'credentials', label: 'Credentials', iconName: 'facebook', href: 'https://user:password@example.com/' },
+      { id: 'unknown', label: 'Unknown', iconName: 'missing', href: 'https://example.com/' },
+      { id: 'empty', label: '   ', iconName: 'facebook', href: 'https://example.com/' },
+    ] as unknown as NonNullable<BusinessSiteFooterProps['socialLinks']>
+    const { container } = render(<BusinessSiteFooter {...props} socialLinks={links} />)
+    const navigation = container.querySelector('.pz-business-footer__social')!
+    expect(navigation.querySelectorAll('a')).toHaveLength(3)
+    expect(navigation.textContent).not.toMatch(/Bad|Relative|Email|Credentials|Unknown/)
+  })
+
+  it('omits the whole row when no supplied profiles are usable', () => {
+    const html = renderToStaticMarkup(<BusinessSiteFooter {...props} socialLinks={[
+      { id: 'bad', label: 'Facebook', iconName: 'facebook', href: 'data:text/html,bad' },
+    ]} />)
+    expect(html).not.toContain('pz-business-footer__social')
+  })
+})

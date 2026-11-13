@@ -1,6 +1,7 @@
 import { safeHref } from '../../utils/safeHref'
 import { footerStyle } from './helpers/appearance'
 import { footerLink, validFooterLinks } from './helpers/links'
+import { footerSocialLink, validFooterSocialLinks } from './helpers/social-links'
 import type { BusinessSiteFooterProps } from './helpers/types'
 
 export type {
@@ -9,6 +10,7 @@ export type {
   BusinessSiteFooterLink,
   BusinessSiteFooterLogo,
   BusinessSiteFooterPhone,
+  BusinessSiteFooterSocialLink,
   BusinessSiteFooterProps,
 } from './helpers/types'
 
@@ -17,6 +19,7 @@ export function BusinessSiteFooter({
   logo,
   addressLines = [],
   phone,
+  socialLinks = [],
   columns = [],
   bottomLinks = [],
   attribution,
@@ -37,6 +40,7 @@ export function BusinessSiteFooter({
     .filter((column) => column?.heading?.trim())
     .map((column) => ({ ...column, links: validFooterLinks(column.links ?? []) }))
     .filter((column) => column.links.length > 0)
+  const profiles = validFooterSocialLinks(socialLinks)
   const legalLinks = validFooterLinks(bottomLinks)
   const year = copyrightYear && Number.isFinite(copyrightYear) && copyrightYear > 0
     ? copyrightYear
@@ -70,6 +74,13 @@ export function BusinessSiteFooter({
                 {address.map((line, index) => <span key={`${index}-${line}`}>{line}</span>)}
                 {phoneHref && phone && <a href={phoneHref}>{phone.display}</a>}
               </address>
+            )}
+            {profiles.length > 0 && (
+              <nav className="pz-business-footer__social" aria-label="Social and review profiles">
+                <ul>{profiles.map((link) => (
+                  <li key={link.id}>{footerSocialLink(link, appearance.socialIconSize ?? 20)}</li>
+                ))}</ul>
+              </nav>
             )}
           </div>
 

@@ -1,23 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { ArrowUpRight, Award, BadgeCheck, CalendarDays, Calculator, Check, ClipboardCheck, ClipboardList, Clock, DollarSign, Droplet, Flame, House, Phone, Shield, ShieldCheck, Snowflake, Star, Tag, Thermometer, Wrench, Zap } from 'lucide-react'
 import type { IconName } from 'lucide-react/dynamic'
-import { Icon as CustomIcon, type IconProps } from '../components/Icon'
-
-const CUSTOM_ICONS = {
-  'brand-chatgpt': { name: 'chatgpt' },
-  'brand-gemini': { name: 'gemini' },
-  'brand-facebook': { name: 'facebook' },
-  'brand-instagram': { name: 'instagram' },
-  'brand-youtube': { name: 'youtube' },
-  'brand-x': { name: 'x' },
-  'brand-tiktok': { name: 'tiktok' },
-  'brand-linkedin': { name: 'linkedin' },
-  'brand-nextdoor': { name: 'nextdoor' },
-  'brand-yelp': { name: 'yelp' },
-  'brand-google-business': { name: 'google-business' },
-  'brand-angi': { name: 'angi' },
-  'brand-bbb': { name: 'bbb' },
-} as const satisfies Record<string, Pick<IconProps, 'name' | 'variant'>>
+import { Icon as RegisteredIcon, type IconName as RegisteredIconName } from '../components/Icon'
+import { getIconDefinition } from '../components/Icon/registry'
 
 const STATIC_ICONS = {
   phone: Phone,
@@ -68,15 +53,16 @@ export function businessSiteIcon(name: string | undefined) {
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
-  const color = iconName.endsWith('-color')
-  const customName = color ? iconName.slice(0, -6) : iconName
-  if (Object.prototype.hasOwnProperty.call(CUSTOM_ICONS, customName)) {
-    return <CustomIcon {...CUSTOM_ICONS[customName as keyof typeof CUSTOM_ICONS]} variant={color ? 'color' : 'monochrome'} size={17} aria-hidden="true" />
-  }
   const Icon = Object.prototype.hasOwnProperty.call(STATIC_ICONS, iconName)
     ? STATIC_ICONS[iconName as keyof typeof STATIC_ICONS]
     : null
   if (Icon) return <Icon aria-hidden="true" size={17} strokeWidth={1.75} />
+  const registeredName = iconName.startsWith('brand-') ? iconName.slice(6) : iconName
+  // X uses main's existing twitter key; plain "x" remains the Lucide close icon.
+  const nameInRegistry = iconName === 'brand-x' ? 'twitter' : registeredName
+  if (getIconDefinition(nameInRegistry)) {
+    return <RegisteredIcon name={nameInRegistry as RegisteredIconName} color="currentColor" size={17} aria-hidden="true" />
+  }
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(iconName)) return null
   return <Suspense fallback={<IconPlaceholder />}><LazyLucideIcon name={iconName} /></Suspense>
 }

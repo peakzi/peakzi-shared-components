@@ -115,6 +115,8 @@ export default defineConfig({
         'react',
         'react-dom',
         'react/jsx-runtime',
+        '@fortawesome/free-brands-svg-icons',
+        /^@fortawesome\/free-brands-svg-icons\//,
         'lucide-react',
         /^lucide-react\//,
         'validator',

@@ -1,101 +1,117 @@
-import { act, render, screen } from '@testing-library/react'
 import { createRef } from 'react'
-import { hydrateRoot } from 'react-dom/client'
 import { renderToStaticMarkup, renderToString } from 'react-dom/server'
+import { hydrateRoot } from 'react-dom/client'
+import { act, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { faXTwitter } from '@fortawesome/free-brands-svg-icons/faXTwitter'
 import { Icon, type IconName } from './Icon'
+import { iconNames } from './registry'
+
+const names = iconNames
 
 describe('Icon', () => {
-  it('forwards its ref to the SVG element', () => {
+  it.each(names)('renders local artwork for %s', (name) => {
+    const { container } = render(<Icon name={name} title={name} />)
+    const icon = screen.getByRole('img', { name })
+    expect(icon).toHaveAttribute('data-icon', name)
+    expect(icon).toHaveAttribute('preserveAspectRatio', 'xMidYMid meet')
+    const paths = icon.querySelectorAll('path')
+    expect(paths.length).toBeGreaterThan(0)
+    paths.forEach((path) => expect(path.getAttribute('d')).toBeTruthy())
+    expect(container.querySelector('img, image, use, script')).toBeNull()
+  })
+
+  it('defaults to black at 24 by 24 without inheriting a parent colour', () => {
+    render(<span style={{ color: 'red' }}><Icon name="facebook" testId="icon" /></span>)
+    const icon = screen.getByTestId('icon')
+    expect(icon).toHaveAttribute('color', 'black')
+    expect(icon.querySelector('path')).toHaveAttribute('fill', 'currentColor')
+    expect(icon).toHaveAttribute('width', '24')
+    expect(icon).toHaveAttribute('height', '24')
+  })
+
+  it('accepts a theme colour and numeric size from the consuming app', () => {
+    render(<Icon name="instagram" color="var(--site-accent)" size={32} testId="icon" />)
+    const icon = screen.getByTestId('icon')
+    expect(icon).toHaveAttribute('color', 'var(--site-accent)')
+    expect(icon).toHaveAttribute('width', '32')
+    expect(icon).toHaveAttribute('height', '32')
+  })
+
+  it('accepts currentColor and relative SVG lengths', () => {
+    render(<Icon name="youtube" color="currentColor" size="1.5em" testId="icon" />)
+    const icon = screen.getByTestId('icon')
+    expect(icon).toHaveAttribute('color', 'currentColor')
+    expect(icon).toHaveAttribute('width', '1.5em')
+    expect(icon).toHaveAttribute('height', '1.5em')
+  })
+
+  it('uses the X artwork for the existing twitter platform key', () => {
+    const { container } = render(<Icon name="twitter" />)
+    expect(container.querySelector('path')).toHaveAttribute('d', faXTwitter.icon[4])
+  })
+
+  it('keeps decorative icons hidden and unfocusable inside labelled links', () => {
+    render(<a href="https://www.facebook.com/AllAmericanPHA" aria-label="Facebook"><Icon name="facebook" testId="icon" /></a>)
+    expect(screen.getByRole('link', { name: 'Facebook' })).toBeInTheDocument()
+    expect(screen.getByTestId('icon')).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByTestId('icon')).toHaveAttribute('focusable', 'false')
+    expect(screen.queryByRole('img')).toBeNull()
+  })
+
+  it('connects standalone titles to unique accessible names', () => {
+    render(<><Icon name="bbb" title="  Better Business Bureau  " /><Icon name="bbb" title="Second BBB logo" /></>)
+    const first = screen.getByRole('img', { name: 'Better Business Bureau' })
+    const second = screen.getByRole('img', { name: 'Second BBB logo' })
+    const firstId = first.getAttribute('aria-labelledby')
+    expect(firstId).toBeTruthy()
+    expect(first.querySelector('title')).toHaveAttribute('id', firstId)
+    expect(second.getAttribute('aria-labelledby')).not.toBe(firstId)
+    expect(first).not.toHaveAttribute('aria-hidden')
+  })
+
+  it('supports aria-label and caller-owned aria-labelledby without conflicting IDs', () => {
+    const { rerender } = render(<Icon name="angi" title="Angi logo" aria-label="Find us on Angi" />)
+    const labelled = screen.getByRole('img', { name: 'Find us on Angi' })
+    expect(labelled).not.toHaveAttribute('aria-labelledby')
+    rerender(<><span id="angi-label">Our Angi profile</span><Icon name="angi" title="Angi" aria-labelledby="angi-label" /></>)
+    expect(screen.getByRole('img', { name: 'Our Angi profile' })).toHaveAttribute('aria-labelledby', 'angi-label')
+  })
+
+  it('ignores whitespace-only titles', () => {
+    const { container } = render(<Icon name="yelp" title="   " />)
+    expect(container.querySelector('title')).toBeNull()
+    expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('forwards refs, SVG attributes, and extra classes', () => {
     const ref = createRef<SVGSVGElement>()
-    const { container } = render(<Icon name="gemini" ref={ref} />)
-    expect(ref.current).toBe(container.querySelector('svg'))
+    render(<Icon ref={ref} name="linkedin" className="footer-social" id="linkedin-icon" testId="icon" />)
+    expect(ref.current).toBe(screen.getByTestId('icon'))
+    expect(ref.current).toHaveAttribute('id', 'linkedin-icon')
+    expect(ref.current).toHaveClass('pz-icon', 'footer-social')
   })
 
-  it.each(['chatgpt', 'gemini'] as const)('renders %s as decorative, theme-colored SVG by default', (name) => {
-    const { container } = render(<Icon name={name} />)
-    const svg = container.querySelector('svg')!
-    expect(svg).toHaveAttribute('width', '24')
-    expect(svg).toHaveAttribute('height', '24')
-    expect(svg).toHaveAttribute('aria-hidden', 'true')
-    expect(svg).toHaveAttribute('focusable', 'false')
-    expect(svg).toHaveAttribute('data-icon-variant', 'monochrome')
-    expect(svg.querySelector('path')).toHaveAttribute('fill', 'currentColor')
-    expect(screen.queryByRole('img')).toBeNull()
+  it.each(['unknown', '__proto__', 'constructor'])('ignores unsupported runtime names: %s', (name) => {
+    const { container } = render(<Icon name={name as IconName} />)
+    expect(container).toBeEmptyDOMElement()
   })
 
-  it('extracts one square ChatGPT mark without the duplicate or construction guides', () => {
-    const { container } = render(<Icon name="chatgpt" />)
-    const svg = container.querySelector('svg')!
-    const viewBox = svg.getAttribute('viewBox')!.split(' ').map(Number)
-    expect(viewBox[2]).toBe(viewBox[3])
-    expect(svg.querySelectorAll('path')).toHaveLength(1)
-    expect(svg.querySelector('[stroke]')).toBeNull()
+  it('server-renders all logos without image placeholders or client scripts', () => {
+    const html = renderToStaticMarkup(<>{names.map((name) => <Icon key={name} name={name} title={name} />)}</>)
+    expect(html.match(/<svg\b/g)).toHaveLength(names.length)
+    expect(html).toContain('data-icon="bbb"')
+    expect(html).toContain('data-icon="angi"')
+    expect(html).not.toMatch(/<img\b|<script\b|<image\b|<use\b/)
+  })
+  it('allows width and height to override size individually', () => {
+    render(<Icon name="facebook" size={40} width={32} height={30} testId="icon" />)
+    expect(screen.getByTestId('icon')).toHaveAttribute('width', '32')
+    expect(screen.getByTestId('icon')).toHaveAttribute('height', '30')
   })
 
-  it('uses an optional title as an accessible name and escapes its text', () => {
-    render(<Icon name="gemini" title="  Gemini <logo>  " />)
-    const image = screen.getByRole('img', { name: 'Gemini <logo>' })
-    expect(image).not.toHaveAttribute('aria-hidden')
-    expect(image.querySelector('logo')).toBeNull()
-    expect(document.getElementById(image.getAttribute('aria-labelledby')!)).toHaveTextContent('Gemini <logo>')
-  })
-
-  it('supports aria-label and a consumer-owned aria-labelledby', () => {
-    const { rerender } = render(<Icon name="chatgpt" aria-label="Ask ChatGPT" />)
-    expect(screen.getByRole('img', { name: 'Ask ChatGPT' })).toBeVisible()
-    rerender(<><span id="provider">Gemini provider</span><Icon name="gemini" title="Icon" aria-labelledby="provider" /></>)
-    expect(screen.getByRole('img', { name: 'Gemini provider' })).toBeVisible()
-  })
-
-  it('forwards SVG attributes, sizing, classes and test identifiers', () => {
-    const { rerender } = render(<Icon name="gemini" size="1em" className="provider-icon" data-source="profile" testId="icon" />)
-    const svg = screen.getByTestId('icon')
-    expect(svg).toHaveClass('pz-icon', 'provider-icon')
-    expect(svg).toHaveAttribute('width', '1em')
-    expect(svg).toHaveAttribute('height', '1em')
-    expect(svg).toHaveAttribute('data-source', 'profile')
-    rerender(<Icon name="gemini" size={40} width={32} height={30} data-testid="native-test-id" />)
-    expect(screen.getByTestId('native-test-id')).toHaveAttribute('width', '32')
-    expect(screen.getByTestId('native-test-id')).toHaveAttribute('height', '30')
-  })
-
-  it('keeps icons next to link text decorative', () => {
-    render(<a href="https://example.com"><Icon name="chatgpt" />Ask ChatGPT</a>)
-    expect(screen.getByRole('link', { name: 'Ask ChatGPT' })).toBeVisible()
-    expect(screen.queryByRole('img')).toBeNull()
-  })
-
-  it('preserves Gemini color artwork and scopes gradient references to each instance', () => {
-    const { container } = render(<><Icon name="gemini" variant="color" /><Icon name="gemini" variant="color" /></>)
-    const gradients = [...container.querySelectorAll('linearGradient')]
-    expect(gradients).toHaveLength(6)
-    expect(new Set(gradients.map((gradient) => gradient.id)).size).toBe(6)
-    for (const svg of container.querySelectorAll('svg')) {
-      expect(svg).toHaveAttribute('data-icon-variant', 'color')
-      expect(svg.querySelector('path')).toHaveAttribute('fill', '#3186FF')
-      expect([...svg.querySelectorAll('stop')].map((stop) => stop.getAttribute('stop-color')))
-        .toEqual(['#08B962', '#08B962', '#F94543', '#F94543', '#FABC12', '#FABC12'])
-      for (const path of svg.querySelectorAll('path[fill^="url("]')) {
-        const id = path.getAttribute('fill')!.slice(5, -1)
-        expect([...svg.querySelectorAll('linearGradient')].some((gradient) => gradient.id === id)).toBe(true)
-      }
-    }
-  })
-
-  it('falls back to monochrome when color artwork is unavailable', () => {
-    const html = renderToStaticMarkup(<Icon name="chatgpt" variant="color" />)
-    expect(html).toContain('data-icon-variant="monochrome"')
-    expect(html).toContain('fill="currentColor"')
-    expect(html).not.toContain('linearGradient')
-  })
-
-  it.each(['missing', '__proto__', 'constructor'])('omits unknown runtime icon names: %s', (name) => {
-    expect(renderToStaticMarkup(<Icon name={name as IconName} />)).toBe('')
-  })
-
-  it('keeps title and gradient IDs stable when hydrating server HTML', async () => {
-    const tree = <><Icon name="gemini" variant="color" title="Gemini" /><Icon name="gemini" variant="color" title="Gemini" /></>
+  it('keeps title and gradient IDs stable during hydration', async () => {
+    const tree = <><Icon name="gemini-color" title="Gemini" /><Icon name="bbb" title="BBB" /></>
     const holder = document.createElement('div')
     holder.innerHTML = renderToString(tree)
     document.body.append(holder)
@@ -106,10 +122,23 @@ describe('Icon', () => {
       await act(async () => { root = hydrateRoot(holder, tree, { onRecoverableError }) })
       expect(onRecoverableError).not.toHaveBeenCalled()
       expect(holder.innerHTML).toBe(before)
-      expect(holder.querySelectorAll('path')).toHaveLength(8)
     } finally {
       await act(async () => root?.unmount())
       holder.remove()
     }
   })
+
+  it('scopes the colored Gemini gradients to each instance without changing the main Icon API', () => {
+    const { container } = render(<><Icon name="gemini-color" /><Icon name="gemini-color" /></>)
+    const gradients = [...container.querySelectorAll('linearGradient')]
+    expect(gradients).toHaveLength(6)
+    expect(new Set(gradients.map(gradient => gradient.id)).size).toBe(6)
+    for (const svg of container.querySelectorAll('svg')) {
+      for (const path of svg.querySelectorAll('path[fill^="url("]')) {
+        const target = path.getAttribute('fill')!.slice(5, -1)
+        expect([...svg.querySelectorAll('linearGradient')].some(gradient => gradient.id === target)).toBe(true)
+      }
+    }
+  })
+
 })

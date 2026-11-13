@@ -1,3 +1,4 @@
+import type { IconName } from '../../Icon'
 import type { BusinessSiteMotion } from '../../../utils/siteAppearance'
 
 export interface BusinessSiteFooterLogo {
@@ -20,6 +21,10 @@ export interface BusinessSiteFooterLink {
   newTab?: boolean
 }
 
+export interface BusinessSiteFooterSocialLink extends Pick<BusinessSiteFooterLink, 'id' | 'label' | 'href'> {
+  iconName: IconName
+}
+
 export interface BusinessSiteFooterColumn {
   id: string
   heading: string
@@ -33,6 +38,8 @@ export interface BusinessSiteFooterAppearance {
   accentColor?: string
   density?: 'comfortable' | 'compact'
   motion?: BusinessSiteMotion
+  /** Nominal icon height; width follows the artwork's aspect ratio. Defaults to 20. */
+  socialIconSize?: number | string
 }
 
 export interface BusinessSiteFooterProps {
@@ -40,6 +47,7 @@ export interface BusinessSiteFooterProps {
   logo?: BusinessSiteFooterLogo
   addressLines?: readonly string[]
   phone?: BusinessSiteFooterPhone
+  socialLinks?: readonly BusinessSiteFooterSocialLink[] | undefined
   columns?: readonly BusinessSiteFooterColumn[]
   bottomLinks?: readonly BusinessSiteFooterLink[]
   attribution?: BusinessSiteFooterLink

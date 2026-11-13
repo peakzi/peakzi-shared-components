@@ -20,7 +20,7 @@ const meta = {
       },
     },
   },
-  render: ({ font, backgroundColor, textColor, accentColor, density, motion, ...props }: StoryArgs) => {
+  render: ({ font, backgroundColor, textColor, accentColor, density, motion, socialIconSize, ...props }: StoryArgs) => {
     const demoLogo = props.logo?.src === peakziLogoWhite || props.logo?.src === peakziLogoColor
     const lightLogo = readableText('#ffffff', safeColor(backgroundColor, '#12171c')) === '#ffffff'
     const logo = demoLogo && props.logo
@@ -31,7 +31,7 @@ const meta = {
       <BusinessSiteFooter
         {...props}
         logo={logo}
-        appearance={{ font, backgroundColor, textColor, accentColor, density, motion }}
+        appearance={{ font, backgroundColor, textColor, accentColor, density, motion, socialIconSize }}
       />
     )
   },
@@ -48,6 +48,8 @@ const meta = {
     columns: { control: 'object' },
     bottomLinks: { control: 'object' },
     attribution: { control: 'object' },
+    socialLinks: { control: 'object' },
+    socialIconSize: { control: 'number' },
   },
   args: {
     businessName: 'Peakzi Demo Services',
@@ -78,6 +80,7 @@ const meta = {
     accentColor: '#a5c9ee',
     density: 'comfortable',
     motion: 'subtle',
+    socialIconSize: 20,
   },
 } satisfies Meta<StoryArgs>
 
@@ -102,4 +105,20 @@ export const Light: Story = {
 
 export const Compact: Story = {
   args: { density: 'compact' },
+}
+
+export const SocialProfiles: Story = {
+  args: {
+    socialLinks: [
+      { id: 'facebook', label: 'Facebook', iconName: 'facebook', href: 'https://www.facebook.com/' },
+      { id: 'twitter', label: 'X (Twitter)', iconName: 'twitter', href: 'https://www.x.com/' },
+      { id: 'instagram', label: 'Instagram', iconName: 'instagram', href: 'https://www.instagram.com/' },
+      { id: 'linkedin', label: 'LinkedIn', iconName: 'linkedin', href: 'https://www.linkedin.com/' },
+      { id: 'tiktok', label: 'TikTok', iconName: 'tiktok', href: 'https://www.tiktok.com/' },
+      { id: 'youtube', label: 'YouTube', iconName: 'youtube', href: 'https://www.youtube.com/' },
+      { id: 'bbb', label: 'Better Business Bureau', iconName: 'bbb', href: 'https://www.bbb.org/' },
+      { id: 'yelp', label: 'Yelp', iconName: 'yelp', href: 'https://www.yelp.com/' },
+      { id: 'angi', label: 'Angi', iconName: 'angi', href: 'https://www.angi.com/' },
+    ],
+  },
 }

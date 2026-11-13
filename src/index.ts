@@ -9,6 +9,12 @@
 // =============================================================================
 
 // ---------------------------------------------------------------------------
+// Icons
+// ---------------------------------------------------------------------------
+export { Icon } from './components/Icon'
+export type { IconProps, IconName } from './components/Icon'
+
+// ---------------------------------------------------------------------------
 // Inputs
 // ---------------------------------------------------------------------------
 export { Button } from './components/Button'
@@ -124,6 +130,7 @@ export type {
   BusinessSiteFooterLink,
   BusinessSiteFooterLogo,
   BusinessSiteFooterPhone,
+  BusinessSiteFooterSocialLink,
   BusinessSiteFooterProps,
 } from './components/BusinessSiteFooter'
 
@@ -365,9 +372,6 @@ export type { StackProps, StackGap } from './components/Stack'
 // ---------------------------------------------------------------------------
 // Brand
 // ---------------------------------------------------------------------------
-export { Icon } from './components/Icon'
-export type { IconProps, IconName, IconVariant, IconAppearance, IconSurface } from './components/Icon'
-
 export { PeakziLogo } from './components/PeakziLogo'
 export type { PeakziLogoProps, LogoVariant, LogoSize } from './components/PeakziLogo'
 

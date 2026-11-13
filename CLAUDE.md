@@ -100,11 +100,15 @@ Package name: `@peakzi/components`
 | `EditableField` | Inline editable value |
 | `DefList`, `DefRow` | Key-value definition lists |
 
+### Icons
+| Component | Key Props |
+|-----------|-----------|
+| `Icon` | Generic SVG renderer from main. `name` comes from the Font Awesome/custom registries; `color` defaults to black; `size` defaults to 24. Register Font Awesome imports in `Icon/fontAwesome.ts` and custom definitions in `Icon/customIcon/`. ChatGPT uses Font Awesome OpenAI; Gemini, `gemini-color`, Nextdoor and Google Business use local definitions alongside BBB/Angi. |
+
 ### Brand
 | Component | Key Props |
 |-----------|-----------|
 | `PeakziLogo` | `variant`: color \| white \| navy. `size`: xs \| sm \| md \| lg \| xl |
-| `Icon` | Local artwork behind one SVG API; Instagram alone retains a small gradient image. `name`: chatgpt, gemini, facebook, instagram, youtube, x, tiktok, linkedin, nextdoor, yelp, google-business, angi, bbb. `variant`: monochrome (currentColor) or supplied color. `appearance`: filled/outline (Angi and BBB have both; Google Business is outline; remaining icons are filled). `surface`: light/dark selects supplied color artwork. Missing treatments fall back to available artwork. `size`: number or SVG length; native width/height override independently. Optional `title` or ARIA label makes it accessible. |
 
 ### Charts & Maps
 Built on Highcharts / Leaflet, which are **optional peer dependencies**. A consuming app that uses these must install `highcharts` + `highcharts-react-official` and/or `leaflet` + `react-leaflet@^5` (requires React 19) itself. **They are not exported from the root entry.** Import from subpaths (`import { ColumnChart } from '@peakzi/components/ColumnChart'`), and never add them to `src/index.ts`: that would make every root import require the optional peers. Map CSS (including Leaflet's) only ships in `@peakzi/components/styles`. Every component takes `className` and `testId`; most take `isLoading` (renders `Skeleton`) and `chartHeight`.
