@@ -1,0 +1,56 @@
+@use '../../../styles/breakpoints';
+
+/* Opt-in single-photo treatment for inner-page introductions. */
+.pz-business-hero[data-media-presentation='natural'] {
+  --pz-business-hero-media-max-height: calc(var(--space-4) * 28);
+
+  .pz-business-hero__media { width: fit-content; max-width: 100%; justify-self: center; }
+  .pz-business-hero__gallery[data-multiple='false'] {
+    .pz-photo-gallery__viewport { height: auto; min-height: 0; aspect-ratio: auto; }
+    .pz-photo-gallery__track { position: relative; inset: auto; display: block; transform: none; }
+    .pz-photo-gallery__slide { height: auto; background: transparent; }
+    .pz-photo-gallery__backdrop { display: none; }
+    .pz-photo-gallery__image {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: var(--pz-business-hero-media-max-height);
+      margin-inline: auto;
+      border-radius: var(--pz-business-hero-radius);
+      object-fit: contain;
+    }
+  }
+  .pz-business-hero__caption {
+    width: 0;
+    min-width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    margin-block-start: var(--space-3);
+    margin-inline: 0;
+    padding: 0;
+    padding-inline-start: var(--space-3);
+    border-inline-start: calc(var(--space-1) / 2) solid var(--pz-business-hero-accent);
+    text-align: start;
+  }
+}
+.pz-business-hero[data-media-presentation='natural'][data-variant='inner-page'][data-density] .pz-business-hero__inner {
+  min-height: 0;
+  padding-block: var(--space-5);
+  gap: var(--space-8);
+  align-items: start;
+}
+@media (min-width: #{breakpoints.$breakpoint-content-stack}) {
+  .pz-business-hero[data-media-presentation='natural'][data-layout='split'][data-content-order='text-first'] .pz-business-hero__inner {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  }
+  .pz-business-hero[data-media-presentation='natural'][data-layout='split'][data-content-order='image-first'] .pz-business-hero__inner {
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  }
+}
+@media (max-width: #{breakpoints.$breakpoint-content-stack}) {
+  .pz-business-hero[data-media-presentation='natural'] { --pz-business-hero-media-max-height: calc(var(--space-4) * 18); }
+  .pz-business-hero[data-media-presentation='natural'][data-layout='split'][data-density] .pz-business-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+}

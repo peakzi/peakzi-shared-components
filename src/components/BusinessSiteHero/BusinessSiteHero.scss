@@ -1,3 +1,5 @@
+@use './helpers/natural-media';
+
 .pz-business-hero {
   --pz-business-hero-background: #ffffff;
   --pz-business-hero-text: #12171c;
@@ -221,12 +223,25 @@
 }
 
 .pz-business-hero__media {
+  margin: 0;
   position: relative;
   overflow: hidden;
   width: 100%;
   aspect-ratio: 5 / 4;
   border-radius: var(--pz-business-hero-radius);
   background: color-mix(in srgb, var(--pz-business-hero-text) 8%, var(--pz-business-hero-background));
+}
+
+.pz-business-hero__caption {
+  max-width: 52ch;
+  margin-inline: auto;
+  padding-top: var(--space-3);
+  color: var(--pz-business-hero-text);
+  font-family: var(--pz-business-hero-font);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .pz-business-hero__media > img,

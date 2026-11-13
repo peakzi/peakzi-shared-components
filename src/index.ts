@@ -160,6 +160,8 @@ export type {
 } from './components/BusinessSiteContactForm'
 export { BusinessSiteContactDialog } from './components/BusinessSiteContactDialog'
 export type { BusinessSiteContactDialogProps } from './components/BusinessSiteContactDialog'
+export { BusinessSiteAbout } from './components/BusinessSiteAbout'
+export type { BusinessSiteAboutAppearance, BusinessSiteAboutProps, BusinessSiteAboutSection, BusinessSiteAboutSectionId } from './components/BusinessSiteAbout'
 export { BusinessSitePolicy } from './components/BusinessSitePolicy'
 export type { BusinessSitePolicyAppearance, BusinessSitePolicyProps } from './components/BusinessSitePolicy'
 export type { BusinessSiteCtaAction, BusinessSiteCtaAppearance, BusinessSiteCtaProps, BusinessSiteCtaVariant } from './components/BusinessSiteCta'

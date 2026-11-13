@@ -134,6 +134,90 @@ describe('BusinessSiteHero', () => {
     expect(screen.queryByRole('img')).toBeNull()
   })
 
+  it.each([
+    { layout: 'split', photos: [images[0]!] },
+    { layout: 'flat', photos: [] },
+  ] as const)('opts inner-page $layout heroes into natural media presentation', ({ layout, photos }) => {
+    const html = renderToStaticMarkup(<BusinessSiteHero {...props} variant="inner-page"
+      layout={layout} images={photos} mediaPresentation="natural" />)
+    expect(html).toContain('data-media-presentation="natural"')
+    expect(html).toContain(`data-layout="${layout}"`)
+  })
+
+  it.each([undefined, 'framed'] as const)('keeps existing inner-page media markup for presentation %s', (mediaPresentation) => {
+    const html = renderToStaticMarkup(<BusinessSiteHero {...props} variant="inner-page"
+      images={[images[0]!]} mediaPresentation={mediaPresentation} />)
+    expect(html).not.toContain('data-media-presentation=')
+  })
+
+  it.each([
+    { name: 'multiple-photo carousel', overrides: { images } },
+    { name: 'background photo', overrides: { layout: 'background' } },
+    { name: 'form aside', overrides: { formContent: <div>Estimate form</div> } },
+    { name: 'explicit default variant', overrides: { variant: 'default' } },
+    { name: 'implicit home/default variant', overrides: { variant: undefined } },
+  ] satisfies { name: string; overrides: Partial<BusinessSiteHeroProps> }[])(
+    'ignores natural media presentation for a $name', ({ overrides }) => {
+      const html = renderToStaticMarkup(<BusinessSiteHero {...props} variant="inner-page"
+        images={[images[0]!]} mediaPresentation="natural" {...overrides} />)
+      expect(html).not.toContain('data-media-presentation=')
+    },
+  )
+
+  it('renders a visible plain-text caption beneath its photo in a semantic figure', () => {
+    const caption = '  Our <crew> & neighbors  '
+    const { container } = render(<BusinessSiteHero {...props} images={[images[0]!]} mediaCaption={caption} />)
+    const figure = container.querySelector('figure.pz-business-hero__media')
+    const figcaption = container.querySelector('figcaption')
+    expect(figure).toContainElement(screen.getByAltText('Front of the client home'))
+    expect(figure?.lastElementChild).toBe(figcaption)
+    expect(figcaption?.parentElement).toBe(figure)
+    expect(figcaption).toBeVisible()
+    expect(figcaption?.textContent).toBe(caption.trim())
+    expect(figcaption?.children).toHaveLength(0)
+    const html = renderToStaticMarkup(<BusinessSiteHero {...props} images={[images[0]!]} mediaCaption={caption} />)
+    expect(html).toContain('Our &lt;crew&gt; &amp; neighbors')
+    expect(html).toContain('<figcaption')
+  })
+
+  it('omits captions without a valid image and keeps the original media markup for blank captions', () => {
+    const caption = 'Our local team'
+    const { container, rerender } = render(<BusinessSiteHero {...props} images={undefined} mediaCaption={caption} />)
+    const invalidImageSets: BusinessSiteHeroProps['images'][] = [
+      undefined,
+      [],
+      [{ ...images[0]!, src: 'javascript:alert(1)' }],
+      [{ ...images[0]!, alt: '  ' }],
+      [{ ...images[0]!, width: 0 }],
+    ]
+    for (const photos of invalidImageSets) {
+      rerender(<BusinessSiteHero {...props} images={photos} mediaCaption={caption} />)
+      expect(container.querySelector('figure, figcaption')).toBeNull()
+      expect(screen.queryByText(caption)).toBeNull()
+      expect(screen.queryByRole('img')).toBeNull()
+    }
+    for (const mediaCaption of [undefined, '  ']) {
+      rerender(<BusinessSiteHero {...props} images={[images[0]!]} mediaCaption={mediaCaption} />)
+      expect(container.querySelector('div.pz-business-hero__media')).toBeInTheDocument()
+      expect(container.querySelector('figure, figcaption')).toBeNull()
+    }
+  })
+
+  it('ignores media captions in background, flat, and form layouts', () => {
+    const caption = 'Our local team'
+    const { container, rerender } = render(<BusinessSiteHero {...props} images={[images[0]!]} layout="background" mediaCaption={caption} />)
+    expect(screen.getByAltText('Front of the client home')).toBeInTheDocument()
+    expect(container.querySelector('figure, figcaption')).toBeNull()
+    expect(screen.queryByText(caption)).toBeNull()
+    rerender(<BusinessSiteHero {...props} layout="flat" mediaCaption={caption} />)
+    expect(container.querySelector('figure, figcaption')).toBeNull()
+    expect(screen.queryByText(caption)).toBeNull()
+    rerender(<BusinessSiteHero {...props} mediaCaption={caption} formContent={<div>Request an estimate</div>} />)
+    expect(screen.getByText('Request an estimate')).toBeInTheDocument()
+    expect(container.querySelector('figure, figcaption')).toBeNull()
+    expect(screen.queryByText(caption)).toBeNull()
+    expect(screen.queryByRole('img')).toBeNull()
+  })
   it('renders URL-only photos without fabricated width or height attributes', () => {
     const urlOnly = images.map(({ src, alt }) => ({ src, alt }))
     const { container, rerender } = render(<BusinessSiteHero {...props} images={urlOnly} imageFit="contain" imageBackdrop="blur" />)

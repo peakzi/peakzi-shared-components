@@ -1,0 +1,195 @@
+@use '../../styles/breakpoints';
+
+.pz-business-about {
+  --about-background: var(--pz-business-about-background, var(--bg));
+  --about-text: var(--pz-business-about-text, var(--fg-1));
+  --about-dark: var(--pz-business-about-dark, var(--fg-1));
+  --about-gradient-end: var(--pz-business-about-gradient-end, var(--about-dark));
+  --about-on-dark: var(--pz-business-about-on-dark, var(--fg-inverse));
+  --about-font: var(--pz-business-about-font, var(--font-body));
+  --about-heading-font: var(--pz-business-about-heading-font, var(--font-display));
+  --about-radius: var(--pz-business-about-radius, var(--radius-md));
+  --about-section-space: clamp(var(--space-10), 5vw, var(--space-16));
+  --about-photo-max-height: calc(var(--space-4) * 28);
+  width: 100%;
+  color: var(--about-text);
+  background: var(--about-background);
+  font-family: var(--about-font);
+}
+
+.pz-business-about__container,
+.pz-business-about__breadcrumb {
+  max-width: calc(var(--space-4) * 75);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+  box-sizing: border-box;
+}
+
+.pz-business-about__breadcrumb { padding-block: var(--space-4); font-size: var(--text-sm); }
+.pz-business-about__breadcrumb :is(ol, ul) { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.pz-business-about__breadcrumb li + li::before { content: '/'; margin-right: var(--space-2); opacity: .6; }
+.pz-business-about__breadcrumb a { color: inherit; text-underline-offset: var(--space-1); }
+.pz-business-about__breadcrumb a:focus-visible,
+.pz-business-about__copy a:focus-visible { outline: calc(var(--space-1) / 2) solid currentColor; outline-offset: var(--space-1); }
+
+.pz-business-about .pz-business-about__eyebrow {
+  margin: 0 0 var(--space-3);
+  color: inherit;
+  font-family: var(--about-font);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+}
+.pz-business-about .pz-business-about__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-5);
+  color: inherit;
+  font-family: var(--about-heading-font);
+  font-size: clamp(var(--text-xl), 2.4vw, var(--text-2xl));
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tighter);
+  overflow-wrap: anywhere;
+}
+.pz-business-about__copy { min-width: 0; font-size: var(--text-base); line-height: calc(var(--leading-normal) + .3); overflow-wrap: anywhere; }
+.pz-business-about__copy :is(p, ul, ol) { color: inherit; font-family: inherit; font-size: inherit; line-height: inherit; }
+.pz-business-about__copy p { white-space: pre-line; }
+.pz-business-about__copy > :first-child { margin-top: 0; }
+.pz-business-about__copy > :last-child { margin-bottom: 0; }
+.pz-business-about__copy :is(h3, h4, h5, h6) { color: inherit; font-family: var(--about-heading-font); line-height: var(--leading-normal); }
+.pz-business-about__copy li + li { margin-top: var(--space-2); }
+.pz-business-about__copy :is(pre, table) { display: block; max-width: 100%; overflow-x: auto; }
+.pz-business-about__copy a { color: inherit; text-underline-offset: var(--space-1); }
+
+.pz-business-about__motto {
+  padding-block: var(--space-10);
+  color: var(--about-on-dark);
+  background: linear-gradient(115deg, var(--about-dark), var(--about-gradient-end));
+  text-align: center;
+}
+.pz-business-about__motto .pz-business-about__eyebrow { opacity: .8; }
+.pz-business-about__motto-copy {
+  max-width: 36ch;
+  margin-inline: auto;
+  font-family: var(--about-heading-font);
+  font-size: clamp(var(--text-2xl), 3.2vw, var(--text-4xl));
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tightest);
+  text-wrap: balance;
+}
+.pz-business-about__story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(var(--space-6), 5vw, var(--space-16));
+  padding-block: var(--about-section-space);
+}
+.pz-business-about__story-grid[data-paired='false'] { grid-template-columns: minmax(0, 1fr); }
+.pz-business-about__story .pz-business-about__copy { max-width: 74ch; }
+.pz-business-about__promise {
+  min-width: 0;
+  padding: var(--space-6);
+  border: calc(var(--space-1) / 4) solid color-mix(in srgb, var(--about-text) 9%, transparent);
+  border-radius: var(--about-radius);
+  background: color-mix(in srgb, var(--about-text) 4%, var(--about-background));
+}
+.pz-business-about__promise h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  color: inherit;
+  font-family: var(--about-heading-font);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+}
+.pz-business-about__promise svg { flex: none; }
+.pz-business-about__promise .pz-business-about__copy { font-size: var(--text-sm); line-height: calc(var(--leading-normal) + .25); }
+.pz-business-about__why { padding-block: var(--about-section-space); background: color-mix(in srgb, var(--about-text) 4%, var(--about-background)); }
+.pz-business-about__why-copy { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--space-6) var(--space-10); }
+.pz-business-about__why-copy > * { margin-block: 0; }
+.pz-business-about__why-copy:has(> :only-child) { grid-template-columns: minmax(0, 1fr); max-width: 86ch; }
+.pz-business-about__credentials { padding-block: var(--about-section-space); }
+.pz-business-about__credentials .pz-business-about__copy { max-width: 86ch; }
+.pz-business-about__credential-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--space-10);
+  height: var(--space-10);
+  border-radius: var(--about-radius);
+  background: color-mix(in srgb, var(--about-text) 6%, var(--about-background));
+}
+.pz-business-about[data-density='compact'] { --about-section-space: var(--space-8); }
+.pz-business-about[data-density='compact'] .pz-business-about__motto { padding-block: var(--space-8); }
+
+@media (max-width: #{breakpoints.$breakpoint-content-stack}) {
+  .pz-business-about { --about-photo-max-height: calc(var(--space-4) * 18); }
+  .pz-business-about__container,
+  .pz-business-about__breadcrumb { padding-inline: var(--space-5); }
+  .pz-business-about__story-grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .pz-business-about__why-copy { grid-template-columns: minmax(0, 1fr); }
+  .pz-business-about__motto { padding-block: var(--space-8); }
+}
+
+/* About photos keep their supplied proportions rather than a cropped carousel frame. */
+.pz-business-about .pz-business-hero__gallery[data-multiple='false'] {
+  .pz-photo-gallery__viewport { height: auto; min-height: 0; aspect-ratio: auto; }
+  .pz-photo-gallery__track { position: relative; inset: auto; display: block; transform: none; }
+  .pz-photo-gallery__slide { height: auto; background: transparent; }
+  .pz-photo-gallery__backdrop { display: none; }
+  .pz-photo-gallery__image {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: var(--about-photo-max-height);
+    margin-inline: auto;
+    border-radius: var(--about-radius);
+    object-fit: contain;
+  }
+}
+
+/* Keep the image and its editorial note together at the photo's displayed width. */
+.pz-business-about figure.pz-business-hero__media {
+  width: fit-content;
+  max-width: 100%;
+  justify-self: center;
+}
+.pz-business-about .pz-business-hero__caption {
+  width: 0;
+  min-width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  margin-block-start: var(--space-3);
+  margin-inline: 0;
+  padding: 0;
+  padding-inline-start: var(--space-3);
+  border-inline-start: calc(var(--space-1) / 2) solid var(--pz-business-hero-accent);
+  text-align: start;
+}
+
+/* A tighter hero rhythm keeps the introduction and its photo visually connected. */
+.pz-business-about .pz-business-about__breadcrumb { padding-block: var(--space-3); }
+.pz-business-about .pz-business-hero[data-variant='inner-page'][data-density] .pz-business-hero__inner {
+  min-height: 0;
+  padding-block: var(--space-5);
+  gap: var(--space-8);
+  align-items: start;
+}
+@media (min-width: #{breakpoints.$breakpoint-content-stack}) {
+  .pz-business-about .pz-business-hero[data-layout='split'] .pz-business-hero__inner {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  }
+}
+@media (max-width: #{breakpoints.$breakpoint-content-stack}) {
+  .pz-business-about .pz-business-hero[data-layout='split'] .pz-business-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+}

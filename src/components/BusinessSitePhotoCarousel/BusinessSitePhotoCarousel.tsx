@@ -4,9 +4,11 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
 import { safeHref } from '../../utils/safeHref'
 
-export interface BusinessSitePhotoCarouselImage { src: string; alt: string; width?: number; height?: number }
+export interface BusinessSitePhotoCarouselImage { src: string; alt: string; caption?: string; width?: number; height?: number }
 export interface BusinessSitePhotoCarouselProps {
   images: readonly BusinessSitePhotoCarouselImage[]
+  /** Display the selected photo's supplied caption. Disable when a parent renders its own caption. */
+  showCaptions?: boolean
   intervalMs?: number
   autoPlay?: boolean
   motion?: 'none' | 'subtle'
@@ -21,7 +23,7 @@ export interface BusinessSitePhotoCarouselProps {
 
 /** Server-rendered photos with peeking cards, progress indicators and explicit playback. */
 export function BusinessSitePhotoCarousel({ images, intervalMs = 5000, autoPlay = false, motion = 'subtle',
-  label = 'Photos', className, imageClassName, backdropClassName, showBlurredBackdrop = false, as: Frame = 'div', navigationLabel = 'photo' }: BusinessSitePhotoCarouselProps) {
+  label = 'Photos', className, imageClassName, backdropClassName, showBlurredBackdrop = false, showCaptions = true, as: Frame = 'div', navigationLabel = 'photo' }: BusinessSitePhotoCarouselProps) {
   const [failed, setFailed] = useState<readonly string[]>([])
   const [selected, setSelected] = useState<string | null>(null)
   const [pausedByUser, setPausedByUser] = useState<boolean | null>(null)
@@ -86,6 +88,8 @@ export function BusinessSitePhotoCarousel({ images, intervalMs = 5000, autoPlay 
   const choose = (target: number) => { setLooping(false); setSelected(photos[Math.max(0, Math.min(count - 1, target))]!.src) }
   const renderPhotos = count > 1 && (autoPlay || !userPaused || looping) ? [...photos, { ...photos[0]!, clone: true }] : photos
 
+  const caption = showCaptions ? photos[index]?.caption?.trim() : undefined
+  const CaptionTag = Frame === 'figure' ? 'figcaption' : 'p'
   return <Frame className={['pz-photo-gallery', className].filter(Boolean).join(' ')} data-motion={motion}
     data-multiple={count > 1} data-running={running} data-snap={snap}
     onFocusCapture={() => { setFocused(true); setExplicitPlay(false) }}
@@ -141,5 +145,6 @@ export function BusinessSitePhotoCarousel({ images, intervalMs = 5000, autoPlay 
       </button>}
       <span className="pz-photo-gallery__status" aria-live={running ? 'off' : 'polite'} aria-atomic="true">Image {index + 1} of {count}</span>
     </div>}
+    {caption && <CaptionTag className="pz-photo-gallery__caption">{caption}</CaptionTag>}
   </Frame>
 }

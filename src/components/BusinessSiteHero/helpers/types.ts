@@ -57,6 +57,10 @@ export interface BusinessSiteHeroProps {
   actions?: readonly BusinessSiteHeroAction[]
   /** One image is static; multiple images render a carousel. */
   images?: readonly BusinessSiteHeroImage[]
+  /** Optional visible caption below split-photo media; omitted for backgrounds and forms. */
+  mediaCaption?: string
+  /** Compact uncropped single-photo styling for inner pages; carousels and backgrounds retain their current presentation. */
+  mediaPresentation?: 'framed' | 'natural'
   /** Cover fills the frame; contain keeps the entire image visible. */
   imageFit?: 'cover' | 'contain'
   /** In split or background + contain mode, blur a second copy behind the full image. */

@@ -19,6 +19,7 @@ const componentEntries = [
   'BusinessSiteContactForm',
   'BusinessSiteContactDialog',
   'BusinessSitePolicy',
+  'BusinessSiteAbout',
   'BusinessSiteServices',
   'BusinessSiteServicesDirectory',
   'BusinessSiteServiceDetail',

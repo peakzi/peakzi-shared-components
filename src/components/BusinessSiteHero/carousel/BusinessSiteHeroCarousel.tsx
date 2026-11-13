@@ -10,7 +10,7 @@ export interface BusinessSiteHeroCarouselProps {
 }
 
 export function BusinessSiteHeroCarousel({ images, intervalMs, showBlurredBackdrop = false, motion = 'subtle' }: BusinessSiteHeroCarouselProps) {
-  return <BusinessSitePhotoCarousel images={images} intervalMs={intervalMs} autoPlay={intervalMs > 0}
+  return <BusinessSitePhotoCarousel images={images} showCaptions={false} intervalMs={intervalMs} autoPlay={intervalMs > 0}
     motion={motion} className={images.length > 1 ? 'pz-business-hero__carousel' : 'pz-business-hero__gallery'}
     imageClassName="pz-business-hero__image-foreground" backdropClassName="pz-business-hero__image-backdrop" showBlurredBackdrop={showBlurredBackdrop} />
 }

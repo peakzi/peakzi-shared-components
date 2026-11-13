@@ -39,3 +39,23 @@
 @keyframes pz-photo-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @media (max-width: 600px) { .pz-photo-gallery { --pz-photo-inset: 18px; --pz-photo-gap: 12px; --pz-photo-height: 280px; } .pz-photo-gallery__controls { padding-block: 16px; } }
 @media (prefers-reduced-motion: reduce) { .pz-photo-gallery__track, .pz-photo-gallery .pz-photo-gallery__indicator { transition: none; } .pz-photo-gallery__progress { animation: none !important; } }
+
+/* Keep the selected photo's caption connected to its visible card. */
+.pz-photo-gallery__caption {
+  box-sizing: border-box;
+  margin: var(--space-3) var(--pz-photo-inset) 0;
+  padding-inline-start: var(--space-3);
+  border-inline-start: calc(var(--space-1) / 2) solid var(--pz-photo-accent, var(--pz-photo-text));
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+/* Caption remains last in figure semantics and sits immediately below the photo visually. */
+.pz-photo-gallery:has(> .pz-photo-gallery__caption) { display: flex; flex-direction: column; }
+.pz-photo-gallery:has(> .pz-photo-gallery__caption) > .pz-photo-gallery__viewport { order: 0; flex: none; }
+.pz-photo-gallery:has(> .pz-photo-gallery__caption) > .pz-photo-gallery__caption { order: 1; }
+.pz-photo-gallery:has(> .pz-photo-gallery__caption) > .pz-photo-gallery__controls { order: 2; }

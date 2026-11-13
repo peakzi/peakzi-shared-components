@@ -68,6 +68,8 @@ export function BusinessSiteHero({
   rating,
   actions = [],
   images,
+  mediaCaption,
+  mediaPresentation = 'framed',
   imageFit = 'cover',
   imageBackdrop = 'solid',
   imagePosition = 'center',
@@ -104,10 +106,15 @@ export function BusinessSiteHero({
       : businessSiteIcon(rating?.iconName)
     : null
 
+  const naturalMedia = variant === 'inner-page' && mediaPresentation === 'natural' && !formContent && photos.length <= 1 &&
+    (resolvedLayout === 'split' || resolvedLayout === 'flat')
+  const caption = resolvedLayout === 'split' ? mediaCaption?.trim() : undefined
+  const MediaTag = caption ? 'figure' : 'div'
   const media = showMedia && photos.length > 0 && (
-    <div className="pz-business-hero__media">
+    <MediaTag className="pz-business-hero__media">
       <BusinessSiteHeroCarousel images={photos} intervalMs={autoplay} motion={motion} showBlurredBackdrop={showBlurredBackdrop} />
-    </div>
+      {caption && <figcaption className="pz-business-hero__caption">{caption}</figcaption>}
+    </MediaTag>
   )
   const splitVisual = resolvedLayout === 'split'
     ? formContent ? <div className="pz-business-hero__aside">{formContent}</div> : media
@@ -118,6 +125,7 @@ export function BusinessSiteHero({
       className={['pz-business-hero', className].filter(Boolean).join(' ')}
       data-variant={variant === 'inner-page' ? 'inner-page' : undefined}
       data-layout={resolvedLayout}
+      data-media-presentation={naturalMedia ? 'natural' : undefined}
       data-image-fit={imageFit === 'contain' ? 'contain' : 'cover'}
       data-image-backdrop={showBlurredBackdrop ? 'blur' : 'solid'}
       data-image-position={imagePosition === 'left' || imagePosition === 'right' ? imagePosition : 'center'}
