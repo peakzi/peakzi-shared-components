@@ -456,3 +456,16 @@
     .pz-business-areas__heading { flex-wrap: wrap; }
   }
 }
+
+// City-page links have a small navigation cue; coverage-only cities keep their existing presentation.
+.pz-business-areas a.pz-business-areas__tile > :is(strong, span:not([aria-hidden])) {
+  min-width: 0;
+  text-decoration: underline;
+  text-underline-offset: calc(var(--space-1) / 2);
+}
+
+.pz-business-areas__link-arrow {
+  flex: none;
+  width: var(--space-4);
+  height: var(--space-4);
+}

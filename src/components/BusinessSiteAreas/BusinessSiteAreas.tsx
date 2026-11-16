@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { ArrowRight } from 'lucide-react'
 import { safeColor, safeFont } from '../../utils/siteAppearance'
 import { safeHref } from '../../utils/safeHref'
 
@@ -70,6 +71,7 @@ export function BusinessSiteAreas({
             <a className="pz-business-areas__tile" href={area.href} data-area-id={area.id}>
               <span aria-hidden="true" className="pz-business-areas__bullet" />
               {area.favorite ? <strong>{area.label}</strong> : <span>{area.label}</span>}
+              <ArrowRight aria-hidden="true" focusable="false" className="pz-business-areas__link-arrow" />
             </a>
           ) : variant === 'directory' ? (
             <button type="button" className="pz-business-areas__tile" data-area-id={area.id}>

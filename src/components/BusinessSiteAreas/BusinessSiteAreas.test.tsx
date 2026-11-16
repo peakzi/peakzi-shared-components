@@ -3,6 +3,19 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { BusinessSiteAreas } from './BusinessSiteAreas'
 
 describe('BusinessSiteAreas', () => {
+  it.each(['section', 'directory'] as const)('adds a decorative arrow only to published city links in the %s layout', (variant) => {
+    const html = renderToStaticMarkup(<BusinessSiteAreas variant={variant} areas={[
+      { id: 'mckinney', label: 'McKinney, TX', href: '/cities/mckinney-tx' },
+      { id: 'plano', label: 'Plano, TX', favorite: true },
+    ]} />)
+    const link = html.match(/<a\b[^>]*href="\/cities\/mckinney-tx"[\s\S]*?<\/a>/)?.[0]
+    expect(link).toContain('pz-business-areas__link-arrow')
+    expect(link).toContain('aria-hidden="true" focusable="false"')
+    expect(html.match(/pz-business-areas__link-arrow/g)).toHaveLength(1)
+    expect(html).toContain('<strong>Plano, TX</strong>')
+    expect(html).not.toContain('href="/cities/plano-tx"')
+  })
+
   it.each(['comfortable', 'compact'] as const)('renders cities without URLs as plain labels in %s sections', (density) => {
     const html = renderToStaticMarkup(<BusinessSiteAreas areas={[
       { id: 'allen', label: 'Allen, TX', favorite: true }, { id: 'plano', label: 'Plano, TX' },

@@ -32,7 +32,7 @@ describe('BusinessSiteAbout', () => {
     expect(html).toContain('Our <strong>company story</strong>.')
     for (const text of ['First supplied paragraph.', 'Second supplied paragraph.', 'Our supplied promise.', 'Our supplied motto.', 'Our supplied credentials.']) expect(html).toContain(text)
     expect([...html.matchAll(/data-section="([^"]+)"/g)].map((match) => match[1])).toEqual([
-      'our-motto', 'who-we-are', 'our-promise', 'why-choose-us', 'awards-and-certifications',
+      'who-we-are', 'our-promise', 'our-motto', 'why-choose-us', 'awards-and-certifications',
     ])
     expect(html).toContain('What sets Client Company apart')
   })
@@ -43,6 +43,38 @@ describe('BusinessSiteAbout', () => {
     expect(html).not.toContain('pz-business-hero__media')
     expect(html).not.toContain('<img')
     expect(html).not.toContain('data-surface="soft"')
+  })
+  it.each(['gradient', 'ink'] as const)('uses the website dark palette for a %s hero without adding another H1', (background) => {
+    const html = renderToStaticMarkup(<BusinessSiteAbout {...props} hero={{ background, layout: 'split', align: 'center' }} />)
+    const hero = html.match(/<section class="pz-business-hero"[\s\S]*?<\/section>/)?.[0]
+    expect(hero).toContain('data-surface="' + background + '"')
+    expect(hero).toContain('data-layout="flat"')
+    expect(hero).toContain('data-align="center"')
+    expect(hero).toContain('--pz-business-hero-background:#091020')
+    expect(hero).toContain('--pz-business-hero-gradient-end:#294d6d')
+    expect(hero).toContain('--pz-business-hero-text:#ffffff')
+    expect(hero).toContain('--pz-business-hero-accent:#efbf57')
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
+    expect(html).toContain('Our <strong>company story</strong>.')
+  })
+  it('honors light-theme layout, alignment and image settings while retaining the supplied photo and caption', () => {
+    const html = renderToStaticMarkup(<BusinessSiteAbout {...props}
+      hero={{ background: 'surface', layout: 'split', align: 'center', contentOrder: 'image-first',
+        headlineSize: 'md', imageFit: 'contain', imagePosition: 'right' }}
+      image={{ src: 'https://images.example/about-team.jpg', alt: 'Company About photo', caption: 'Our team at work.' }} />)
+    const hero = html.match(/<section class="pz-business-hero"[\s\S]*?<\/section>/)?.[0]
+    expect(hero).toContain('data-surface="surface"')
+    expect(hero).toContain('data-layout="split"')
+    expect(hero).toContain('data-content-order="image-first"')
+    expect(hero).toContain('data-align="center"')
+    expect(hero).toContain('data-size="md"')
+    expect(hero).toContain('data-image-fit="contain"')
+    expect(hero).toContain('data-image-position="right"')
+    expect(hero).toContain('--pz-business-hero-background:#ffffff')
+    expect(hero).toContain('--pz-business-hero-text:#17324d')
+    expect(hero).toContain('src="https://images.example/about-team.jpg"')
+    expect(hero).toContain('<figcaption class="pz-business-hero__caption">Our team at work.</figcaption>')
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
   })
   it('renders a photo only when explicitly supplied', () => {
     const html = renderToStaticMarkup(<BusinessSiteAbout {...props} image={{ src: 'https://images.example/about-team.jpg', alt: 'Company-provided About photo', caption: 'Our team at work.' }} />)

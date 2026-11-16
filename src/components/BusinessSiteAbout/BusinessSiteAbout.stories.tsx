@@ -7,13 +7,14 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    docs: { description: { component: 'Reusable server-rendered About presentation. The application supplies company content, validated actions, optional About-specific photo, breadcrumb and website appearance. The hero uses the website page background. Missing photos and sections leave no placeholders. The component makes no API requests and does not select homepage images.' } },
+    docs: { description: { component: 'Reusable server-rendered About presentation. The application supplies company content, validated actions, optional About-specific photo, breadcrumb and website appearance. The hero accepts the website inner-page settings and palette, with the page surface as its default. Missing photos and sections leave no placeholders. The component makes no API requests and does not select homepage images.' } },
   },
   argTypes: {
     appearance: { control: 'object' },
     sections: { control: 'object' },
     actions: { control: 'object' },
     image: { control: 'object' },
+    hero: { control: 'object' },
     headline: { control: 'text' },
     businessName: { control: 'text' },
   },
@@ -50,6 +51,13 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const WithoutImage: Story = {}
+export const ThemeGradientHero: Story = {
+  args: { hero: { background: 'gradient', layout: 'split', align: 'center', headlineSize: 'lg' } },
+}
+export const ThemeGradientWithImage: Story = {
+  args: { hero: { background: 'gradient', layout: 'split', align: 'left', contentOrder: 'text-first' },
+    image: { src: '/demo-assets/hero-example-team.svg', alt: 'Company-supplied About photo', caption: 'A company-provided image and caption.' } },
+}
 export const WithExplicitImage: Story = {
   args: { image: { src: '/demo-assets/hero-example-team.svg', alt: 'Illustration for an explicitly supplied company photo', caption: 'A company-provided image and caption.' } },
 }

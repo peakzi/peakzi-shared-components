@@ -126,3 +126,8 @@ export const ScrollReveal: Story = {
     ),
   ],
 }
+
+/** Enabled cities show a navigation arrow; other cities remain coverage labels. */
+export const MixedCityPages: Story = {
+  args: { areas: scrollAreas.slice(0, 10).map((area, index) => index === 2 ? area : { ...area, href: undefined }) },
+}

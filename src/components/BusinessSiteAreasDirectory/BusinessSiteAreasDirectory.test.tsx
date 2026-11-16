@@ -94,7 +94,10 @@ describe('BusinessSiteAreasDirectory', () => {
     const { container } = render(<BusinessSiteAreasDirectory
       areas={[{ id: 'city', label: 'City', favorite: true, href: '/services/city' }]}
       appearance={{ backgroundColor: '#ffffff', textColor: '#101010', density: 'compact', font: 'Nunito Sans' }} />)
-    expect(screen.getByRole('link', { name: 'City' })).toHaveAttribute('href', '/services/city')
+    const cityLink = screen.getByRole('link', { name: 'City' })
+    expect(cityLink).toHaveAttribute('href', '/services/city')
+    expect(cityLink.querySelector('.pz-business-areas__link-arrow')).toHaveAttribute('aria-hidden', 'true')
+    expect(cityLink.querySelector('.pz-business-areas__link-arrow')).toHaveAttribute('focusable', 'false')
     expect(container.querySelector('section')).toHaveAttribute('data-density', 'compact')
     expect(container.querySelector('section')?.getAttribute('style')).toContain('--pz-business-areas-background: #ffffff')
   })

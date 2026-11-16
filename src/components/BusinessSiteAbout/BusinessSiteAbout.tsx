@@ -1,5 +1,6 @@
 import { useId, type CSSProperties, type ReactNode } from 'react'
 import { Award, ShieldCheck } from 'lucide-react'
+import { safeHref } from '../../utils/safeHref'
 import { BusinessSiteHero, type BusinessSiteHeroAction, type BusinessSiteHeroAppearance, type BusinessSiteHeroImage, type BusinessSiteHeroProps } from '../BusinessSiteHero'
 import { BusinessSiteCta } from '../BusinessSiteCta'
 import { readableText, safeColor, safeFont, type BusinessSiteMotion } from '../../utils/siteAppearance'
@@ -38,7 +39,9 @@ export interface BusinessSiteAboutProps {
   actions?: readonly BusinessSiteHeroAction[]
   /** Optional About-specific image. Omit it when that content source supplies no image. */
   image?: BusinessSiteHeroImage & { caption?: string }
-  hero?: Pick<BusinessSiteHeroProps, 'headlineSize' | 'imageFit' | 'imageBackdrop' | 'imagePosition'>
+  /** Presentation settings from the consuming website's inner-page hero theme. */
+  hero?: Pick<BusinessSiteHeroProps, 'headlineSize' | 'imageFit' | 'imageBackdrop' | 'imagePosition' |
+    'layout' | 'background' | 'align' | 'contentOrder' | 'overlay'>
   cta?: { title: string; description?: string; placement?: string }
   appearance?: BusinessSiteAboutAppearance
   /** Stable anchor prefix when provided; otherwise each instance receives unique IDs. */
@@ -86,9 +89,16 @@ export function BusinessSiteAbout({
   const copy = (item: BusinessSiteAboutSection, modifier?: string) => <div className={[
     'pz-business-about__copy', modifier && 'pz-business-about__' + modifier,
   ].filter(Boolean).join(' ')}>{item.content}</div>
+  const heroBackground = hero?.background ?? 'surface'
+  const photoBackground = hero?.layout === 'background' && Boolean(image && safeHref(image.src, true) && image.alt?.trim())
+  const darkHero = photoBackground || heroBackground === 'gradient' || heroBackground === 'ink'
+  const heroSurface = darkHero ? appearance.darkBackgroundColor : appearance.backgroundColor
+  const heroText = darkHero ? appearance.textOnDark : appearance.textColor
   const heroAppearance = definedProps({
-    font: appearance.font, headingFont: appearance.headingFont, backgroundColor: appearance.backgroundColor,
-    textColor: appearance.textColor, accentColor: appearance.accentColor, buttonRadius: appearance.buttonRadius,
+    font: appearance.font, headingFont: appearance.headingFont, backgroundColor: heroSurface,
+    textColor: heroText, gradientEndColor: appearance.gradientEndColor,
+    galleryBackgroundColor: heroSurface, galleryTextColor: heroText,
+    accentColor: appearance.accentColor, buttonRadius: appearance.buttonRadius,
     density: appearance.density, motion: appearance.motion,
   })
 
@@ -98,15 +108,10 @@ export function BusinessSiteAbout({
     {breadcrumb && <div className="pz-business-about__breadcrumb">{breadcrumb}</div>}
     <BusinessSiteHero {...hero} headline={headline} headingId={id + '-heading'} eyebrow={eyebrow}
       {...definedProps({ answer: description, images: image ? [image] : undefined, mediaCaption: image?.caption })} actions={actions}
-      layout={image ? 'split' : 'flat'} background="surface" align="left" contentOrder="text-first"
+      layout={hero?.layout ?? (image ? 'split' : 'flat')} background={heroBackground}
+      align={hero?.align ?? 'left'} contentOrder={hero?.contentOrder ?? 'text-first'}
       intervalMs={0} variant="inner-page" appearance={heroAppearance} />
     <article aria-label="About the company">
-      {motto && <section className="pz-business-about__motto" data-section={motto.id} aria-labelledby={headingId(motto)}>
-        <div className="pz-business-about__container">
-          <h2 className="pz-business-about__eyebrow" id={headingId(motto)}>{motto.title}</h2>
-          {copy(motto, 'motto-copy')}
-        </div>
-      </section>}
       {(who || promise) && <div className="pz-business-about__container pz-business-about__story-grid" data-paired={Boolean(who && promise)}>
         {who && <section className="pz-business-about__story" data-section={who.id} aria-labelledby={headingId(who)}>
           <p className="pz-business-about__eyebrow">Our story</p>
@@ -118,6 +123,12 @@ export function BusinessSiteAbout({
           {copy(promise)}
         </section>}
       </div>}
+      {motto && <section className="pz-business-about__motto" data-section={motto.id} aria-labelledby={headingId(motto)}>
+        <div className="pz-business-about__container">
+          <h2 className="pz-business-about__eyebrow" id={headingId(motto)}>{motto.title}</h2>
+          {copy(motto, 'motto-copy')}
+        </div>
+      </section>}
       {why && <section className="pz-business-about__why" data-section={why.id} aria-labelledby={headingId(why)}>
         <div className="pz-business-about__container">
           <p className="pz-business-about__eyebrow">{why.title}</p>
